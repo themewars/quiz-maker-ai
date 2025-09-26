@@ -100,11 +100,22 @@ class CustomRegister extends Register
 
         event(new Registered($user));
 
-        $user->sendEmailVerificationNotification();
-        Notification::make()
-            ->success()
-            ->title(__('messages.home.email_verification_link_sent'))
-            ->send();
+        // Auto-verify users for testing / simplified onboarding.
+        // Toggle with env AUTO_VERIFY_USERS=true|false (defaults true for now).
+        if (env('AUTO_VERIFY_USERS', true)) {
+            $user->email_verified_at = now();
+            $user->save();
+            Notification::make()
+                ->success()
+                ->title(__('messages.user.register_successfully'))
+                ->send();
+        } else {
+            $user->sendEmailVerificationNotification();
+            Notification::make()
+                ->success()
+                ->title(__('messages.home.email_verification_link_sent'))
+                ->send();
+        }
 
         return app(RegistrationResponse::class);
     }
