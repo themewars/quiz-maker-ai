@@ -37,6 +37,28 @@ class Plan extends Model
         'assign_default',
         'status',
         'currency_id',
+        // limits
+        'exams_per_month',
+        'max_questions_per_exam',
+        'max_questions_per_month',
+        'max_pdf_pages',
+        'max_images_ocr',
+        'max_website_tokens',
+        // toggles
+        'export_pdf',
+        'export_word',
+        'website_to_exam',
+        'pdf_to_exam',
+        'ppt_quiz',
+        'answer_key',
+        'white_label',
+        'watermark',
+        'priority_support',
+        'multi_teacher',
+        // misc
+        'allowed_question_types',
+        'badge_text',
+        'payment_gateway_plan_id',
     ];
 
     /**
@@ -53,6 +75,26 @@ class Plan extends Model
         'trial_days' => 'integer',
         'assign_default' => 'boolean',
         'status' => 'boolean',
+        // limits
+        'exams_per_month' => 'integer',
+        'max_questions_per_exam' => 'integer',
+        'max_questions_per_month' => 'integer',
+        'max_pdf_pages' => 'integer',
+        'max_images_ocr' => 'integer',
+        'max_website_tokens' => 'integer',
+        // toggles
+        'export_pdf' => 'boolean',
+        'export_word' => 'boolean',
+        'website_to_exam' => 'boolean',
+        'pdf_to_exam' => 'boolean',
+        'ppt_quiz' => 'boolean',
+        'answer_key' => 'boolean',
+        'white_label' => 'boolean',
+        'watermark' => 'boolean',
+        'priority_support' => 'boolean',
+        'multi_teacher' => 'boolean',
+        // misc
+        'allowed_question_types' => 'array',
     ];
 
     public function currency()
@@ -136,6 +178,43 @@ class Plan extends Model
                             }
                         }),
                 ])->columns(2),
+                Section::make(__('Plan Limits'))->schema([
+                    TextInput::make('exams_per_month')->numeric()->label('Exams Per Month')->hint('Set to -1 for unlimited exams'),
+                    TextInput::make('max_questions_per_exam')->numeric()->label('Max Questions Per Exam')->hint('Set to -1 for unlimited questions per exam'),
+                    TextInput::make('max_questions_per_month')->numeric()->label('Max Questions Per Month')->hint('Set to -1 for unlimited questions per month'),
+                    TextInput::make('max_pdf_pages')->numeric()->label('Max PDF Pages Allowed')->hint('Leave empty for unlimited'),
+                    TextInput::make('max_images_ocr')->numeric()->label('Max Images Allowed (OCR)')->hint('Leave empty for unlimited'),
+                    TextInput::make('max_website_tokens')->numeric()->label('Max Website Tokens Allowed')->hint('Leave empty for unlimited'),
+                ])->columns(3),
+                Section::make(__('Plan Features'))->schema([
+                    Toggle::make('export_pdf')->label('PDF Export Enabled'),
+                    Toggle::make('export_word')->label('Word Export Enabled'),
+                    Toggle::make('website_to_exam')->label('Website to Exam Enabled'),
+                    Toggle::make('pdf_to_exam')->label('PDF to Exam Enabled'),
+                    Toggle::make('ppt_quiz')->label('PPT Quiz Enabled'),
+                    Toggle::make('answer_key')->label('Answer Key Enabled'),
+                    Toggle::make('white_label')->label('White Label Enabled'),
+                    Toggle::make('watermark')->label('Watermark Enabled'),
+                    Toggle::make('priority_support')->label('Priority Support Enabled'),
+                    Toggle::make('multi_teacher')->label('Multi Teacher Enabled'),
+                ])->columns(3),
+                Section::make(__('Question Types'))
+                    ->schema([
+                        Select::make('allowed_question_types')
+                            ->multiple()
+                            ->options([
+                                'multiple_choice' => 'Multiple Choice Questions',
+                                'single_choice' => 'Single Choice Questions',
+                                'open_ended' => 'Open Ended Questions',
+                            ])
+                            ->label('Allowed Question Types')
+                            ->hint('Select which question types are allowed for this plan'),
+                    ]),
+                Section::make(__('Badge & Payment'))
+                    ->schema([
+                        TextInput::make('badge_text')->label('Badge Text')->placeholder('e.g., Popular, Best Value, Recommended'),
+                        TextInput::make('payment_gateway_plan_id')->label('Payment Gateway Plan ID')->placeholder('Enter payment gateway plan ID'),
+                    ])->columns(2),
             ])->columns(2)
         ];
     }
