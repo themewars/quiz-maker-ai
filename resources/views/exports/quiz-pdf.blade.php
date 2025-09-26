@@ -42,6 +42,11 @@
             direction: ltr;
             unicode-bidi: embed;
         }
+
+        /* Force font on all elements to avoid fallback boxes */
+        * {
+            font-family: 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif !important;
+        }
         
         .header {
             text-align: center;
