@@ -36,6 +36,14 @@ class ListQuizzes extends ListRecords
                     ->body(__('Go to Upgrade Plan page to select a higher plan.'))
                     ->persistent()
                     ->send();
+
+                // Add a prominent Upgrade button in header actions
+                $actions[] = Actions\Action::make('upgrade_plan')
+                    ->label(__('Upgrade Plan'))
+                    ->color('warning')
+                    ->icon('heroicon-o-arrow-up-circle')
+                    ->url(route('filament.user.pages.upgrade-subscription'))
+                    ->openUrlInNewTab(false);
             }
         }
 
