@@ -189,7 +189,21 @@ class Quiz extends Model implements HasMedia
                                         ->schema([
                                             Select::make('quiz_type')
                                                 ->label(__('messages.quiz.question_type') . ':')
-                                                ->options(Quiz::getQuizTypeOptions())
+                                                ->options(function(){
+                                                    $options = Quiz::getQuizTypeOptions();
+                                                    $sub = getActiveSubscription();
+                                                    $allowed = $sub && $sub->plan ? (array)$sub->plan->allowed_question_types : [];
+                                                    if (empty($allowed)) {
+                                                        return $options;
+                                                    }
+                                                    $map = [
+                                                        0 => 'multiple_choice',
+                                                        1 => 'single_choice',
+                                                    ];
+                                                    return collect($options)->filter(function($label, $key) use ($allowed, $map){
+                                                        return isset($map[$key]) ? in_array($map[$key], $allowed) : true;
+                                                    });
+                                                })
                                                 ->default(0)
                                                 ->searchable()
                                                 ->required()
