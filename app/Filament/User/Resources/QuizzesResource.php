@@ -122,6 +122,24 @@ class QuizzesResource extends Resource implements HasForms
                     ->size('lg')
                     ->visible(fn(Quiz $record): bool => $record->questions()->exists()),
                 Tables\Actions\EditAction::make()->hiddenLabel()->size('lg')->tooltip(__('messages.common.edit')),
+                Tables\Actions\Action::make('export_pdf')
+                    ->label('Export PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(fn(Quiz $record) => route('quiz.export.pdf', $record->id))
+                    ->openUrlInNewTab()
+                    ->visible(function(Quiz $record){
+                        $sub = getActiveSubscription();
+                        return $record->questions()->exists() && $sub && optional($sub->plan)->export_pdf;
+                    }),
+                Tables\Actions\Action::make('export_word')
+                    ->label('Export Word')
+                    ->icon('heroicon-o-document-text')
+                    ->url(fn(Quiz $record) => route('quiz.export.word', $record->id))
+                    ->openUrlInNewTab()
+                    ->visible(function(Quiz $record){
+                        $sub = getActiveSubscription();
+                        return $record->questions()->exists() && $sub && optional($sub->plan)->export_word;
+                    }),
                 \App\Filament\Actions\CustomDeleteAction::make()
                     ->setCommonProperties()
                     ->successNotificationTitle(__('messages.quiz.quiz_deleted_success'))

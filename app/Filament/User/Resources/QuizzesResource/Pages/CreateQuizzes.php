@@ -43,6 +43,40 @@ class CreateQuizzes extends CreateRecord
     protected function handleRecordCreation(array $data): Model
     {
         $userId = Auth::id();
+        $subscription = getActiveSubscription();
+        if (!$subscription || !$subscription->plan) {
+            Notification::make()->danger()->title(__('messages.plan.your_plan_expired_and_choose_plan'))->send();
+            $this->halt();
+        }
+
+        // Enforce question type allowance
+        $allowedTypes = (array) ($subscription->plan->allowed_question_types ?? []);
+        $incomingType = $data['quiz_type'] ?? Quiz::MULTIPLE_CHOICE;
+        $map = [
+            Quiz::MULTIPLE_CHOICE => 'multiple_choice',
+            Quiz::SINGLE_CHOICE => 'single_choice',
+        ];
+        if (!empty($allowedTypes) && isset($map[$incomingType]) && !in_array($map[$incomingType], $allowedTypes)) {
+            Notification::make()->danger()->title(__('This question type is not allowed in your plan.'))->send();
+            $this->halt();
+        }
+
+        // Enforce max questions per exam and per month
+        $maxQuestions = (int)($data['max_questions'] ?? 0);
+        if (!is_null($subscription->plan->max_questions_per_exam) && (int)$subscription->plan->max_questions_per_exam >= 0) {
+            if ($maxQuestions > $subscription->plan->max_questions_per_exam) {
+                $maxQuestions = $subscription->plan->max_questions_per_exam;
+            }
+        }
+        if (!is_null($subscription->plan->max_questions_per_month) && (int)$subscription->plan->max_questions_per_month >= 0) {
+            $periodStart = now()->startOfMonth();
+            $periodEnd = now()->endOfMonth();
+            $monthQuestions = Question::where('user_id', $userId)->whereBetween('created_at', [$periodStart, $periodEnd])->count();
+            if ($monthQuestions >= $subscription->plan->max_questions_per_month) {
+                Notification::make()->danger()->title(__('You have reached your monthly question limit.'))->send();
+                $this->halt();
+            }
+        }
         $activeTab = getTabType();
 
         $descriptionFields = [
@@ -61,7 +95,7 @@ class CreateQuizzes extends CreateRecord
             'type' => $activeTab,
             'status' => 1,
             'quiz_type' => $data['quiz_type'] ?? 0,
-            'max_questions' => $data['max_questions'] ?? 0,
+            'max_questions' => $maxQuestions,
             'diff_level' => $data['diff_level'] ?? 0,
             'unique_code' => generateUniqueCode(),
             'language' => $data['language'] ?? 'en',

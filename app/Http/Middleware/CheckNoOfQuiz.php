@@ -32,12 +32,26 @@ class CheckNoOfQuiz
             if ($subscription && $subscription->plan) {
                 $quizCount = Quiz::where('user_id', Auth::id())->whereBetween('created_at', [$subscription->starts_at, $subscription->ends_at])->count();
 
-                if ($quizCount > $subscription->plan->no_of_quiz) {
+                // Total quizzes allowed during subscription period
+                if ($quizCount >= $subscription->plan->no_of_quiz) {
                     Notification::make()
                         ->danger()
                         ->title(__('messages.quiz.reached_maximum_no_of_quiz'))
                         ->send();
                     return redirect()->route('filament.user.resources.quizzes.index');
+                }
+
+                // Monthly limit if configured
+                if (!is_null($subscription->plan->exams_per_month) && (int)$subscription->plan->exams_per_month >= 0) {
+                    $periodStart = now()->startOfMonth();
+                    $periodEnd = now()->endOfMonth();
+                    $monthlyCount = Quiz::where('user_id', Auth::id())
+                        ->whereBetween('created_at', [$periodStart, $periodEnd])
+                        ->count();
+                    if ($subscription->plan->exams_per_month >= 0 && $monthlyCount >= $subscription->plan->exams_per_month) {
+                        Notification::make()->danger()->title(__('You have reached your monthly quiz limit.'))->send();
+                        return redirect()->route('filament.user.resources.quizzes.index');
+                    }
                 }
             } else {
                 Notification::make()
