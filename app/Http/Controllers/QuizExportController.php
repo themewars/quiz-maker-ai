@@ -6,6 +6,7 @@ use App\Models\Quiz;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Spatie\Browsershot\Browsershot;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,6 +45,12 @@ class QuizExportController extends Controller
                 ->showBackground()
                 ->emulateMedia('print')
                 ->waitUntilNetworkIdle();
+            $args = trim((string) env('BROWSERSHOT_CHROME_ARGS', ''));
+            if ($args !== '') {
+                $b->addChromiumArguments(explode(' ', $args));
+            } else {
+                $b->noSandbox();
+            }
             if (! empty($chromePath)) {
                 $b->setChromePath($chromePath);
             }
@@ -52,6 +59,7 @@ class QuizExportController extends Controller
             return response()->download($filePath)->deleteFileAfterSend(true);
 
         } catch (\Exception $e) {
+            Log::error('Browsershot PDF generation failed: '.$e->getMessage());
             // Fallback 1: Snappy/wkhtmltopdf (good unicode, limited shaping)
             try {
                 $html = view('exports.quiz-pdf', [
@@ -74,6 +82,7 @@ class QuizExportController extends Controller
                 $filename = 'quiz_' . $quiz->id . '_' . date('Y-m-d_H-i-s') . '.pdf';
                 return $pdf->download($filename);
             } catch (\Exception $e2) {
+                Log::error('Snappy PDF generation failed: '.$e2->getMessage());
                 // Fallback 2: DomPDF as last resort
                 $pdf = Pdf::loadView('exports.quiz-pdf', [
                     'quiz' => $quiz,
@@ -86,6 +95,7 @@ class QuizExportController extends Controller
                     'isRemoteEnabled' => true,
                     'isHtml5ParserEnabled' => true,
                 ]);
+                Log::warning('Using DomPDF fallback for quiz export; Indic shaping may be limited.');
             }
         }
 
