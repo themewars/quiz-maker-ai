@@ -15,14 +15,14 @@
         /* Only use base64-embedded sources to avoid external HTTP fetch issues */
         @font-face {
             font-family: 'Noto Sans Devanagari';
-            src: url('data:font/ttf;base64,{{ $fontRegularData }}') format('truetype');
+            src: url('data:font/ttf;base64,{!! $fontRegularData !!}') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
         }
         @font-face {
             font-family: 'Noto Sans Devanagari';
-            src: url('data:font/ttf;base64,{{ $fontBoldData }}') format('truetype');
+            src: url('data:font/ttf;base64,{!! $fontBoldData !!}') format('truetype');
             font-weight: bold;
             font-style: normal;
             font-display: swap;
