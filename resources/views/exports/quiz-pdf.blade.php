@@ -12,28 +12,24 @@
     @endphp
     <style>
         /* Embed Hindi-capable fonts so viewers without system fonts still see text */
-        /* Use HTTP URLs so headless Chrome can fetch fonts */
+        /* Only use base64-embedded sources to avoid external HTTP fetch issues */
         @font-face {
             font-family: 'Noto Sans Devanagari';
-            src: {{ $fontRegularData ? "url('data:font/ttf;base64,$fontRegularData')" : "url('" . asset('fonts/NotoSansDevanagari-Regular.ttf') . "')" }} format('truetype');
+            src: url('data:font/ttf;base64,{{ $fontRegularData }}') format('truetype');
             font-weight: normal;
             font-style: normal;
+            font-display: swap;
         }
         @font-face {
             font-family: 'Noto Sans Devanagari';
-            src: {{ $fontBoldData ? "url('data:font/ttf;base64,$fontBoldData')" : "url('" . asset('fonts/NotoSansDevanagari-Bold.ttf') . "')" }} format('truetype');
+            src: url('data:font/ttf;base64,{{ $fontBoldData }}') format('truetype');
             font-weight: bold;
             font-style: normal;
-        }
-        @font-face {
-            font-family: 'Mangal';
-            src: url('{{ asset('fonts/Mangal.ttf') }}') format('truetype');
-            font-weight: normal;
-            font-style: normal;
+            font-display: swap;
         }
 
         body {
-            font-family: 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif;
+            font-family: 'Noto Sans Devanagari', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif;
             font-size: 12px;
             line-height: 1.4;
             color: #333;
@@ -45,7 +41,7 @@
 
         /* Force font on all elements to avoid fallback boxes */
         * {
-            font-family: 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif !important;
+            font-family: 'Noto Sans Devanagari', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif !important;
         }
         
         .header {
