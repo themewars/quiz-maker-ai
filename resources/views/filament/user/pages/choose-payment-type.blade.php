@@ -293,6 +293,7 @@
     </div>
 </section>
 
+@push('scripts')
 @vite('resources/js/razorpay-checkout.js')
 <script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
 <script>
@@ -374,3 +375,4 @@
         });
     });
 </script>
+@endpush
