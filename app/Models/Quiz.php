@@ -210,15 +210,30 @@ class Quiz extends Model implements HasMedia
                                                 ->validationAttribute(__('messages.quiz.difficulty')),
                                             TextInput::make('max_questions')
                                                 ->numeric()
-                                                ->rules(['integer', 'max:25'])
                                                 ->integer()
                                                 ->required()
                                                 ->minValue(1)
-                                                ->maxValue(25)
                                                 ->label(__('messages.quiz.num_of_questions') . ':')
-                                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('messages.quiz.max_no_of_quiz'))
+                                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: function(){
+                                                    $sub = getActiveSubscription();
+                                                    $limit = $sub && $sub->plan ? $sub->plan->max_questions_per_exam : null;
+                                                    return $limit !== null && (int)$limit >= 0
+                                                        ? __('Maximum :n number of questions allowed.', ['n' => $limit])
+                                                        : __('messages.quiz.max_no_of_quiz');
+                                                })
                                                 ->placeholder(__('messages.quiz.number_of_questions'))
-                                                ->validationAttribute(__('messages.quiz.num_of_questions')),
+                                                ->validationAttribute(__('messages.quiz.num_of_questions'))
+                                                ->live()
+                                                ->rule(function(){
+                                                    $sub = getActiveSubscription();
+                                                    $limit = $sub && $sub->plan ? $sub->plan->max_questions_per_exam : null;
+                                                    return ($limit !== null && (int)$limit >= 0) ? 'max:'.$limit : null;
+                                                })
+                                                ->maxValue(function(){
+                                                    $sub = getActiveSubscription();
+                                                    $limit = $sub && $sub->plan ? $sub->plan->max_questions_per_exam : null;
+                                                    return ($limit !== null && (int)$limit >= 0) ? $limit : 25;
+                                                }),
                                             Select::make('language')
                                                 ->label(__('messages.home.language') . ':')
                                                 ->options(getAllLanguages())
