@@ -71,7 +71,12 @@ class CreateQuizzes extends CreateRecord
         if (!is_null($subscription->plan->max_questions_per_month) && (int)$subscription->plan->max_questions_per_month >= 0) {
             $periodStart = now()->startOfMonth();
             $periodEnd = now()->endOfMonth();
-            $monthQuestions = Question::where('user_id', $userId)->whereBetween('created_at', [$periodStart, $periodEnd])->count();
+            // questions table doesn't have user_id; filter via related quiz
+            $monthQuestions = Question::whereBetween('created_at', [$periodStart, $periodEnd])
+                ->whereHas('quiz', function($q) use ($userId) {
+                    $q->where('user_id', $userId);
+                })
+                ->count();
             if ($monthQuestions >= $subscription->plan->max_questions_per_month) {
                 Notification::make()->danger()->title(__('You have reached your monthly question limit.'))->send();
                 $this->halt();
