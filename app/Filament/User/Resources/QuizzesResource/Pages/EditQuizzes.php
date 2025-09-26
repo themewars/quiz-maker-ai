@@ -373,7 +373,7 @@ class EditQuizzes extends EditRecord
             ]
 
         - **Single Choice**:
-            - Use the following format with exactly two options. Mark one option as `is_correct: true` and the other as `is_correct: false`:
+            - Use the following format with exactly four options. Mark one option as `is_correct: true` and the other three as `is_correct: false`:
 
             [
                 {
@@ -386,17 +386,58 @@ class EditQuizzes extends EditRecord
                         {
                             "title": "Answer Option 2",
                             "is_correct": true
+                        },
+                        {
+                            "title": "Answer Option 3",
+                            "is_correct": false
+                        },
+                        {
+                            "title": "Answer Option 4",
+                            "is_correct": false
                         }
                     ],
                     "correct_answer_key": "Answer Option 2"
                 }
             ]
 
+        - **True/False**:
+            - Use the following format with exactly two options (True and False). Mark one option as `is_correct: true`:
+
+            [
+                {
+                    "question": "Your question text here",
+                    "answers": [
+                        {
+                            "title": "True",
+                            "is_correct": true
+                        },
+                        {
+                            "title": "False",
+                            "is_correct": false
+                        }
+                    ],
+                    "correct_answer_key": "True"
+                }
+            ]
+
+        - **Open Ended**:
+            - Use the following format with no predefined answers. The user will provide their own answer:
+
+            [
+                {
+                    "question": "Your question text here",
+                    "answers": [],
+                    "correct_answer_key": "User will provide their own answer"
+                }
+            ]
+
         **Guidelines:**
         - You must generate exactly **{$data['max_questions']}** questions.
         - For Multiple Choice questions, ensure that there are exactly four answer options, with two options marked as `is_correct: true`.
-        - For Single Choice questions, ensure that there are exactly two answer options, with one option marked as `is_correct: true`.
-        - The correct_answer_key should match the correct answer's title value(s) for Multiple Choice and Single Choice questions.
+        - For Single Choice questions, ensure that there are exactly four answer options, with one option marked as `is_correct: true`.
+        - For True/False questions, ensure that there are exactly two answer options (True and False), with one option marked as `is_correct: true`.
+        - For Open Ended questions, provide no answer options (empty answers array).
+        - The correct_answer_key should match the correct answer's title value(s) for Multiple Choice, Single Choice, and True/False questions.
         - Ensure that each question is diverse and well-crafted, covering various relevant concepts.
 
         Your responses should be formatted impeccably in JSON, capturing the essence of the provided quiz details.
