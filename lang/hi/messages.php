@@ -303,6 +303,17 @@ return [
         'language_created_success' => 'भाषा सफलतापूर्वक बनाई गई।',
         'language_updated_success' => 'भाषा सफलतापूर्वक अपडेट की गई।',
         'language_deleted_success' => 'भाषा सफलतापूर्वक हटाई गई।',
+        'export_quiz' => 'क्विज़ निर्यात करें',
+        'export_word' => 'Word में निर्यात करें',
+        'quiz_export' => 'क्विज़ निर्यात',
+        'quiz_details' => 'क्विज़ विवरण',
+        'total_questions' => 'कुल प्रश्न',
+        'time_limit' => 'समय सीमा',
+        'exported_from' => 'से निर्यात किया गया',
+        'export_date' => 'निर्यात तिथि',
+        'quiz_code' => 'क्विज़ कोड',
+        'no_questions_found' => 'कोई प्रश्न नहीं मिला',
+        'created_by' => 'द्वारा बनाया गया',
     ],
 
     'auth' => [

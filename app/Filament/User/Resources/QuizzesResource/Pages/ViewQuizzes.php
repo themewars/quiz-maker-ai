@@ -3,6 +3,7 @@
 namespace App\Filament\User\Resources\QuizzesResource\Pages;
 
 use App\Filament\User\Resources\QuizzesResource;
+use App\Models\Quiz;
 
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -21,6 +22,20 @@ class ViewQuizzes extends ViewRecord
     protected function getActions(): array
     {
         return [
+            Action::make('export_pdf')
+                ->label(__('messages.quiz.export_quiz'))
+                ->color('success')
+                ->icon('heroicon-o-document-arrow-down')
+                ->url(route('quiz.export.pdf', $this->record->id))
+                ->openUrlInNewTab()
+                ->visible(fn(Quiz $record): bool => $record->questions()->exists()),
+            Action::make('export_word')
+                ->label(__('messages.quiz.export_word'))
+                ->color('info')
+                ->icon('heroicon-o-document-text')
+                ->url(route('quiz.export.word', $this->record->id))
+                ->openUrlInNewTab()
+                ->visible(fn(Quiz $record): bool => $record->questions()->exists()),
             Action::make('leaderboard')
                 ->label(__('messages.quiz_report.leaderboard'))
                 ->color('gray')

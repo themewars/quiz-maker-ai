@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PollResultController;
+use App\Http\Controllers\QuizExportController;
 use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\StripeController;
@@ -54,6 +55,12 @@ Route::middleware('SetLanguage')->group(function () {
 
     // Route of Download subscription Invoice
     Route::get('invoice/{subscription}/pdf', [SubscriptionController::class, 'subscriptionInvoice'])->name('subscription.invoice');
+
+    // Route of Quiz Export
+    Route::middleware('auth')->group(function () {
+        Route::get('quiz/{quiz}/export/pdf', [QuizExportController::class, 'exportToPdf'])->name('quiz.export.pdf');
+        Route::get('quiz/{quiz}/export/word', [QuizExportController::class, 'exportToWord'])->name('quiz.export.word');
+    });
 
     // Route for the landing home page
     Route::get('/', [HomeController::class, 'index'])->name('home');
