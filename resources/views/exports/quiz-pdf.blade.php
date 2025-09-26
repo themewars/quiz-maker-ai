@@ -4,23 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $quiz->title }} - Quiz Export</title>
+    @php
+        $fontRegularPath = public_path('fonts/NotoSansDevanagari-Regular.ttf');
+        $fontBoldPath = public_path('fonts/NotoSansDevanagari-Bold.ttf');
+        $fontRegularData = file_exists($fontRegularPath) ? base64_encode(file_get_contents($fontRegularPath)) : null;
+        $fontBoldData = file_exists($fontBoldPath) ? base64_encode(file_get_contents($fontBoldPath)) : null;
+    @endphp
     <style>
         /* Embed Hindi-capable fonts so viewers without system fonts still see text */
+        /* Use HTTP URLs so headless Chrome can fetch fonts */
         @font-face {
             font-family: 'Noto Sans Devanagari';
-            src: url('{{ public_path('fonts/NotoSansDevanagari-Regular.ttf') }}') format('truetype');
+            src: {{ $fontRegularData ? "url('data:font/ttf;base64,$fontRegularData')" : "url('" . asset('fonts/NotoSansDevanagari-Regular.ttf') . "')" }} format('truetype');
             font-weight: normal;
             font-style: normal;
         }
         @font-face {
             font-family: 'Noto Sans Devanagari';
-            src: url('{{ public_path('fonts/NotoSansDevanagari-Bold.ttf') }}') format('truetype');
+            src: {{ $fontBoldData ? "url('data:font/ttf;base64,$fontBoldData')" : "url('" . asset('fonts/NotoSansDevanagari-Bold.ttf') . "')" }} format('truetype');
             font-weight: bold;
             font-style: normal;
         }
         @font-face {
             font-family: 'Mangal';
-            src: url('{{ public_path('fonts/Mangal.ttf') }}') format('truetype');
+            src: url('{{ asset('fonts/Mangal.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
