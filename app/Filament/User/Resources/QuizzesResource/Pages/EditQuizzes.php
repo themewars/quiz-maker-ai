@@ -307,6 +307,15 @@ class EditQuizzes extends EditRecord
             $description = substr($description, 0, 10000) . '...';
         }
 
+        // Enforce per-exam limit in edit regenerate flow as well
+        $subscription = getActiveSubscription();
+        if ($subscription && $subscription->plan && !is_null($data['max_questions'])) {
+            $limit = $subscription->plan->max_questions_per_exam;
+            if (!is_null($limit) && (int)$limit >= 0 && $data['max_questions'] > $limit) {
+                $data['max_questions'] = $limit;
+            }
+        }
+
         $quizData = [
             'Difficulty' => Quiz::DIFF_LEVEL[$data['diff_level']],
             'question_type' => Quiz::QUIZ_TYPE[$data['quiz_type']],

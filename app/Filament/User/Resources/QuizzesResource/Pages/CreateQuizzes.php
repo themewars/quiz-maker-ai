@@ -66,6 +66,8 @@ class CreateQuizzes extends CreateRecord
         if (!is_null($subscription->plan->max_questions_per_exam) && (int)$subscription->plan->max_questions_per_exam >= 0) {
             if ($maxQuestions > $subscription->plan->max_questions_per_exam) {
                 $maxQuestions = $subscription->plan->max_questions_per_exam;
+                // also reflect back into $data used in prompts to avoid AI generating more
+                $data['max_questions'] = $maxQuestions;
             }
         }
         if (!is_null($subscription->plan->max_questions_per_month) && (int)$subscription->plan->max_questions_per_month >= 0) {
