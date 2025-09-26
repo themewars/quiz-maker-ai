@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Quiz;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,30 +23,64 @@ class QuizExportController extends Controller
         // Get current language
         $currentLanguage = session('language', 'en');
         
-        // Set PDF options
-        $pdf = Pdf::loadView('exports.quiz-pdf', [
-            'quiz' => $quiz,
-            'language' => $currentLanguage
-        ]);
+        // Try Snappy PDF first (better Hindi support)
+        try {
+            $html = view('exports.quiz-pdf', [
+                'quiz' => $quiz,
+                'language' => $currentLanguage
+            ])->render();
 
-        // Set PDF options for better formatting with Hindi font support
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->setOptions([
-            'defaultFont' => 'DejaVu Sans',
-            'isRemoteEnabled' => true,
-            'isHtml5ParserEnabled' => true,
-            'isPhpEnabled' => true,
-            'isJavascriptEnabled' => false,
-            'isFontSubsettingEnabled' => true,
-            'defaultMediaType' => 'print',
-            'fontHeightRatio' => 1.1,
-            'dpi' => 150,
-            'fontDir' => storage_path('fonts/'),
-            'fontCache' => storage_path('fonts/'),
-            'tempDir' => sys_get_temp_dir(),
-            'chroot' => public_path(),
-            'logOutputFile' => storage_path('logs/dompdf.log'),
-        ]);
+            $pdf = SnappyPdf::loadHTML($html)
+                ->setPaper('a4')
+                ->setOrientation('portrait')
+                ->setOption('encoding', 'UTF-8')
+                ->setOption('margin-top', 0)
+                ->setOption('margin-right', 0)
+                ->setOption('margin-bottom', 0)
+                ->setOption('margin-left', 0)
+                ->setOption('disable-smart-shrinking', true)
+                ->setOption('print-media-type', true)
+                ->setOption('dpi', 300)
+                ->setOption('image-quality', 100)
+                ->setOption('enable-local-file-access', true)
+                ->setOption('load-error-handling', 'ignore')
+                ->setOption('load-media-error-handling', 'ignore')
+                ->setOption('javascript-delay', 1000)
+                ->setOption('no-stop-slow-scripts', true)
+                ->setOption('enable-javascript', true)
+                ->setOption('debug-javascript', false)
+                ->setOption('no-pdf-compression', true)
+                ->setOption('lowquality', false)
+                ->setOption('grayscale', false)
+                ->setOption('disable-external-links', false)
+                ->setOption('disable-internal-links', false)
+                ->setOption('zoom', 1.0);
+
+        } catch (\Exception $e) {
+            // Fallback to DomPDF if Snappy fails
+            $pdf = Pdf::loadView('exports.quiz-pdf', [
+                'quiz' => $quiz,
+                'language' => $currentLanguage
+            ]);
+
+            $pdf->setPaper('A4', 'portrait');
+            $pdf->setOptions([
+                'defaultFont' => 'DejaVu Sans',
+                'isRemoteEnabled' => true,
+                'isHtml5ParserEnabled' => true,
+                'isPhpEnabled' => true,
+                'isJavascriptEnabled' => false,
+                'isFontSubsettingEnabled' => true,
+                'defaultMediaType' => 'print',
+                'fontHeightRatio' => 1.1,
+                'dpi' => 150,
+                'fontDir' => storage_path('fonts/'),
+                'fontCache' => storage_path('fonts/'),
+                'tempDir' => sys_get_temp_dir(),
+                'chroot' => public_path(),
+                'logOutputFile' => storage_path('logs/dompdf.log'),
+            ]);
+        }
 
         // Generate filename
         $filename = 'quiz_' . $quiz->id . '_' . date('Y-m-d_H-i-s') . '.pdf';

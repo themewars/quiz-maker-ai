@@ -6,7 +6,7 @@
     <title>{{ $quiz->title }} - Quiz Export</title>
     <style>
         body {
-            font-family: 'DejaVu Sans', 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', Arial, sans-serif;
+            font-family: 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif;
             font-size: 12px;
             line-height: 1.4;
             color: #333;
