@@ -206,6 +206,7 @@ class Plan extends Model
                                 'multiple_choice' => 'Multiple Choice Questions',
                                 'single_choice' => 'Single Choice Questions',
                                 'open_ended' => 'Open Ended Questions',
+                                'true_false' => 'True / False Questions',
                             ])
                             ->label('Allowed Question Types')
                             ->hint('Select which question types are allowed for this plan'),
