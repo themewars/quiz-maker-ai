@@ -6,12 +6,14 @@
     <title>{{ $quiz->title }} - Quiz Export</title>
     <style>
         body {
-            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-family: 'DejaVu Sans', 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', Arial, sans-serif;
             font-size: 12px;
             line-height: 1.4;
             color: #333;
             margin: 0;
             padding: 20px;
+            direction: ltr;
+            unicode-bidi: embed;
         }
         
         .header {

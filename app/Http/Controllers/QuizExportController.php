@@ -28,12 +28,23 @@ class QuizExportController extends Controller
             'language' => $currentLanguage
         ]);
 
-        // Set PDF options for better formatting
+        // Set PDF options for better formatting with Hindi font support
         $pdf->setPaper('A4', 'portrait');
         $pdf->setOptions([
-            'isHtml5ParserEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
             'isRemoteEnabled' => true,
-            'defaultFont' => 'DejaVu Sans'
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true,
+            'isJavascriptEnabled' => false,
+            'isFontSubsettingEnabled' => true,
+            'defaultMediaType' => 'print',
+            'fontHeightRatio' => 1.1,
+            'dpi' => 150,
+            'fontDir' => storage_path('fonts/'),
+            'fontCache' => storage_path('fonts/'),
+            'tempDir' => sys_get_temp_dir(),
+            'chroot' => public_path(),
+            'logOutputFile' => storage_path('logs/dompdf.log'),
         ]);
 
         // Generate filename
