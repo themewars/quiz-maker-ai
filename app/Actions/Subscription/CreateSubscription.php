@@ -109,22 +109,28 @@ class CreateSubscription
                 'notes' => $subscription->notes ?? '',
                 'id' => $subscription->id,
             ];
-            if ($paymentType != null && $paymentType == Subscription::TYPE_MANUALLY) {
-                Mail::to($user->email)
-                    ->send(new ManualPaymentGuideMail($manualPaymentGuide, $user));
-                $email = getSetting() ? getSetting()->email : null;
-                Mail::to($email)
-                    ->send(new AdminManualPaymentMail($adminMailData, $email));
+            if (! env('DISABLE_PAYMENT_EMAILS', false)) {
+                if ($paymentType != null && $paymentType == Subscription::TYPE_MANUALLY) {
+                    Mail::to($user->email)
+                        ->send(new ManualPaymentGuideMail($manualPaymentGuide, $user));
+                    $email = getSetting() ? getSetting()->email : null;
+                    if ($email) {
+                        Mail::to($email)
+                            ->send(new AdminManualPaymentMail($adminMailData, $email));
+                    }
+                }
             }
 
             // Send Email Razorpay, paypal Payment Success
-            if ($paymentType != null) {
-                if ($paymentType == Subscription::TYPE_RAZORPAY || $paymentType == Subscription::TYPE_PAYPAL || $paymentType == Subscription::TYPE_STRIPE) {
-                    $successData = [
-                        'name' => $user->name,
-                        'planName' => $subscription->plan->name,
-                    ];
-                    Mail::to($user->email)->send(new SubscriptionPaymentSuccessMail($successData));
+            if (! env('DISABLE_PAYMENT_EMAILS', false)) {
+                if ($paymentType != null) {
+                    if ($paymentType == Subscription::TYPE_RAZORPAY || $paymentType == Subscription::TYPE_PAYPAL || $paymentType == Subscription::TYPE_STRIPE) {
+                        $successData = [
+                            'name' => $user->name,
+                            'planName' => $subscription->plan->name,
+                        ];
+                        Mail::to($user->email)->send(new SubscriptionPaymentSuccessMail($successData));
+                    }
                 }
             }
 
