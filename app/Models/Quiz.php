@@ -105,9 +105,13 @@ class Quiz extends Model implements HasMedia
 
     const MULTIPLE_CHOICE = 0;
     const SINGLE_CHOICE = 1;
+    const TRUE_FALSE = 2;
+    const OPEN_ENDED = 3;
     const QUIZ_TYPE = [
         self::MULTIPLE_CHOICE => 'Multiple Choices',
         self::SINGLE_CHOICE => 'Single Choice',
+        self::TRUE_FALSE => 'True / False',
+        self::OPEN_ENDED => 'Open Ended',
     ];
 
     public static function getQuizTypeOptions()
@@ -115,6 +119,8 @@ class Quiz extends Model implements HasMedia
         return [
             0 => __('messages.home.multiple_choice'),
             1 => __('messages.home.single_choice'),
+            2 => __('True / False'),
+            3 => __('Open Ended'),
         ];
     }
 
@@ -199,6 +205,8 @@ class Quiz extends Model implements HasMedia
                                                     $map = [
                                                         0 => 'multiple_choice',
                                                         1 => 'single_choice',
+                                                        2 => 'true_false',
+                                                        3 => 'open_ended',
                                                     ];
                                                     return collect($options)->filter(function($label, $key) use ($allowed, $map){
                                                         return isset($map[$key]) ? in_array($map[$key], $allowed) : true;
