@@ -111,12 +111,17 @@ class CreateSubscription
             ];
             if (! env('DISABLE_PAYMENT_EMAILS', false)) {
                 if ($paymentType != null && $paymentType == Subscription::TYPE_MANUALLY) {
-                    Mail::to($user->email)
-                        ->send(new ManualPaymentGuideMail($manualPaymentGuide, $user));
-                    $email = getSetting() ? getSetting()->email : null;
-                    if ($email) {
-                        Mail::to($email)
-                            ->send(new AdminManualPaymentMail($adminMailData, $email));
+                    try {
+                        Mail::to($user->email)
+                            ->send(new ManualPaymentGuideMail($manualPaymentGuide, $user));
+                        $email = getSetting() ? getSetting()->email : null;
+                        if ($email) {
+                            Mail::to($email)
+                                ->send(new AdminManualPaymentMail($adminMailData, $email));
+                        }
+                    } catch (\Exception $e) {
+                        // Log the error but don't fail the subscription creation
+                        \Log::error('Failed to send manual payment guide email: ' . $e->getMessage());
                     }
                 }
             }
@@ -125,11 +130,16 @@ class CreateSubscription
             if (! env('DISABLE_PAYMENT_EMAILS', false)) {
                 if ($paymentType != null) {
                     if ($paymentType == Subscription::TYPE_RAZORPAY || $paymentType == Subscription::TYPE_PAYPAL || $paymentType == Subscription::TYPE_STRIPE) {
-                        $successData = [
-                            'name' => $user->name,
-                            'planName' => $subscription->plan->name,
-                        ];
-                        Mail::to($user->email)->send(new SubscriptionPaymentSuccessMail($successData));
+                        try {
+                            $successData = [
+                                'name' => $user->name,
+                                'planName' => $subscription->plan->name,
+                            ];
+                            Mail::to($user->email)->send(new SubscriptionPaymentSuccessMail($successData));
+                        } catch (\Exception $e) {
+                            // Log the error but don't fail the subscription creation
+                            \Log::error('Failed to send payment success email: ' . $e->getMessage());
+                        }
                     }
                 }
             }
