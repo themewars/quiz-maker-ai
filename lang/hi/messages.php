@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'नया प्रश्न जोड़ें',
         'clear_date' => 'तारीख साफ़ करें',
         'time_out' => 'समय समाप्त',
+        'created_by' => 'द्वारा बनाया गया',
     ],
 
     'setting' => [

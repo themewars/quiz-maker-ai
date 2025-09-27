@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Add New Question',
         'clear_date' => 'Clear Date',
         'time_out' => 'Time Out',
+        'created_by' => 'Created By',
     ],
 
     'setting' => [
