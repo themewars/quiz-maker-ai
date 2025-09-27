@@ -37,6 +37,6 @@ class RedirectAuthenticated extends Middleware
 
     protected function redirectTo($request): ?string
     {
-        return route('filament.auth.auth.login');
+        return route('filament.auth.pages.login');
     }
 }
