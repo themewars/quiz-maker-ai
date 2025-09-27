@@ -30,7 +30,7 @@ class HomeController extends Controller
         $plans = Plan::take(3)->orderBy('updated_at', 'desc')->get();
         $testimonials = Testimonial::all();
         $quizzes = Quiz::with('category')->whereNotNull('category_id')
-            ->where('status', 1)->where('is_show_home', 1)
+            ->where('status', 1)->where('is_show_home', 1)->where('is_public', 1)
             ->where(function ($query) {
                 $query->whereNull('quiz_expiry_date')
                     ->orWhere('quiz_expiry_date', '>=', Carbon::now());
