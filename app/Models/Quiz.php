@@ -472,9 +472,18 @@ class Quiz extends Model implements HasMedia
                     Repeater::make('answers')
                         ->label(__('messages.common.answer') . ':')
                         ->addActionLabel(__('messages.common.add_answer'))
-                        ->defaultItems(2)
-                        ->minItems(2)
-                        ->maxItems(4)
+                        ->defaultItems(function (Get $get) {
+                            $quizType = $get('../../quiz_type');
+                            return $quizType == Quiz::OPEN_ENDED ? 0 : 2;
+                        })
+                        ->minItems(function (Get $get) {
+                            $quizType = $get('../../quiz_type');
+                            return $quizType == Quiz::OPEN_ENDED ? 0 : 2;
+                        })
+                        ->maxItems(function (Get $get) {
+                            $quizType = $get('../../quiz_type');
+                            return $quizType == Quiz::OPEN_ENDED ? 0 : 4;
+                        })
                         ->validationAttribute(__('messages.common.answer'))
                         ->grid(2)
                         ->schema([
@@ -489,7 +498,10 @@ class Quiz extends Model implements HasMedia
                                     ->label(__('messages.common.is_correct') . ':'),
                             ])->columns(4),
                         ])
-                        ->required(),
+                        ->required(function (Get $get) {
+                            $quizType = $get('../../quiz_type');
+                            return $quizType != Quiz::OPEN_ENDED;
+                        }),
                 ]),
 
         ];

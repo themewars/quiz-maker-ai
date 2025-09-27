@@ -154,7 +154,8 @@ class EditQuizzes extends EditRecord
 
             foreach ($questions as $index => $quizQuestion) {
 
-                if (empty($quizQuestion['answers']) || !collect($quizQuestion['answers'])->where('is_correct', true)->count()) {
+                // Skip validation for Open Ended questions (type 3) as they don't have predefined answers
+                if ($record->quiz_type != Quiz::OPEN_ENDED && (empty($quizQuestion['answers']) || !collect($quizQuestion['answers'])->where('is_correct', true)->count())) {
                     Notification::make()
                         ->danger()
                         ->title('Question #' . ($index + 1) . ' must have at least one correct answer.')
