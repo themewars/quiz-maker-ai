@@ -376,6 +376,8 @@ return [
         'file_upload_hint' => 'Only PDF and DOCX files are allowed. Max size: 10MB',
         'no_selected_error_message' => 'Please select at least one answer before continuing.',
         'limit_error_message' => 'You can only select up to :limit options.',
+        'export_quiz' => 'Export Quiz',
+        'export_word' => 'Export to Word',
     ],
 
     'quiz_report' => [
@@ -485,8 +487,6 @@ return [
         'unsupervised_learning' => 'Unsupervised Learning',
         'predictive_memorization' => 'Predictive Memorization',
         'reinforcement_learning' => 'Reinforcement Learning',
-        'export_quiz' => 'Export Quiz',
-        'export_word' => 'Export to Word',
         'features' => 'Features',
         'features_title' => 'Everything You Need for Interactive Learning',
         'features_description' => 'Transform your static content into dynamic quizzes and assessments with our AI-powered tools. No more manual question creation.',
