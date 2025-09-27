@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Добавить новый вопрос',
         'clear_date' => 'Очистить данные',
         'time_out' => 'Время вышло',
+        'created_by' => 'Создано',
     ],
 
     'setting' => [

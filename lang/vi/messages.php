@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Thêm câu hỏi mới',
         'clear_date' => 'Xóa dữ liệu',
         'time_out' => 'Hết thời gian',
+        'created_by' => 'Được tạo bởi',
     ],
 
     'setting' => [

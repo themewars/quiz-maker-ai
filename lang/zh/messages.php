@@ -58,6 +58,7 @@ return [
         'add_new_question' => '添加新问题',
         'clear_data' => '清除数据',
         'time_out' => '时间到',
+        'created_by' => '创建者',
     ],
 
     'setting' => [

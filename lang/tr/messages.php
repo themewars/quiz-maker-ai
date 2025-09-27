@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Yeni Soru Ekle',
         'clear_date' => 'Verileri Temizle',
         'time_out' => 'Süre doldu',
+        'created_by' => 'Oluşturan',
     ],
 
     'setting' => [
