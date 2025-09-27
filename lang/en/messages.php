@@ -378,6 +378,14 @@ return [
         'limit_error_message' => 'You can only select up to :limit options.',
         'export_quiz' => 'Export PDF',
         'export_word' => 'Export Word',
+        'quiz_export' => 'Quiz Export',
+        'quiz_details' => 'Quiz Details',
+        'total_questions' => 'Total Questions',
+        'created_at' => 'Created At',
+        'questions' => 'Questions',
+        'exported_from' => 'Exported From',
+        'export_date' => 'Export Date',
+        'quiz_code' => 'Quiz Code',
     ],
 
     'quiz_report' => [
