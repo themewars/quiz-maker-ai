@@ -244,6 +244,8 @@ return [
         'plan_created_success' => 'योजना सफलतापूर्वक बनाई गई।',
         'plan_updated_success' => 'योजना सफलतापूर्वक अपडेट की गई।',
         'plan_deleted_success' => 'योजना सफलतापूर्वक हटाई गई।',
+        'export_pdf' => 'PDF निर्यात सक्षम',
+        'export_word' => 'Word निर्यात सक्षम',
     ],
 
     'subscription' => [

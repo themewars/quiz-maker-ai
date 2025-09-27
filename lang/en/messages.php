@@ -238,6 +238,8 @@ return [
         'your_plan_expired_and_choose_plan' => 'Your plan is expired. Please choose a plan to continue the services.',
         'cannot_delete_plan' => 'This Plan cannot be deleted because it is currently in used.',
         'default_plan_cannot_turned_off' => 'The default plan cannot be turned off',
+        'export_pdf' => 'PDF Export Enabled',
+        'export_word' => 'Word Export Enabled',
     ],
 
     'subscription' => [
@@ -484,6 +486,7 @@ return [
         'predictive_memorization' => 'Predictive Memorization',
         'reinforcement_learning' => 'Reinforcement Learning',
         'export_quiz' => 'Export Quiz',
+        'export_word' => 'Export to Word',
         'features' => 'Features',
         'features_title' => 'Everything You Need for Interactive Learning',
         'features_description' => 'Transform your static content into dynamic quizzes and assessments with our AI-powered tools. No more manual question creation.',

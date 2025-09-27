@@ -187,8 +187,8 @@ class Plan extends Model
                     TextInput::make('max_website_tokens')->numeric()->label('Max Website Tokens Allowed')->hint('Leave empty for unlimited'),
                 ])->columns(3),
                 Section::make(__('Plan Features'))->schema([
-                    Toggle::make('export_pdf')->label('PDF Export Enabled'),
-                    Toggle::make('export_word')->label('Word Export Enabled'),
+                    Toggle::make('export_pdf')->label(__('messages.plan.export_pdf')),
+                    Toggle::make('export_word')->label(__('messages.plan.export_word')),
                     Toggle::make('website_to_exam')->label('Website to Exam Enabled'),
                     Toggle::make('pdf_to_exam')->label('PDF to Exam Enabled'),
                     Toggle::make('ppt_quiz')->label('PPT Quiz Enabled'),

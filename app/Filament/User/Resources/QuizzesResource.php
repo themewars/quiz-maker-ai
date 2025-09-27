@@ -123,7 +123,7 @@ class QuizzesResource extends Resource implements HasForms
                     ->visible(fn(Quiz $record): bool => $record->questions()->exists()),
                 Tables\Actions\EditAction::make()->hiddenLabel()->size('lg')->tooltip(__('messages.common.edit')),
                 Tables\Actions\Action::make('export_pdf')
-                    ->label('Export PDF')
+                    ->label(__('messages.quiz.export_quiz'))
                     ->icon('heroicon-o-arrow-down-tray')
                     ->url(fn(Quiz $record) => route('quiz.export.pdf', $record->id))
                     ->openUrlInNewTab()
@@ -132,7 +132,7 @@ class QuizzesResource extends Resource implements HasForms
                         return $record->questions()->exists() && $sub && optional($sub->plan)->export_pdf;
                     }),
                 Tables\Actions\Action::make('export_word')
-                    ->label('Export Word')
+                    ->label(__('messages.quiz.export_word'))
                     ->icon('heroicon-o-document-text')
                     ->url(fn(Quiz $record) => route('quiz.export.word', $record->id))
                     ->openUrlInNewTab()
