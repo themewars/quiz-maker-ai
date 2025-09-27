@@ -110,6 +110,7 @@ class CreateQuizzes extends CreateRecord
             'time' => $data['time'] ?? 0,
             'time_type' => $data['time_type'] ?? null,
             'quiz_expiry_date' => $data['quiz_expiry_date'] ?? null,
+            'is_public' => $data['is_public'] ?? false,
         ];
 
         if ($activeTab == Quiz::URL_TYPE && $data['quiz_description_url'] != null) {

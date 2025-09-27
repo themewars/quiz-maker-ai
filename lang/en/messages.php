@@ -369,6 +369,8 @@ return [
         'participants' => 'Participants',
         'expiry_date' => 'Quiz Expiry Date',
         'show_in_home' => 'Show in Home',
+        'make_public' => 'Make Public',
+        'make_public_help' => 'Enable this to make your quiz publicly accessible',
         'file_upload_hint' => 'Only PDF and DOCX files are allowed. Max size: 10MB',
         'no_selected_error_message' => 'Please select at least one answer before continuing.',
         'limit_error_message' => 'You can only select up to :limit options.',

@@ -50,6 +50,7 @@ class Quiz extends Model implements HasMedia
         'time_type',
         'quiz_expiry_date',
         'is_show_home',
+        'is_public',
     ];
 
     protected $casts = [
@@ -63,6 +64,7 @@ class Quiz extends Model implements HasMedia
         'max_questions' => 'integer',
         'unique_code' => 'string',
         'view_count' => 'integer',
+        'is_public' => 'boolean',
     ];
 
     const TEXT_TYPE = 1;
@@ -398,6 +400,14 @@ class Quiz extends Model implements HasMedia
                                                 }),
                                         ])
                                         ->columns(2),
+                                    Section::make()
+                                        ->schema([
+                                            Toggle::make('is_public')
+                                                ->label(__('messages.quiz.make_public') . ':')
+                                                ->default(false)
+                                                ->helperText(__('messages.quiz.make_public_help')),
+                                        ])
+                                        ->columns(1),
                                 ])
                                 ->columnSpan(1),
                         ])
