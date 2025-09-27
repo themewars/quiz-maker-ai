@@ -175,10 +175,19 @@ class CreateQuizzes extends CreateRecord
     - **Number of Questions**: {$data['max_questions']}
     - **Difficulty**: {$quizData['Difficulty']}
     - **Question Type**: {$quizData['question_type']}
+    - **Language**: {$quizData['language']}
+
+    **CRITICAL LANGUAGE REQUIREMENT:**
+    - You MUST write ALL questions and answers EXCLUSIVELY in {$quizData['language']} language.
+    - Do NOT use English or any other language.
+    - If the language is "Hindi", write everything in Hindi (Devanagari script).
+    - If the language is "Arabic", write everything in Arabic script.
+    - If the language is "Spanish", write everything in Spanish.
+    - This is MANDATORY - every single word must be in the specified language.
 
     **Instructions:**
 
-    1. **Language Requirement**: Write all quiz questions and answers in {$data['language']}.
+    1. **Language Requirement**: Write all quiz questions and answers in {$quizData['language']}.
     2. **Number of Questions**: Create exactly {$data['max_questions']} questions.
     3. **Difficulty Level**: Ensure each question adheres to the specified difficulty level: {$quizData['Difficulty']}.
     4. **Description Alignment**: Ensure that each question is relevant to and reflects key aspects of the provided description.
@@ -281,6 +290,7 @@ class CreateQuizzes extends CreateRecord
     - For Open Ended questions, provide no answer options (empty answers array).
     - The correct_answer_key should match the correct answer's title value(s) for Multiple Choice, Single Choice, and True/False questions.
     - Ensure that each question is diverse and well-crafted, covering various relevant concepts.
+    - **LANGUAGE COMPLIANCE**: Every single word in questions and answers MUST be in {$quizData['language']}. No exceptions.
 
     Your responses should be formatted impeccably in JSON, capturing the essence of the provided quiz details.
 
