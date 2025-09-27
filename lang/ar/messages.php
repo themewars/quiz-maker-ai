@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'إضافة سؤال جديد',
         'clear_date' => 'مسح البيانات',
         'time_out' => 'انتهى الوقت',
+        'created_by' => 'تم إنشاؤه بواسطة',
     ],
 
     'setting' => [
@@ -238,6 +239,8 @@ return [
         'your_plan_expired_and_choose_plan' => 'انتهت خطتك. الرجاء اختيار خطة لمواصلة الخدمات.',
         'cannot_delete_plan' => 'لا يمكن حذف هذه الخطة لأنها قيد الاستخدام حاليًا.',
         'default_plan_cannot_turned_off' => 'لا يمكن إيقاف تشغيل الخطة الافتراضية',
+        'export_pdf' => 'تصدير PDF مفعل',
+        'export_word' => 'تصدير Word مفعل',
     ],
 
     'subscription' => [
@@ -368,6 +371,16 @@ return [
         'file_upload_hint' => 'يُسمح فقط بملفات PDF وDOCX. الحد الأقصى للحجم: 10 ميجابايت',
         'no_selected_error_message' => 'يرجى تحديد إجابة واحدة على الأقل قبل المتابعة.',
         'limit_error_message' => 'يمكنك اختيار ما يصل إلى :limit خيارات فقط.',
+        'export_quiz' => 'تصدير PDF',
+        'export_word' => 'تصدير Word',
+        'quiz_export' => 'تصدير الاختبار',
+        'quiz_details' => 'تفاصيل الاختبار',
+        'total_questions' => 'إجمالي الأسئلة',
+        'created_at' => 'تاريخ الإنشاء',
+        'questions' => 'الأسئلة',
+        'exported_from' => 'تم التصدير من',
+        'export_date' => 'تاريخ التصدير',
+        'quiz_code' => 'رمز الاختبار',
     ],
 
     'quiz_report' => [

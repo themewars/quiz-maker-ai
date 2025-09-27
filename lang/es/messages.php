@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Agregar nueva pregunta',
         'clear_date' => 'Borrar datos',
         'time_out' => 'Tiempo agotado',
+        'created_by' => 'Creado por',
     ],
 
     'setting' => [
@@ -238,6 +239,8 @@ return [
         'your_plan_expired_and_choose_plan' => 'Tu plan ha caducado. Elija un plan para continuar con los servicios.',
         'cannot_delete_plan' => 'Este Plan no se puede eliminar porque actualmente está en uso.',
         'default_plan_cannot_turned_off' => 'El plan predeterminado no se puede desactivar',
+        'export_pdf' => 'Exportar PDF Habilitado',
+        'export_word' => 'Exportar Word Habilitado',
     ],
 
     'subscription' => [
@@ -368,6 +371,16 @@ return [
         'file_upload_hint' => 'Solo se permiten archivos PDF y DOCX. Tamaño máximo: 10 MB',
         'no_selected_error_message' => 'Por favor, seleccione al menos una respuesta antes de continuar.',
         'limit_error_message' => 'Solo puede seleccionar hasta :limit opciones.',
+        'export_quiz' => 'Exportar PDF',
+        'export_word' => 'Exportar Word',
+        'quiz_export' => 'Exportar Quiz',
+        'quiz_details' => 'Detalles del Quiz',
+        'total_questions' => 'Total de Preguntas',
+        'created_at' => 'Creado en',
+        'questions' => 'Preguntas',
+        'exported_from' => 'Exportado desde',
+        'export_date' => 'Fecha de Exportacion',
+        'quiz_code' => 'Codigo del Quiz',
     ],
 
     'quiz_report' => [

@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Neue Frage hinzufügen',
         'clear_date' => 'Daten löschen',
         'time_out' => 'Zeit abgelaufen',
+        'created_by' => 'Erstellt von',
     ],
 
     'setting' => [
