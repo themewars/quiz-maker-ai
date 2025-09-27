@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Ajouter une nouvelle question',
         'clear_date' => 'Effacer les données',
         'time_out' => 'Temps écoulé',
+        'created_by' => 'Créé par',
     ],
 
     'setting' => [
@@ -238,6 +239,8 @@ return [
         'your_plan_expired_and_choose_plan' => 'Votre forfait est expiré. Veuillez choisir un forfait pour continuer les services.',
         'cannot_delete_plan' => 'Ce plan ne peut pas être supprimé car il est actuellement utilisé.',
         'default_plan_cannot_turned_off' => 'Le forfait par défaut ne peut pas être désactivé',
+        'export_pdf' => 'Export PDF Activé',
+        'export_word' => 'Export Word Activé',
     ],
 
     'subscription' => [
@@ -368,6 +371,16 @@ return [
         'file_upload_hint' => 'Seuls les fichiers PDF et DOCX sont autorisés. Taille maximale : 10 Mo',
         'no_selected_error_message' => 'Veuillez sélectionner au moins une réponse avant de continuer.',
         'limit_error_message' => 'Vous pouvez sélectionner jusqu\'à :limit options uniquement.',
+        'export_quiz' => 'Exporter PDF',
+        'export_word' => 'Exporter Word',
+        'quiz_export' => 'Exporter Quiz',
+        'quiz_details' => 'Détails du Quiz',
+        'total_questions' => 'Total des Questions',
+        'created_at' => 'Créé le',
+        'questions' => 'Questions',
+        'exported_from' => 'Exporté depuis',
+        'export_date' => 'Date d\'Exportation',
+        'quiz_code' => 'Code du Quiz',
     ],
 
     'quiz_report' => [

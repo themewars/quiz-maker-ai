@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Dodaj nowe pytanie',
         'clear_date' => 'Wyczyść dane',
         'time_out' => 'Koniec czasu',
+        'created_by' => 'Utworzone przez',
     ],
 
     'setting' => [

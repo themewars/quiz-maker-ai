@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Aggiungi nuova domanda',
         'clear_date' => 'Cancella dati',
         'time_out' => 'Tempo scaduto',
+        'created_by' => 'Creato da',
     ],
 
     'setting' => [
@@ -238,6 +239,8 @@ return [
         'your_plan_expired_and_choose_plan' => 'Il tuo piano è scaduto. Scegli un piano per continuare i servizi.',
         'cannot_delete_plan' => 'Questo piano non può essere eliminato perché è attualmente in uso.',
         'default_plan_cannot_turned_off' => 'Il piano predefinito non può essere disattivato',
+        'export_pdf' => 'Esporta PDF Abilitato',
+        'export_word' => 'Esporta Word Abilitato',
     ],
 
     'subscription' => [
@@ -368,6 +371,16 @@ return [
         'file_upload_hint' => 'Sono consentiti solo i file PDF e DOCX. Dimensione massima: 10 MB',
         'no_selected_error_message' => 'Si prega di selezionare almeno una risposta prima di continuare.',
         'limit_error_message' => 'Puoi selezionare solo fino a :limit opzioni.',
+        'export_quiz' => 'Esporta PDF',
+        'export_word' => 'Esporta Word',
+        'quiz_export' => 'Esporta Quiz',
+        'quiz_details' => 'Dettagli Quiz',
+        'total_questions' => 'Totale Domande',
+        'created_at' => 'Creato il',
+        'questions' => 'Domande',
+        'exported_from' => 'Esportato da',
+        'export_date' => 'Data Esportazione',
+        'quiz_code' => 'Codice Quiz',
     ],
 
     'quiz_report' => [

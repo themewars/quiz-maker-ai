@@ -58,6 +58,7 @@ return [
         'add_new_question' => 'Adicionar nova pergunta',
         'clear_date' => 'Limpar dados',
         'time_out' => 'Tempo esgotado',
+        'created_by' => 'Criado por',
     ],
 
     'setting' => [
@@ -368,6 +369,16 @@ return [
         'file_upload_hint' => 'Apenas arquivos PDF e DOCX são permitidos. Tamanho máximo: 10 MB',
         'no_selected_error_message' => 'Por favor, selecione pelo menos uma resposta antes de continuar.',
         'limit_error_message' => 'Você só pode selecionar até :limit opções.',
+        'export_quiz' => 'Exportar PDF',
+        'export_word' => 'Exportar Word',
+        'quiz_export' => 'Exportar Quiz',
+        'quiz_details' => 'Detalhes do Quiz',
+        'total_questions' => 'Total de Perguntas',
+        'created_at' => 'Criado em',
+        'questions' => 'Perguntas',
+        'exported_from' => 'Exportado de',
+        'export_date' => 'Data de Exportação',
+        'quiz_code' => 'Código do Quiz',
     ],
 
     'quiz_report' => [
