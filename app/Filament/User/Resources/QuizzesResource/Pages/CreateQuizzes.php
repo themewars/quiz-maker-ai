@@ -556,12 +556,16 @@ class CreateQuizzes extends CreateRecord
                         }
                     } else {
                         Log::warning('Invalid question format in AI response: ' . json_encode($question));
-                        Log::warning('Question keys: ' . implode(', ', array_keys($question ?? [])));
                         
                         // Check if this is a string (like "class 8 hindi exam") and skip it
                         if (is_string($question)) {
                             Log::info("Skipping string element: " . $question);
                             continue;
+                        }
+                        
+                        // Only log keys if it's an array
+                        if (is_array($question)) {
+                            Log::warning('Question keys: ' . implode(', ', array_keys($question)));
                         }
                     }
                 }
