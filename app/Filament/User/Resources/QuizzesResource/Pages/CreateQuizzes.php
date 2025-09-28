@@ -138,11 +138,35 @@ class CreateQuizzes extends CreateRecord
         if (isset($this->data['file_upload']) && is_array($this->data['file_upload'])) {
             foreach ($this->data['file_upload'] as $file) {
                 if ($file instanceof \Illuminate\Http\UploadedFile) {
+                    // Check file size limit (10MB from media-library config)
+                    $maxFileSize = 10 * 1024 * 1024; // 10MB
+                    if ($file->getSize() > $maxFileSize) {
+                        Notification::make()
+                            ->danger()
+                            ->title('File Size Exceeded')
+                            ->body('File size exceeds the maximum allowed limit of 10MB. Please upload a smaller file.')
+                            ->send();
+                        $this->halt();
+                    }
+
                     $filePath = $file->store('temp-file', 'public');
                     $fileUrl = Storage::disk('public')->url($filePath);
                     $extension = pathinfo($fileUrl, PATHINFO_EXTENSION);
 
                     if ($extension === 'pdf') {
+                        // Check PDF page count limit
+                        $pageCount = getPdfPageCount($fileUrl);
+                        if (!is_null($subscription->plan->max_pdf_pages) && (int)$subscription->plan->max_pdf_pages > 0) {
+                            if ($pageCount > $subscription->plan->max_pdf_pages) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('PDF Page Limit Exceeded')
+                                    ->body("PDF has {$pageCount} pages, but your plan allows maximum {$subscription->plan->max_pdf_pages} pages. Please upgrade your plan or use a smaller PDF.")
+                                    ->send();
+                                $this->halt();
+                            }
+                        }
+
                         $description = pdfToText($fileUrl);
                         if (empty($description)) {
                             Notification::make()

@@ -76,6 +76,61 @@ if (! function_exists('pdfToText')) {
     }
 }
 
+if (! function_exists('getPdfPageCount')) {
+    function getPdfPageCount($filePath)
+    {
+        $pageCount = 0;
+        $tempFilePath = null;
+        try {
+            // Ensure the temp directory exists
+            $tempDir = public_path('uploads/temp-file');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $content = file_get_contents($filePath, false, $context);
+            if (! $content) {
+                Log::error('Failed to read PDF file content from: ' . $filePath);
+                return 0;
+            }
+            $fileName = Str::random(6) . basename($filePath);
+            $tempFilePath = $tempDir . '/' . $fileName;
+
+            $res = file_put_contents($tempFilePath, $content);
+            if (! $res) {
+                Log::error('Failed to write PDF file to temp location: ' . $tempFilePath);
+                return 0;
+            }
+
+            $parser = new Parser;
+            $pdf = $parser->parseFile($tempFilePath);
+
+            $pageCount = $pdf->getPages();
+            
+            // Clean up temp file
+            if (file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
+            
+            Log::info('PDF page count: ' . $pageCount);
+        } catch (\Exception $e) {
+            Log::error('PDF page count failed: ' . $e->getMessage() . ' for file: ' . $filePath);
+            // Clean up temp file on error
+            if ($tempFilePath && file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
+        }
+
+        return $pageCount;
+    }
+}
+
 if (! function_exists('docxToText')) {
     function docxToText(string $filePath): string
     {

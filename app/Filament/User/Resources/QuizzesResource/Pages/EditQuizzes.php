@@ -310,6 +310,19 @@ class EditQuizzes extends EditRecord
             $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
             if ($extension === 'pdf') {
+                // Check PDF page count limit
+                $pageCount = getPdfPageCount($filePath);
+                if (!is_null($subscription->plan->max_pdf_pages) && (int)$subscription->plan->max_pdf_pages > 0) {
+                    if ($pageCount > $subscription->plan->max_pdf_pages) {
+                        Notification::make()
+                            ->danger()
+                            ->title('PDF Page Limit Exceeded')
+                            ->body("PDF has {$pageCount} pages, but your plan allows maximum {$subscription->plan->max_pdf_pages} pages. Please upgrade your plan or use a smaller PDF.")
+                            ->send();
+                        return;
+                    }
+                }
+
                 $description = pdfToText($filePath);
                 if (empty($description)) {
                     Notification::make()

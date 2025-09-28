@@ -345,7 +345,9 @@ class Quiz extends Model implements HasMedia
                                                         })
                                                         ->live()
                                                         ->collection(Quiz::QUIZ_PATH)
-                                                        ->acceptedFileTypes(['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
+                                                        ->acceptedFileTypes(['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+                                                        ->maxSize(10240) // 10MB in KB
+                                                        ->helperText('Maximum file size: 10MB. PDF page limits may apply based on your plan.'),
                                                 ]),
                                         ])
                                         ->activeTab(function ($get) {
