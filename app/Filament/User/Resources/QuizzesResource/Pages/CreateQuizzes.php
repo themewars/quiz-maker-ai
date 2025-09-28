@@ -157,17 +157,23 @@ class CreateQuizzes extends CreateRecord
                         $pageCount = getPdfPageCount($tempPath);
                         $planLimit = $subscription->plan->max_pdf_pages;
                         
-                        Log::info("PDF page count: " . $pageCount . ", Plan limit: " . (is_array($planLimit) ? json_encode($planLimit) : (string)$planLimit));
+                        // Convert plan limit to integer safely
+                        $planLimitInt = 0;
+                        if (is_numeric($planLimit)) {
+                            $planLimitInt = (int)$planLimit;
+                        } elseif (is_array($planLimit) && isset($planLimit[0]) && is_numeric($planLimit[0])) {
+                            $planLimitInt = (int)$planLimit[0];
+                        }
                         
-                        if (!is_null($planLimit) && (int)$planLimit > 0) {
-                            if ($pageCount > (int)$planLimit) {
-                                Notification::make()
-                                    ->danger()
-                                    ->title('PDF Page Limit Exceeded')
-                                    ->body("PDF has " . $pageCount . " pages, but your plan allows maximum " . (int)$planLimit . " pages. Please upgrade your plan or use a smaller PDF.")
-                                    ->send();
-                                $this->halt();
-                            }
+                        Log::info("PDF page count: {$pageCount}, Plan limit: {$planLimitInt}");
+                        
+                        if ($planLimitInt > 0 && $pageCount > $planLimitInt) {
+                            Notification::make()
+                                ->danger()
+                                ->title('PDF Page Limit Exceeded')
+                                ->body("PDF has {$pageCount} pages, but your plan allows maximum {$planLimitInt} pages. Please upgrade your plan or use a smaller PDF.")
+                                ->send();
+                            $this->halt();
                         }
                     }
 
