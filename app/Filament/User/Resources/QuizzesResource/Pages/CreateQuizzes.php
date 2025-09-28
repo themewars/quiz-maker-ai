@@ -106,12 +106,15 @@ class CreateQuizzes extends CreateRecord
         $activeTab = getTabType();
 
         $descriptionFields = [
-            Quiz::TEXT_TYPE => $data['quiz_description_text'],
-            Quiz::SUBJECT_TYPE => $data['quiz_description_sub'],
-            Quiz::URL_TYPE => $data['quiz_description_url'],
+            Quiz::TEXT_TYPE => $data['quiz_description_text'] ?? null,
+            Quiz::SUBJECT_TYPE => $data['quiz_description_sub'] ?? null,
+            Quiz::URL_TYPE => $data['quiz_description_url'] ?? null,
         ];
 
         $description = $descriptionFields[$activeTab] ?? null;
+        
+        // Debug logging
+        Log::info("Active tab: " . $activeTab . ", Description: " . ($description ?? 'null'));
 
         $input = [
             'user_id' => $userId,
