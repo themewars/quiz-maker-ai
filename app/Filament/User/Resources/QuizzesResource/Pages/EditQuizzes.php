@@ -611,7 +611,45 @@ class EditQuizzes extends EditRecord
                 foreach ($quizQuestions as $index => $question) {
                     Log::info("Processing additional question " . ($index + 1) . ": " . json_encode($question));
                     
-                    if (isset($question['question'], $question['answers'])) {
+                    // Check if this is a nested array of questions
+                    if (is_array($question) && isset($question[0]) && is_array($question[0]) && isset($question[0]['question'])) {
+                        Log::info("Found nested questions array, processing " . count($question) . " questions");
+                        foreach ($question as $nestedIndex => $nestedQuestion) {
+                            if (isset($nestedQuestion['question'], $nestedQuestion['answers'])) {
+                                $questionModel = Question::create([
+                                    'quiz_id' => $this->record->id,
+                                    'title' => $nestedQuestion['question'],
+                                ]);
+
+                                // Check if answers array is not empty
+                                if (is_array($nestedQuestion['answers']) && !empty($nestedQuestion['answers'])) {
+                                    foreach ($nestedQuestion['answers'] as $answer) {
+                                        $isCorrect = false;
+                                        $correctKey = $nestedQuestion['correct_answer_key'] ?? '';
+
+                                        if (is_array($correctKey)) {
+                                            $isCorrect = in_array($answer['title'], $correctKey);
+                                        } else {
+                                            $isCorrect = $answer['title'] === $correctKey;
+                                        }
+
+                                        Answer::create([
+                                            'question_id' => $questionModel->id,
+                                            'title' => $answer['title'],
+                                            'is_correct' => $isCorrect,
+                                        ]);
+                                    }
+                                    Log::info("Additional nested question created successfully with " . count($nestedQuestion['answers']) . " answers");
+                                } else {
+                                    // For Open Ended questions or questions without answers
+                                    Log::info('Additional nested question created without answers (Open Ended): ' . $nestedQuestion['question']);
+                                }
+                                $addedCount++;
+                            } else {
+                                Log::warning('Invalid nested question format in AI response: ' . json_encode($nestedQuestion));
+                            }
+                        }
+                    } elseif (isset($question['question'], $question['answers'])) {
                         $questionModel = Question::create([
                             'quiz_id' => $this->record->id,
                             'title' => $question['question'],
