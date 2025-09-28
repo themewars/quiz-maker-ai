@@ -288,7 +288,12 @@ class EditQuizzes extends EditRecord
         $data = $this->data;
         $description = null;
 
-        if ($data['type'] == Quiz::URL_TYPE && $data['quiz_description_url'] != null) {
+        // Set description based on the active tab type
+        if ($data['type'] == Quiz::TEXT_TYPE) {
+            $description = $data['quiz_description_text'] ?? null;
+        } elseif ($data['type'] == Quiz::SUBJECT_TYPE) {
+            $description = $data['quiz_description_sub'] ?? null;
+        } elseif ($data['type'] == Quiz::URL_TYPE && $data['quiz_description_url'] != null) {
             $url = $data['quiz_description_url'];
 
             $context = stream_context_create([
