@@ -124,6 +124,15 @@ if (! function_exists('getPdfPageCount')) {
 
             $pageCount = $pdf->getPages();
             
+            // Ensure pageCount is an integer
+            if (is_array($pageCount)) {
+                $pageCount = count($pageCount);
+            } elseif (!is_numeric($pageCount)) {
+                $pageCount = 0;
+            } else {
+                $pageCount = (int)$pageCount;
+            }
+            
             // Clean up temp file only if we created it
             if ($tempFilePath !== $filePath && file_exists($tempFilePath)) {
                 unlink($tempFilePath);
