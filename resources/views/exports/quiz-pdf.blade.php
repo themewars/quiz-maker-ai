@@ -256,7 +256,7 @@
     </div>
 
     <div class="footer">
-        <div>{{ __('messages.quiz.exported_from') }} ExamWhiz AI</div>
+        <div>{{ __('messages.quiz.exported_from') }} ExamGenerator AI</div>
         <div>{{ __('messages.quiz.export_date') }}: {{ date('d/m/Y H:i:s') }}</div>
         <div>{{ __('messages.quiz.quiz_code') }}: {{ $quiz->unique_code }}</div>
     </div>
