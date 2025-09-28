@@ -165,13 +165,13 @@ class CreateQuizzes extends CreateRecord
                             $planLimitInt = (int)$planLimit[0];
                         }
                         
-                        Log::info("PDF page count: {$pageCount}, Plan limit: {$planLimitInt}");
+                        Log::info("PDF page count: " . $pageCount . ", Plan limit: " . $planLimitInt);
                         
                         if ($planLimitInt > 0 && $pageCount > $planLimitInt) {
                             Notification::make()
                                 ->danger()
                                 ->title('PDF Page Limit Exceeded')
-                                ->body("PDF has {$pageCount} pages, but your plan allows maximum {$planLimitInt} pages. Please upgrade your plan or use a smaller PDF.")
+                                ->body("PDF has " . $pageCount . " pages, but your plan allows maximum " . $planLimitInt . " pages. Please upgrade your plan or use a smaller PDF.")
                                 ->send();
                             $this->halt();
                         }
