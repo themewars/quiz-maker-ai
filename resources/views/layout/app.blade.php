@@ -12,7 +12,7 @@
     </title>
     <meta name="keywords" content="{{ !empty(getSetting()->seo_keywords) ? getSetting()->seo_keywords : getAppName() }}">
     <meta name="description"
-        content="{{ !empty(getSetting()->seo_description) ? getSetting()->seo_description : 'QuizWhiz AI is an intelligent platform that instantly converts PDFs and web content into engaging quizzes, multiple choice questions, and interactive polls for education and training.' }}">
+        content="{{ !empty(getSetting()->seo_description) ? getSetting()->seo_description : 'ExamWhiz AI is an intelligent platform that instantly converts PDFs and web content into engaging exams, multiple choice questions, and interactive polls for education and training.' }}">
 
     <link rel="icon" type="image/png" href="{{ getFaviconUrl() }}" />
     <link
@@ -335,7 +335,7 @@
             });
         });
 
-        // Quiz Category Tabs
+        // Exam Category Tabs
         const categoryPills = document.querySelectorAll('.category-pills .pill');
         const quizContents = document.querySelectorAll('.quiz-category-content');
 

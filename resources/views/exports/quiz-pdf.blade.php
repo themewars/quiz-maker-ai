@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $quiz->title }} - Quiz Export</title>
+    <title>{{ $quiz->title }} - Exam Export</title>
     @php
         $fontRegularPath = public_path('fonts/NotoSansDevanagari-Regular.ttf');
         $fontBoldPath = public_path('fonts/NotoSansDevanagari-Bold.ttf');
@@ -256,7 +256,7 @@
     </div>
 
     <div class="footer">
-        <div>{{ __('messages.quiz.exported_from') }} QuizWhiz AI</div>
+        <div>{{ __('messages.quiz.exported_from') }} ExamWhiz AI</div>
         <div>{{ __('messages.quiz.export_date') }}: {{ date('d/m/Y H:i:s') }}</div>
         <div>{{ __('messages.quiz.quiz_code') }}: {{ $quiz->unique_code }}</div>
     </div>

@@ -61,10 +61,10 @@
                 <div class="py-5 my-5"></div>
                 <div class="pt-3">
                     <p class="text-sm font-medium opacity-70">{{ __('messages.dashboard.active_quizzes') }}</p>
-                    <h4 class="text-3xl font-bold tracking-tight xl:text-2xl">{{ $activeQuiz }}</h4>
+                    <h4 class="text-3xl font-bold tracking-tight xl:text-2xl">{{ $activeExam }}</h4>
                     <p class="text-sm opacity-70">
                         <span>{{ __('messages.dashboard.total_quizzes') . ':' }}</span>
-                        <span>{{ $totalQuiz }}</span>
+                        <span>{{ $totalExam }}</span>
                     </p>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                     <p class="text-sm font-medium opacity-70">{{ __('messages.dashboard.participants') }}</p>
                     <h4 class="text-3xl font-bold tracking-tight xl:text-2xl">{{ $participant }}</h4>
                     <p class="text-sm opacity-70">
-                        <span>{{ $completedQuiz }}%</span>
+                        <span>{{ $completedExam }}%</span>
                         <span>{{ __('messages.dashboard.participants_completed_quiz') }}</span>
                     </p>
                 </div>
