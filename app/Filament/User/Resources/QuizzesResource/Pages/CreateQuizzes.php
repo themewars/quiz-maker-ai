@@ -157,7 +157,7 @@ class CreateQuizzes extends CreateRecord
                         $pageCount = getPdfPageCount($tempPath);
                         $planLimit = $subscription->plan->max_pdf_pages;
                         
-                        Log::info("PDF page count: " . $pageCount . ", Plan limit: " . (is_array($planLimit) ? json_encode($planLimit) : $planLimit));
+                        Log::info("PDF page count: " . $pageCount . ", Plan limit: " . (is_array($planLimit) ? json_encode($planLimit) : (string)$planLimit));
                         
                         if (!is_null($planLimit) && (int)$planLimit > 0) {
                             if ($pageCount > (int)$planLimit) {
