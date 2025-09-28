@@ -118,6 +118,9 @@ class CreateQuizzes extends CreateRecord
         Log::info("Form data keys: " . implode(', ', array_keys($data)));
         Log::info("quiz_description_sub: " . ($data['quiz_description_sub'] ?? 'not set'));
         Log::info("quiz_description_text: " . ($data['quiz_description_text'] ?? 'not set'));
+        Log::info("AI Type: " . getSetting()->ai_type);
+        Log::info("AI API Key exists: " . (getSetting()->gemini_api_key ? 'yes' : 'no'));
+        Log::info("Max questions for AI: " . $maxQuestions);
 
         $input = [
             'user_id' => $userId,
@@ -468,6 +471,7 @@ class CreateQuizzes extends CreateRecord
             $quizQuestions = json_decode($quizData, true);
             
             Log::info("Parsed questions count: " . (is_array($quizQuestions) ? count($quizQuestions) : 'not array'));
+            Log::info("JSON decode error: " . json_last_error_msg());
 
             $quiz = Quiz::create($input);
 
@@ -507,11 +511,16 @@ class CreateQuizzes extends CreateRecord
                 }
             } else {
                 Log::error('AI response is not a valid array: ' . $quizData);
+                Log::error('JSON decode error: ' . json_last_error_msg());
             }
 
             return $quiz;
         }
 
+        Log::error('No AI response received - quizText is empty or null');
+        Log::error('AI Type: ' . getSetting()->ai_type);
+        Log::error('Description length: ' . strlen($description ?? ''));
+        
         Notification::make()
             ->danger()
             ->title(__('messages.setting.something_went_wrong'))
