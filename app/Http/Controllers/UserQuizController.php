@@ -159,8 +159,12 @@ class UserQuizController extends AppBaseController
 
             if ($quiz->user->email) {
                 $email = $quiz->user->email;
-                Mail::to($email)
-                    ->send(new NewParticipantMail($mailData, $email));
+                try {
+                    Mail::to($email)
+                        ->send(new NewParticipantMail($mailData, $email));
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send new participant email: ' . $e->getMessage());
+                }
             }
         }
 
@@ -452,14 +456,22 @@ class UserQuizController extends AppBaseController
         $mailData['result_url'] = route('show.quizResult', $quizUser->uuid);
 
         if (isset(getSetting()->quiz_complete_mail_to_participant) && getSetting()->quiz_complete_mail_to_participant) {
-            Mail::to($quizUser->email)
-                ->send(new NotifyParticipantOfQuizCompletion($mailData, $quizUser->email));
+            try {
+                Mail::to($quizUser->email)
+                    ->send(new NotifyParticipantOfQuizCompletion($mailData, $quizUser->email));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send quiz completion email to participant: ' . $e->getMessage());
+            }
         }
 
         if (isset(getSetting()->quiz_complete_mail_to_creator) && getSetting()->quiz_complete_mail_to_creator) {
             $email = $quiz->user->email;
-            Mail::to($email)
-                ->send(new NotifyQuizOwnerOnCompletion($mailData, $email));
+            try {
+                Mail::to($email)
+                    ->send(new NotifyQuizOwnerOnCompletion($mailData, $email));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send quiz completion email to creator: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('quiz.result', $quizUser->uuid)
