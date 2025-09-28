@@ -162,7 +162,7 @@ class CreateQuizzes extends CreateRecord
                                 Notification::make()
                                     ->danger()
                                     ->title('PDF Page Limit Exceeded')
-                                    ->body("PDF has {$pageCount} pages, but your plan allows maximum {$subscription->plan->max_pdf_pages} pages. Please upgrade your plan or use a smaller PDF.")
+                                    ->body("PDF has " . $pageCount . " pages, but your plan allows maximum " . $subscription->plan->max_pdf_pages . " pages. Please upgrade your plan or use a smaller PDF.")
                                     ->send();
                                 $this->halt();
                             }
