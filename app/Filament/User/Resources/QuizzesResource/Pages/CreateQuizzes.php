@@ -114,6 +114,7 @@ class CreateQuizzes extends CreateRecord
         $description = $descriptionFields[$activeTab] ?? null;
         
         // Debug logging
+        Log::info("=== EXAM CREATION DEBUG START ===");
         Log::info("Active tab: " . $activeTab . ", Description: " . ($description ?? 'null'));
         Log::info("Form data keys: " . implode(', ', array_keys($data)));
         Log::info("quiz_description_sub: " . ($data['quiz_description_sub'] ?? 'not set'));
@@ -121,6 +122,7 @@ class CreateQuizzes extends CreateRecord
         Log::info("AI Type: " . getSetting()->ai_type);
         Log::info("AI API Key exists: " . (getSetting()->gemini_api_key ? 'yes' : 'no'));
         Log::info("Max questions for AI: " . $maxQuestions);
+        Log::info("=== EXAM CREATION DEBUG END ===");
 
         $input = [
             'user_id' => $userId,
@@ -458,9 +460,11 @@ class CreateQuizzes extends CreateRecord
             $quizText = $quizResponse['choices'][0]['message']['content'] ?? null;
         }
 
+        Log::info("=== AI RESPONSE DEBUG START ===");
         Log::info("AI response received: " . ($quizText ? 'yes' : 'no'));
         Log::info("AI Type: " . getSetting()->ai_type);
         Log::info("Description: " . substr($description ?? '', 0, 200));
+        Log::info("=== AI RESPONSE DEBUG END ===");
 
         if ($quizText) {
             $quizData = trim($quizText);
