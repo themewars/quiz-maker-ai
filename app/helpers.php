@@ -82,30 +82,41 @@ if (! function_exists('getPdfPageCount')) {
         $pageCount = 0;
         $tempFilePath = null;
         try {
-            // Ensure the temp directory exists
-            $tempDir = public_path('uploads/temp-file');
-            if (!file_exists($tempDir)) {
-                mkdir($tempDir, 0755, true);
-            }
-
-            $context = stream_context_create([
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                ],
-            ]);
-            $content = file_get_contents($filePath, false, $context);
-            if (! $content) {
-                Log::error('Failed to read PDF file content from: ' . $filePath);
+            // Check if file exists and is readable
+            if (!file_exists($filePath) || !is_readable($filePath)) {
+                Log::error('PDF file not found or not readable: ' . $filePath);
                 return 0;
             }
-            $fileName = Str::random(6) . basename($filePath);
-            $tempFilePath = $tempDir . '/' . $fileName;
 
-            $res = file_put_contents($tempFilePath, $content);
-            if (! $res) {
-                Log::error('Failed to write PDF file to temp location: ' . $tempFilePath);
-                return 0;
+            // If it's already a local file, use it directly
+            if (is_file($filePath) && !filter_var($filePath, FILTER_VALIDATE_URL)) {
+                $tempFilePath = $filePath;
+            } else {
+                // For URLs or remote files, download to temp location
+                $tempDir = public_path('uploads/temp-file');
+                if (!file_exists($tempDir)) {
+                    mkdir($tempDir, 0755, true);
+                }
+
+                $context = stream_context_create([
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ],
+                ]);
+                $content = file_get_contents($filePath, false, $context);
+                if (! $content) {
+                    Log::error('Failed to read PDF file content from: ' . $filePath);
+                    return 0;
+                }
+                $fileName = Str::random(6) . basename($filePath);
+                $tempFilePath = $tempDir . '/' . $fileName;
+
+                $res = file_put_contents($tempFilePath, $content);
+                if (! $res) {
+                    Log::error('Failed to write PDF file to temp location: ' . $tempFilePath);
+                    return 0;
+                }
             }
 
             $parser = new Parser;
@@ -113,8 +124,8 @@ if (! function_exists('getPdfPageCount')) {
 
             $pageCount = $pdf->getPages();
             
-            // Clean up temp file
-            if (file_exists($tempFilePath)) {
+            // Clean up temp file only if we created it
+            if ($tempFilePath !== $filePath && file_exists($tempFilePath)) {
                 unlink($tempFilePath);
             }
             
@@ -122,7 +133,7 @@ if (! function_exists('getPdfPageCount')) {
         } catch (\Exception $e) {
             Log::error('PDF page count failed: ' . $e->getMessage() . ' for file: ' . $filePath);
             // Clean up temp file on error
-            if ($tempFilePath && file_exists($tempFilePath)) {
+            if ($tempFilePath && $tempFilePath !== $filePath && file_exists($tempFilePath)) {
                 unlink($tempFilePath);
             }
         }

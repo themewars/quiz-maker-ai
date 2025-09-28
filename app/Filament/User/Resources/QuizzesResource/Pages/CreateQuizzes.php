@@ -149,13 +149,13 @@ class CreateQuizzes extends CreateRecord
                         $this->halt();
                     }
 
-                    $filePath = $file->store('temp-file', 'public');
-                    $fileUrl = Storage::disk('public')->url($filePath);
-                    $extension = pathinfo($fileUrl, PATHINFO_EXTENSION);
-
+                    // Check PDF page count limit before storing
+                    $extension = strtolower($file->getClientOriginalExtension());
                     if ($extension === 'pdf') {
-                        // Check PDF page count limit
-                        $pageCount = getPdfPageCount($fileUrl);
+                        $tempPath = $file->getRealPath();
+                        $pageCount = getPdfPageCount($tempPath);
+                        Log::info("PDF page count: {$pageCount}, Plan limit: {$subscription->plan->max_pdf_pages}");
+                        
                         if (!is_null($subscription->plan->max_pdf_pages) && (int)$subscription->plan->max_pdf_pages > 0) {
                             if ($pageCount > $subscription->plan->max_pdf_pages) {
                                 Notification::make()
@@ -166,7 +166,12 @@ class CreateQuizzes extends CreateRecord
                                 $this->halt();
                             }
                         }
+                    }
 
+                    $filePath = $file->store('temp-file', 'public');
+                    $fileUrl = Storage::disk('public')->url($filePath);
+
+                    if ($extension === 'pdf') {
                         $description = pdfToText($fileUrl);
                         if (empty($description)) {
                             Notification::make()
