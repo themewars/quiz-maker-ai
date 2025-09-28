@@ -64,14 +64,32 @@ class CreateQuizzes extends CreateRecord
 
         // Enforce max questions per exam and per month
         $maxQuestions = (int)($data['max_questions'] ?? 0);
-        if (!is_null($subscription->plan->max_questions_per_exam) && (int)$subscription->plan->max_questions_per_exam >= 0) {
-            if ($maxQuestions > $subscription->plan->max_questions_per_exam) {
-                $maxQuestions = $subscription->plan->max_questions_per_exam;
+        
+        // Safe conversion for max_questions_per_exam
+        $maxQuestionsPerExam = 0;
+        if (is_numeric($subscription->plan->max_questions_per_exam)) {
+            $maxQuestionsPerExam = (int)$subscription->plan->max_questions_per_exam;
+        } elseif (is_array($subscription->plan->max_questions_per_exam) && isset($subscription->plan->max_questions_per_exam[0]) && is_numeric($subscription->plan->max_questions_per_exam[0])) {
+            $maxQuestionsPerExam = (int)$subscription->plan->max_questions_per_exam[0];
+        }
+        
+        if ($maxQuestionsPerExam >= 0) {
+            if ($maxQuestions > $maxQuestionsPerExam) {
+                $maxQuestions = $maxQuestionsPerExam;
                 // also reflect back into $data used in prompts to avoid AI generating more
                 $data['max_questions'] = $maxQuestions;
             }
         }
-        if (!is_null($subscription->plan->max_questions_per_month) && (int)$subscription->plan->max_questions_per_month >= 0) {
+        
+        // Safe conversion for max_questions_per_month
+        $maxQuestionsPerMonth = 0;
+        if (is_numeric($subscription->plan->max_questions_per_month)) {
+            $maxQuestionsPerMonth = (int)$subscription->plan->max_questions_per_month;
+        } elseif (is_array($subscription->plan->max_questions_per_month) && isset($subscription->plan->max_questions_per_month[0]) && is_numeric($subscription->plan->max_questions_per_month[0])) {
+            $maxQuestionsPerMonth = (int)$subscription->plan->max_questions_per_month[0];
+        }
+        
+        if ($maxQuestionsPerMonth >= 0) {
             $periodStart = now()->startOfMonth();
             $periodEnd = now()->endOfMonth();
             // questions table doesn't have user_id; filter via related quiz
@@ -80,7 +98,7 @@ class CreateQuizzes extends CreateRecord
                     $q->where('user_id', $userId);
                 })
                 ->count();
-            if ($monthQuestions >= $subscription->plan->max_questions_per_month) {
+            if ($monthQuestions >= $maxQuestionsPerMonth) {
                 Notification::make()->danger()->title(__('You have reached your monthly question limit.'))->send();
                 $this->halt();
             }
