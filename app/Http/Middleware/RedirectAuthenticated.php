@@ -37,6 +37,12 @@ class RedirectAuthenticated extends Middleware
 
     protected function redirectTo($request): ?string
     {
-        return route('filament.auth.pages.login');
+        $panel = Filament::getCurrentPanel();
+        
+        if ($panel && $panel->getId() === 'admin') {
+            return route('filament.admin.auth.login');
+        }
+        
+        return route('filament.user.auth.login');
     }
 }
