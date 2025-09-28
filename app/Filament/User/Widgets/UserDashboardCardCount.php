@@ -36,6 +36,8 @@ class UserDashboardCardCount extends BaseWidget
             'subscription' => $subscription,
             'totalQuizzes' => $totalQuizzes,
             'activeQuizzes' => $activeQuizzes,
+            'totalExams' => $totalQuizzes,
+            'activeExams' => $activeQuizzes,
             'participants' => $participants,
             'completedPer' => $completedPer
         ];

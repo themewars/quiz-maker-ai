@@ -41,8 +41,11 @@ class AdminDashboardCardCount extends BaseWidget
             'payableAmount' => $payableAmount,
             'activeQuiz' => $activeQuiz,
             'totalQuiz' => $totalQuiz,
+            'activeExam' => $activeQuiz,
+            'totalExam' => $totalQuiz,
             'participant' => $participant,
             'completedQuiz' =>  $completedQuiz,
+            'completedExam' =>  $completedQuiz,
         ];
     }
 }
