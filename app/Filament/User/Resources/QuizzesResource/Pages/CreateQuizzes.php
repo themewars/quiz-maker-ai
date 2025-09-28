@@ -459,6 +459,8 @@ class CreateQuizzes extends CreateRecord
         }
 
         Log::info("AI response received: " . ($quizText ? 'yes' : 'no'));
+        Log::info("AI Type: " . getSetting()->ai_type);
+        Log::info("Description: " . substr($description ?? '', 0, 200));
 
         if ($quizText) {
             $quizData = trim($quizText);
@@ -584,6 +586,7 @@ class CreateQuizzes extends CreateRecord
         Log::error('No AI response received - quizText is empty or null');
         Log::error('AI Type: ' . getSetting()->ai_type);
         Log::error('Description length: ' . strlen($description ?? ''));
+        Log::error('Description content: ' . substr($description ?? '', 0, 200));
         
         Notification::make()
             ->danger()
