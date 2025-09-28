@@ -84,22 +84,34 @@ class EditQuizzes extends EditRecord
                 : $questionData;
 
             foreach ($questionsArray as $question) {
-                if (isset($question['question'], $question['answers']) && is_array($question['answers'])) {
-                    $answersOption = array_map(function ($answer) {
-                        return [
-                            'title' => $answer['title'],
-                            'is_correct' => $answer['is_correct']
+                if (isset($question['question'], $question['answers'])) {
+                    // Check if answers array is not empty
+                    if (is_array($question['answers']) && !empty($question['answers'])) {
+                        $answersOption = array_map(function ($answer) {
+                            return [
+                                'title' => $answer['title'],
+                                'is_correct' => $answer['is_correct']
+                            ];
+                        }, $question['answers']);
+
+                        $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+
+                        $data['questions'][] = [
+                            'title' => $question['question'],
+                            'answers' => $answersOption,
+                            'is_correct' => $correctAnswer,
                         ];
-                    }, $question['answers']);
-
-                    $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-
-                    $data['questions'][] = [
-                        'title' => $question['question'],
-                        'answers' => $answersOption,
-                        'is_correct' => $correctAnswer,
-
-                    ];
+                    } else {
+                        // For Open Ended questions or questions without answers
+                        $data['questions'][] = [
+                            'title' => $question['question'],
+                            'answers' => [],
+                            'is_correct' => [],
+                        ];
+                        Log::info('Question processed without answers (Open Ended): ' . $question['question']);
+                    }
+                } else {
+                    Log::warning('Invalid question format in AI response: ' . json_encode($question));
                 }
             }
         }
@@ -357,6 +369,12 @@ class EditQuizzes extends EditRecord
         - If the language is "Arabic", write everything in Arabic script.
         - If the language is "Spanish", write everything in Spanish.
         - This is MANDATORY - every single word must be in the specified language.
+
+        **CRITICAL ANSWER REQUIREMENT:**
+        - You MUST provide answers for ALL questions except Open Ended questions.
+        - For Single Choice, Multiple Choice, and True/False questions, you MUST include the answers array with proper options.
+        - Do NOT create questions without answers unless they are specifically Open Ended questions.
+        - Each answer must have a "title" field and an "is_correct" field (true/false).
 
         **Instructions:**
 

@@ -199,6 +199,12 @@ class CreateQuizzes extends CreateRecord
     - If the language is "Spanish", write everything in Spanish.
     - This is MANDATORY - every single word must be in the specified language.
 
+    **CRITICAL ANSWER REQUIREMENT:**
+    - You MUST provide answers for ALL questions except Open Ended questions.
+    - For Single Choice, Multiple Choice, and True/False questions, you MUST include the answers array with proper options.
+    - Do NOT create questions without answers unless they are specifically Open Ended questions.
+    - Each answer must have a "title" field and an "is_correct" field (true/false).
+
     **Instructions:**
 
     1. **Language Requirement**: Write all quiz questions and answers in {$quizData['language']}.
@@ -402,24 +408,34 @@ class CreateQuizzes extends CreateRecord
                             'title' => $question['question'],
                         ]);
 
-                        foreach ($question['answers'] as $answer) {
-                            $isCorrect = false;
-                            $correctKey = $question['correct_answer_key'];
+                        // Check if answers array is not empty
+                        if (is_array($question['answers']) && !empty($question['answers'])) {
+                            foreach ($question['answers'] as $answer) {
+                                $isCorrect = false;
+                                $correctKey = $question['correct_answer_key'] ?? '';
 
-                            if (is_array($correctKey)) {
-                                $isCorrect = in_array($answer['title'], $correctKey);
-                            } else {
-                                $isCorrect = $answer['title'] === $correctKey;
+                                if (is_array($correctKey)) {
+                                    $isCorrect = in_array($answer['title'], $correctKey);
+                                } else {
+                                    $isCorrect = $answer['title'] === $correctKey;
+                                }
+
+                                Answer::create([
+                                    'question_id' => $questionModel->id,
+                                    'title' => $answer['title'],
+                                    'is_correct' => $isCorrect,
+                                ]);
                             }
-
-                            Answer::create([
-                                'question_id' => $questionModel->id,
-                                'title' => $answer['title'],
-                                'is_correct' => $isCorrect,
-                            ]);
+                        } else {
+                            // For Open Ended questions or questions without answers
+                            Log::info('Question created without answers (Open Ended): ' . $question['question']);
                         }
+                    } else {
+                        Log::warning('Invalid question format in AI response: ' . json_encode($question));
                     }
                 }
+            } else {
+                Log::error('AI response is not a valid array: ' . $quizData);
             }
 
             return $quiz;
