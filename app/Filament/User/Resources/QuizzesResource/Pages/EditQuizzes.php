@@ -609,7 +609,7 @@ class EditQuizzes extends EditRecord
             if (is_array($quizQuestions)) {
                 $addedCount = 0;
                 foreach ($quizQuestions as $index => $question) {
-                    Log::info("Processing additional question " . ($index + 1) . ": " . json_encode($question));
+                    Log::info("Processing additional question " . (intval($index) + 1) . ": " . json_encode($question));
                     
                     // Check if this is a nested array of questions
                     if (is_array($question) && isset($question[0]) && is_array($question[0]) && isset($question[0]['question'])) {
