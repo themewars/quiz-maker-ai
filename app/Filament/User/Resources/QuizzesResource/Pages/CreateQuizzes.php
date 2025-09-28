@@ -472,6 +472,7 @@ class CreateQuizzes extends CreateRecord
             
             Log::info("Parsed questions count: " . (is_array($quizQuestions) ? count($quizQuestions) : 'not array'));
             Log::info("JSON decode error: " . json_last_error_msg());
+            Log::info("Full AI response structure: " . json_encode($quizQuestions));
 
             $quiz = Quiz::create($input);
             Log::info("Quiz created with ID: " . $quiz->id);
