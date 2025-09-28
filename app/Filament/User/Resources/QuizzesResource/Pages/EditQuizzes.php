@@ -264,12 +264,398 @@ class EditQuizzes extends EditRecord
                 ->color('gray')
                 ->action('regenerateQuestions'),
 
+            Action::make('addMoreQuestions')
+                ->label('Add More Questions With AI')
+                ->color('success')
+                ->action('addMoreQuestions'),
+
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
                 ->color('gray')
                 ->url(QuizzesResource::getUrl('index')),
 
         ];
+    }
+
+    public function addMoreQuestions(): void
+    {
+        $currentFormState = $this->form->getState();
+        $currentFormState['type'] = getTabType();
+        if ($currentFormState['type'] == Quiz::TEXT_TYPE) {
+            $currentFormState['quiz_description'] = $currentFormState['quiz_description_text'];
+        } elseif ($currentFormState['type'] == Quiz::SUBJECT_TYPE) {
+            $currentFormState['quiz_description'] = $currentFormState['quiz_description_sub'];
+        } elseif ($currentFormState['type'] == Quiz::URL_TYPE) {
+            $currentFormState['quiz_description'] = $currentFormState['quiz_description_url'];
+        }
+        Session::put('editedQuizDataForRegeneration', $currentFormState);
+
+        $data = $this->data;
+        $description = null;
+
+        // Set description based on the active tab type
+        if ($data['type'] == Quiz::TEXT_TYPE) {
+            $description = $data['quiz_description_text'] ?? null;
+        } elseif ($data['type'] == Quiz::SUBJECT_TYPE) {
+            $description = $data['quiz_description_sub'] ?? null;
+        } elseif ($data['type'] == Quiz::URL_TYPE && $data['quiz_description_url'] != null) {
+            $url = $data['quiz_description_url'];
+
+            $context = stream_context_create([
+                "ssl" => [
+                    "verify_peer" => false,
+                    "verify_peer_name" => false,
+                ],
+            ]);
+
+            $responseContent = file_get_contents($url, false, $context);
+            $readability = new Readability(new Configuration());
+            $readability->parse($responseContent);
+            $readability->getContent();
+            $description = $readability->getExcerpt();
+        }
+
+        if (isset($data['quiz_document']) && !empty($data['quiz_document'])) {
+            $filePath = $data['quiz_document'];
+            $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+            if ($extension === 'pdf') {
+                $description = pdfToText($filePath);
+                if (empty($description)) {
+                    Notification::make()
+                        ->warning()
+                        ->title('PDF Processing Warning')
+                        ->body('PDF text extraction failed. Please try with a different PDF file or use text input instead.')
+                        ->send();
+                }
+            } elseif ($extension === 'docx') {
+                $description = docxToText($filePath);
+                if (empty($description)) {
+                    Notification::make()
+                        ->warning()
+                        ->title('DOCX Processing Warning')
+                        ->body('DOCX text extraction failed. Please try with a different DOCX file or use text input instead.')
+                        ->send();
+                }
+            }
+        }
+
+        if (strlen($description) > 10000) {
+            $description = substr($description, 0, 10000) . '...';
+        }
+
+        // Add 20 more questions
+        $additionalQuestions = 20;
+        $subscription = getActiveSubscription();
+        if ($subscription && $subscription->plan) {
+            // Safe conversion for max_questions_per_exam
+            $maxQuestionsPerExam = 0;
+            if (is_numeric($subscription->plan->max_questions_per_exam)) {
+                $maxQuestionsPerExam = (int)$subscription->plan->max_questions_per_exam;
+            } elseif (is_array($subscription->plan->max_questions_per_exam) && isset($subscription->plan->max_questions_per_exam[0]) && is_numeric($subscription->plan->max_questions_per_exam[0])) {
+                $maxQuestionsPerExam = (int)$subscription->plan->max_questions_per_exam[0];
+            }
+            
+            // Check current question count
+            $currentQuestionCount = Question::where('quiz_id', $this->record->id)->count();
+            
+            // Ensure we don't exceed plan limits
+            if ($maxQuestionsPerExam > 0 && ($currentQuestionCount + $additionalQuestions) > $maxQuestionsPerExam) {
+                $additionalQuestions = $maxQuestionsPerExam - $currentQuestionCount;
+                if ($additionalQuestions <= 0) {
+                    Notification::make()
+                        ->danger()
+                        ->title('Question Limit Reached')
+                        ->body('You have reached the maximum number of questions allowed for your plan.')
+                        ->send();
+                    return;
+                }
+            }
+        }
+
+        $quizData = [
+            'Difficulty' => Quiz::DIFF_LEVEL[$data['diff_level']],
+            'question_type' => Quiz::QUIZ_TYPE[$data['quiz_type']],
+            'language' => getAllLanguages()[$data['language']] ?? 'English'
+        ];
+
+        $prompt = <<<PROMPT
+
+        You are an expert in crafting engaging quizzes. Based on the quiz details provided, your task is to meticulously generate {$additionalQuestions} additional questions according to the specified question type. Your output should be exclusively in properly formatted JSON.
+
+        **Quiz Details:**
+
+        - **Title**: {$data['title']}
+        - **Description**: {$description}
+        - **Number of Additional Questions**: {$additionalQuestions}
+        - **Difficulty**: {$quizData['Difficulty']}
+        - **Question Type**: {$quizData['question_type']}
+        - **Language**: {$quizData['language']}
+
+        **CRITICAL LANGUAGE REQUIREMENT:**
+        - You MUST write ALL questions and answers EXCLUSIVELY in {$quizData['language']} language.
+        - Do NOT use English or any other language.
+        - If the language is "Hindi", write everything in Hindi (Devanagari script).
+        - If the language is "Arabic", write everything in Arabic script.
+        - If the language is "Spanish", write everything in Spanish.
+        - This is MANDATORY - every single word must be in the specified language.
+
+        **CRITICAL ANSWER REQUIREMENT:**
+        - You MUST provide answers for ALL questions except Open Ended questions.
+        - For Single Choice, Multiple Choice, and True/False questions, you MUST include the answers array with proper options.
+        - Do NOT create questions without answers unless they are specifically Open Ended questions.
+        - Each answer must have a "title" field and an "is_correct" field (true/false).
+
+        **Instructions:**
+
+        1. **Language Requirement**: Write all quiz questions and answers in {$quizData['language']}.
+        2. **Number of Questions**: Create exactly {$additionalQuestions} additional questions.
+        3. **Difficulty Level**: Ensure each question adheres to the specified difficulty level: {$quizData['Difficulty']}.
+        4. **Description Alignment**: Ensure that each question is relevant to and reflects key aspects of the provided description.
+        5. **Question Type**: Follow the format specified below based on the question type:
+
+        **Question Formats:**
+
+        - **Multiple Choice**:
+            - Structure your JSON with four answer options. Mark exactly two options as `is_correct: true`. Use the following format:
+
+            [
+                {
+                    "question": "Your question text here",
+                    "answers": [
+                        {
+                            "title": "Answer Option 1",
+                            "is_correct": false
+                        },
+                        {
+                            "title": "Answer Option 2",
+                            "is_correct": true
+                        },
+                        {
+                            "title": "Answer Option 3",
+                            "is_correct": false
+                        },
+                        {
+                            "title": "Answer Option 4",
+                            "is_correct": true
+                        }
+                    ],
+                    "correct_answer_key": ["Answer Option 2", "Answer Option 4"]
+                }
+            ]
+
+        - **Single Choice**:
+            - Use the following format with exactly four options. Mark one option as `is_correct: true` and the other three as `is_correct: false`:
+
+            [
+                {
+                    "question": "Your question text here",
+                    "answers": [
+                        {
+                            "title": "Answer Option 1",
+                            "is_correct": false
+                        },
+                        {
+                            "title": "Answer Option 2",
+                            "is_correct": true
+                        },
+                        {
+                            "title": "Answer Option 3",
+                            "is_correct": false
+                        },
+                        {
+                            "title": "Answer Option 4",
+                            "is_correct": false
+                        }
+                    ],
+                    "correct_answer_key": "Answer Option 2"
+                }
+            ]
+
+        - **True/False**:
+            - Use the following format with exactly two options (True and False). Mark one option as `is_correct: true`:
+
+            [
+                {
+                    "question": "Your question text here",
+                    "answers": [
+                        {
+                            "title": "True",
+                            "is_correct": true
+                        },
+                        {
+                            "title": "False",
+                            "is_correct": false
+                        }
+                    ],
+                    "correct_answer_key": "True"
+                }
+            ]
+
+        - **Open Ended**:
+            - Use the following format with no predefined answers. The user will provide their own answer:
+
+            [
+                {
+                    "question": "Your question text here",
+                    "answers": [],
+                    "correct_answer_key": "User will provide their own answer"
+                }
+            ]
+
+        **Guidelines:**
+        - You must generate exactly **{$additionalQuestions}** additional questions.
+        - For Multiple Choice questions, ensure that there are exactly four answer options, with two options marked as `is_correct: true`.
+        - For Single Choice questions, ensure that there are exactly four answer options, with one option marked as `is_correct: true`.
+        - For True/False questions, ensure that there are exactly two answer options (True and False), with one option marked as `is_correct: true`.
+        - For Open Ended questions, provide no answer options (empty answers array).
+        - The correct_answer_key should match the correct answer's title value(s) for Multiple Choice, Single Choice, and True/False questions.
+        - Ensure that each question is diverse and well-crafted, covering various relevant concepts.
+        - **LANGUAGE COMPLIANCE**: Every single word in questions and answers MUST be in {$quizData['language']}. No exceptions.
+
+        Your responses should be formatted impeccably in JSON, capturing the essence of the provided quiz details.
+
+        PROMPT;
+
+        $aiType = getSetting()->ai_type;
+
+        if ($aiType == Quiz::GEMINI_AI) {
+            $geminiApiKey = getSetting()->gemini_api_key;
+            $model = getSetting()->gemini_ai_model;
+
+            if (! $geminiApiKey) {
+                Notification::make()
+                    ->danger()
+                    ->title(__('messages.quiz.set_openai_key_at_env'))
+                    ->send();
+                return;
+            }
+
+            $geminiResponse = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$geminiApiKey}", [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $prompt],
+                        ],
+                    ],
+                ],
+            ]);
+
+            if ($geminiResponse->failed()) {
+                Notification::make()
+                    ->danger()
+                    ->title($geminiResponse->json()['error']['message'])
+                    ->send();
+                return;
+            }
+
+            $rawText = $geminiResponse->json()['candidates'][0]['content']['parts'][0]['text'] ?? null;
+            $quizText = preg_replace('/^```(?:json)?|```$/im', '', $rawText);
+        }
+        if ($aiType == Quiz::OPEN_AI) {
+            $key = getSetting()->open_api_key;
+            $openAiKey = (! empty($key)) ? $key : config('services.open_ai.open_api_key');
+            $model = getSetting()->open_ai_model;
+
+            if (! $openAiKey) {
+                Notification::make()
+                    ->danger()
+                    ->title(__('messages.quiz.set_openai_key_at_env'))
+                    ->send();
+                return;
+            }
+
+            $quizResponse = Http::withToken($openAiKey)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                ])
+                ->timeout(90)
+                ->post('https://api.openai.com/v1/chat/completions', [
+                    'model' => $model,
+                    'messages' => [
+                        [
+                            'role' => 'user',
+                            'content' => $prompt,
+                        ],
+                    ],
+                ]);
+
+            if ($quizResponse->failed()) {
+                $error = $quizResponse->json()['error']['message'] ?? 'Unknown error occurred';
+                Notification::make()->danger()->title(__('OpenAI Error'))->body($error)->send();
+                return;
+            }
+
+            $quizText = $quizResponse['choices'][0]['message']['content'] ?? null;
+        }
+
+        if ($quizText) {
+            $quizData = trim($quizText);
+            if (stripos($quizData, '```json') === 0) {
+                $quizData = preg_replace('/^```json\s*|\s*```$/', '', $quizData);
+                $quizData = trim($quizData);
+            }
+            $quizQuestions = json_decode($quizData, true);
+
+            if (is_array($quizQuestions)) {
+                $addedCount = 0;
+                foreach ($quizQuestions as $question) {
+                    if (isset($question['question'], $question['answers'])) {
+                        $questionModel = Question::create([
+                            'quiz_id' => $this->record->id,
+                            'title' => $question['question'],
+                        ]);
+
+                        // Check if answers array is not empty
+                        if (is_array($question['answers']) && !empty($question['answers'])) {
+                            foreach ($question['answers'] as $answer) {
+                                $isCorrect = false;
+                                $correctKey = $question['correct_answer_key'] ?? '';
+
+                                if (is_array($correctKey)) {
+                                    $isCorrect = in_array($answer['title'], $correctKey);
+                                } else {
+                                    $isCorrect = $answer['title'] === $correctKey;
+                                }
+
+                                Answer::create([
+                                    'question_id' => $questionModel->id,
+                                    'title' => $answer['title'],
+                                    'is_correct' => $isCorrect,
+                                ]);
+                            }
+                        } else {
+                            // For Open Ended questions or questions without answers
+                            Log::info('Additional question created without answers (Open Ended): ' . $question['question']);
+                        }
+                        $addedCount++;
+                    } else {
+                        Log::warning('Invalid question format in AI response: ' . json_encode($question));
+                    }
+                }
+                
+                Notification::make()
+                    ->success()
+                    ->title('Questions Added Successfully')
+                    ->body("Successfully added {$addedCount} additional questions to your exam.")
+                    ->send();
+            } else {
+                Log::error('AI response is not a valid array: ' . $quizData);
+                Notification::make()
+                    ->danger()
+                    ->title('Error Adding Questions')
+                    ->body('Failed to generate additional questions. Please try again.')
+                    ->send();
+            }
+        } else {
+            Notification::make()
+                ->danger()
+                ->title('Error Adding Questions')
+                ->body('Failed to generate additional questions. Please try again.')
+                ->send();
+        }
     }
 
     public function regenerateQuestions(): void

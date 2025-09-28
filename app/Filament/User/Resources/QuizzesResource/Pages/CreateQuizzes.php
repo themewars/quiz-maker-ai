@@ -62,8 +62,8 @@ class CreateQuizzes extends CreateRecord
             $this->halt();
         }
 
-        // Enforce max questions per exam and per month
-        $maxQuestions = (int)($data['max_questions'] ?? 0);
+        // Default to 10 questions for initial creation (faster generation)
+        $maxQuestions = 10;
         
         // Safe conversion for max_questions_per_exam
         $maxQuestionsPerExam = 0;
@@ -73,13 +73,13 @@ class CreateQuizzes extends CreateRecord
             $maxQuestionsPerExam = (int)$subscription->plan->max_questions_per_exam[0];
         }
         
-        if ($maxQuestionsPerExam >= 0) {
-            if ($maxQuestions > $maxQuestionsPerExam) {
-                $maxQuestions = $maxQuestionsPerExam;
-                // also reflect back into $data used in prompts to avoid AI generating more
-                $data['max_questions'] = $maxQuestions;
-            }
+        // Ensure we don't exceed plan limits
+        if ($maxQuestionsPerExam > 0 && $maxQuestions > $maxQuestionsPerExam) {
+            $maxQuestions = $maxQuestionsPerExam;
         }
+        
+        // Update data for AI prompt
+        $data['max_questions'] = $maxQuestions;
         
         // Safe conversion for max_questions_per_month
         $maxQuestionsPerMonth = 0;
