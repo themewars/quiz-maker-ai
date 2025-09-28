@@ -115,6 +115,9 @@ class CreateQuizzes extends CreateRecord
         
         // Debug logging
         Log::info("Active tab: " . $activeTab . ", Description: " . ($description ?? 'null'));
+        Log::info("Form data keys: " . implode(', ', array_keys($data)));
+        Log::info("quiz_description_sub: " . ($data['quiz_description_sub'] ?? 'not set'));
+        Log::info("quiz_description_text: " . ($data['quiz_description_text'] ?? 'not set'));
 
         $input = [
             'user_id' => $userId,
@@ -452,13 +455,19 @@ class CreateQuizzes extends CreateRecord
             $quizText = $quizResponse['choices'][0]['message']['content'] ?? null;
         }
 
+        Log::info("AI response received: " . ($quizText ? 'yes' : 'no'));
+
         if ($quizText) {
             $quizData = trim($quizText);
+            Log::info("Raw AI response: " . substr($quizData, 0, 500));
+            
             if (stripos($quizData, '```json') === 0) {
                 $quizData = preg_replace('/^```json\s*|\s*```$/', '', $quizData);
                 $quizData = trim($quizData);
             }
             $quizQuestions = json_decode($quizData, true);
+            
+            Log::info("Parsed questions count: " . (is_array($quizQuestions) ? count($quizQuestions) : 'not array'));
 
             $quiz = Quiz::create($input);
 
