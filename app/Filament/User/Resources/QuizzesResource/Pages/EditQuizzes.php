@@ -267,7 +267,11 @@ class EditQuizzes extends EditRecord
             Action::make('addMoreQuestions')
                 ->label('Add More Questions With AI')
                 ->color('success')
-                ->action('addMoreQuestions'),
+                ->action('addMoreQuestions')
+                ->requiresConfirmation()
+                ->modalHeading('Add More Questions')
+                ->modalDescription('This will add 20 more questions to your exam using AI.')
+                ->modalSubmitActionLabel('Add Questions'),
 
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
@@ -695,11 +699,19 @@ class EditQuizzes extends EditRecord
                     }
                 }
                 
-                Notification::make()
-                    ->success()
-                    ->title('Questions Added Successfully')
-                    ->body("Successfully added {$addedCount} additional questions to your exam.")
-                    ->send();
+                if ($addedCount > 0) {
+                    Notification::make()
+                        ->success()
+                        ->title('Questions Added Successfully')
+                        ->body("Successfully added {$addedCount} additional questions to your exam.")
+                        ->send();
+                } else {
+                    Notification::make()
+                        ->warning()
+                        ->title('No Questions Added')
+                        ->body('No additional questions were generated. Please try again.')
+                        ->send();
+                }
             } else {
                 Log::error('AI response is not a valid array: ' . $quizData);
                 Log::error('JSON decode error: ' . json_last_error_msg());
