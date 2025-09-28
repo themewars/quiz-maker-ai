@@ -478,6 +478,7 @@ class CreateQuizzes extends CreateRecord
             Log::info("Quiz created with ID: " . $quiz->id);
 
             if (is_array($quizQuestions)) {
+                $questionsCreated = 0;
                 foreach ($quizQuestions as $index => $question) {
                     Log::info("Processing question " . (intval($index) + 1) . ": " . json_encode($question));
                     
@@ -510,9 +511,11 @@ class CreateQuizzes extends CreateRecord
                                         ]);
                                     }
                                     Log::info("Nested question created successfully with " . count($nestedQuestion['answers']) . " answers");
+                                    $questionsCreated++;
                                 } else {
                                     // For Open Ended questions or questions without answers
                                     Log::info('Nested question created without answers (Open Ended): ' . $nestedQuestion['question']);
+                                    $questionsCreated++;
                                 }
                             } else {
                                 Log::warning('Invalid nested question format in AI response: ' . json_encode($nestedQuestion));
@@ -543,9 +546,11 @@ class CreateQuizzes extends CreateRecord
                                 ]);
                             }
                             Log::info("Question created successfully with " . count($question['answers']) . " answers");
+                            $questionsCreated++;
                         } else {
                             // For Open Ended questions or questions without answers
                             Log::info('Question created without answers (Open Ended): ' . $question['question']);
+                            $questionsCreated++;
                         }
                     } else {
                         Log::warning('Invalid question format in AI response: ' . json_encode($question));
@@ -558,6 +563,8 @@ class CreateQuizzes extends CreateRecord
                         }
                     }
                 }
+                
+                Log::info("Total questions created in this loop: " . $questionsCreated);
                 
                 // Check if any questions were actually created
                 $totalQuestions = Question::where('quiz_id', $quiz->id)->count();
