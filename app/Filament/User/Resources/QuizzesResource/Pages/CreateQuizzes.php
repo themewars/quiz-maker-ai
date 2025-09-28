@@ -474,6 +474,7 @@ class CreateQuizzes extends CreateRecord
             Log::info("JSON decode error: " . json_last_error_msg());
 
             $quiz = Quiz::create($input);
+            Log::info("Quiz created with ID: " . $quiz->id);
 
             if (is_array($quizQuestions)) {
                 foreach ($quizQuestions as $index => $question) {
@@ -549,6 +550,14 @@ class CreateQuizzes extends CreateRecord
                         Log::warning('Invalid question format in AI response: ' . json_encode($question));
                         Log::warning('Question keys: ' . implode(', ', array_keys($question ?? [])));
                     }
+                }
+                
+                // Check if any questions were actually created
+                $totalQuestions = Question::where('quiz_id', $quiz->id)->count();
+                Log::info("Total questions created for quiz {$quiz->id}: {$totalQuestions}");
+                
+                if ($totalQuestions == 0) {
+                    Log::error("No questions were created despite AI response being processed");
                 }
             } else {
                 Log::error('AI response is not a valid array: ' . $quizData);
