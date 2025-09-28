@@ -476,9 +476,7 @@ class CreateQuizzes extends CreateRecord
             $quiz = Quiz::create($input);
 
             if (is_array($quizQuestions)) {
-                foreach ($quizQuestions as $index => $question) {
-                    Log::info("Processing question " . ($index + 1) . ": " . json_encode($question));
-                    
+                foreach ($quizQuestions as $question) {
                     if (isset($question['question'], $question['answers'])) {
                         $questionModel = Question::create([
                             'quiz_id' => $quiz->id,
@@ -503,14 +501,12 @@ class CreateQuizzes extends CreateRecord
                                     'is_correct' => $isCorrect,
                                 ]);
                             }
-                            Log::info("Question created successfully with " . count($question['answers']) . " answers");
                         } else {
                             // For Open Ended questions or questions without answers
                             Log::info('Question created without answers (Open Ended): ' . $question['question']);
                         }
                     } else {
                         Log::warning('Invalid question format in AI response: ' . json_encode($question));
-                        Log::warning('Question keys: ' . implode(', ', array_keys($question ?? [])));
                     }
                 }
             } else {

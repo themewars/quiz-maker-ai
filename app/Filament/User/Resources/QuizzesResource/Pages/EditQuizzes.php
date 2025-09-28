@@ -591,17 +591,26 @@ class EditQuizzes extends EditRecord
             $quizText = $quizResponse['choices'][0]['message']['content'] ?? null;
         }
 
+        Log::info("Additional questions AI response received: " . ($quizText ? 'yes' : 'no'));
+
         if ($quizText) {
             $quizData = trim($quizText);
+            Log::info("Raw additional questions AI response: " . substr($quizData, 0, 500));
+            
             if (stripos($quizData, '```json') === 0) {
                 $quizData = preg_replace('/^```json\s*|\s*```$/', '', $quizData);
                 $quizData = trim($quizData);
             }
             $quizQuestions = json_decode($quizData, true);
+            
+            Log::info("Parsed additional questions count: " . (is_array($quizQuestions) ? count($quizQuestions) : 'not array'));
+            Log::info("JSON decode error: " . json_last_error_msg());
 
             if (is_array($quizQuestions)) {
                 $addedCount = 0;
-                foreach ($quizQuestions as $question) {
+                foreach ($quizQuestions as $index => $question) {
+                    Log::info("Processing additional question " . ($index + 1) . ": " . json_encode($question));
+                    
                     if (isset($question['question'], $question['answers'])) {
                         $questionModel = Question::create([
                             'quiz_id' => $this->record->id,
@@ -626,6 +635,7 @@ class EditQuizzes extends EditRecord
                                     'is_correct' => $isCorrect,
                                 ]);
                             }
+                            Log::info("Additional question created successfully with " . count($question['answers']) . " answers");
                         } else {
                             // For Open Ended questions or questions without answers
                             Log::info('Additional question created without answers (Open Ended): ' . $question['question']);
@@ -633,6 +643,7 @@ class EditQuizzes extends EditRecord
                         $addedCount++;
                     } else {
                         Log::warning('Invalid question format in AI response: ' . json_encode($question));
+                        Log::warning('Question keys: ' . implode(', ', array_keys($question ?? [])));
                     }
                 }
                 
@@ -643,6 +654,7 @@ class EditQuizzes extends EditRecord
                     ->send();
             } else {
                 Log::error('AI response is not a valid array: ' . $quizData);
+                Log::error('JSON decode error: ' . json_last_error_msg());
                 Notification::make()
                     ->danger()
                     ->title('Error Adding Questions')
@@ -650,6 +662,7 @@ class EditQuizzes extends EditRecord
                     ->send();
             }
         } else {
+            Log::error('No AI response received for additional questions - quizText is empty or null');
             Notification::make()
                 ->danger()
                 ->title('Error Adding Questions')
