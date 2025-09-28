@@ -299,8 +299,22 @@ class EditQuizzes extends EditRecord
 
             if ($extension === 'pdf') {
                 $description = pdfToText($filePath);
+                if (empty($description)) {
+                    Notification::make()
+                        ->warning()
+                        ->title('PDF Processing Warning')
+                        ->body('PDF text extraction failed. Please try with a different PDF file or use text input instead.')
+                        ->send();
+                }
             } elseif ($extension === 'docx') {
                 $description = docxToText($filePath);
+                if (empty($description)) {
+                    Notification::make()
+                        ->warning()
+                        ->title('DOCX Processing Warning')
+                        ->body('DOCX text extraction failed. Please try with a different DOCX file or use text input instead.')
+                        ->send();
+                }
             }
         }
 

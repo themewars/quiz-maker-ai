@@ -27,6 +27,12 @@ if (! function_exists('pdfToText')) {
         $text = '';
         $tempFilePath = null;
         try {
+            // Ensure the temp directory exists
+            $tempDir = public_path('uploads/temp-file');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
             $context = stream_context_create([
                 'ssl' => [
                     'verify_peer' => false,
@@ -35,13 +41,15 @@ if (! function_exists('pdfToText')) {
             ]);
             $content = file_get_contents($filePath, false, $context);
             if (! $content) {
+                Log::error('Failed to read PDF file content from: ' . $filePath);
                 return '';
             }
             $fileName = Str::random(6) . basename($filePath);
-            $tempFilePath = public_path('uploads/temp-file/' . $fileName);
+            $tempFilePath = $tempDir . '/' . $fileName;
 
             $res = file_put_contents($tempFilePath, $content);
             if (! $res) {
+                Log::error('Failed to write PDF file to temp location: ' . $tempFilePath);
                 return '';
             }
 
@@ -49,11 +57,19 @@ if (! function_exists('pdfToText')) {
             $pdf = $parser->parseFile($tempFilePath);
 
             $text = $pdf->getText();
-
-            // unlink($tempFilePath);
+            
+            // Clean up temp file
+            if (file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
+            
+            Log::info('PDF text extraction successful. Text length: ' . strlen($text));
         } catch (\Exception $e) {
-            // unlink($tempFilePath);
-            Log::error($e->getMessage());
+            Log::error('PDF text extraction failed: ' . $e->getMessage() . ' for file: ' . $filePath);
+            // Clean up temp file on error
+            if ($tempFilePath && file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
         }
 
         return $text;
@@ -66,6 +82,12 @@ if (! function_exists('docxToText')) {
         $text = '';
         $tempFilePath = null;
         try {
+            // Ensure the temp directory exists
+            $tempDir = public_path('uploads/temp-file');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
             $context = stream_context_create([
                 'ssl' => [
                     'verify_peer' => false,
@@ -74,12 +96,14 @@ if (! function_exists('docxToText')) {
             ]);
             $content = file_get_contents($filePath, false, $context);
             if (! $content) {
+                Log::error('Failed to read DOCX file content from: ' . $filePath);
                 return '';
             }
             $fileName = Str::random(6) . basename($filePath);
-            $tempFilePath = public_path('uploads/temp-file/' . $fileName);
+            $tempFilePath = $tempDir . '/' . $fileName;
             $res = file_put_contents($tempFilePath, $content);
             if (! $res) {
+                Log::error('Failed to write DOCX file to temp location: ' . $tempFilePath);
                 return '';
             }
             $phpWord = IOFactory::load($tempFilePath);
@@ -91,11 +115,19 @@ if (! function_exists('docxToText')) {
                     }
                 }
 
-                // unlink($tempFilePath);
+                // Clean up temp file
+                if (file_exists($tempFilePath)) {
+                    unlink($tempFilePath);
+                }
+                
+                Log::info('DOCX text extraction successful. Text length: ' . strlen($text));
             }
         } catch (\Exception $e) {
-            // unlink($tempFilePath);
-            Log::error($e->getMessage());
+            Log::error('DOCX text extraction failed: ' . $e->getMessage() . ' for file: ' . $filePath);
+            // Clean up temp file on error
+            if ($tempFilePath && file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
         }
 
         return $text;
