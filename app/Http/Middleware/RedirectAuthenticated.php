@@ -40,9 +40,9 @@ class RedirectAuthenticated extends Middleware
         $panel = Filament::getCurrentPanel();
         
         if ($panel && $panel->getId() === 'admin') {
-            return route('filament.admin.auth.login');
+            return '/admin/login';
         }
         
-        return route('filament.user.auth.login');
+        return '/login';
     }
 }
