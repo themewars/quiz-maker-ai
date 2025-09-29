@@ -340,6 +340,8 @@ class EditQuizzes extends EditRecord
                         ->warning()
                         ->title('PDF Processing Warning')
                         ->body('PDF text extraction failed. Please try with a different PDF file or use text input instead.')
+                        ->persistent()
+                        ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                         ->send();
                 }
             } elseif ($extension === 'docx') {
@@ -349,6 +351,8 @@ class EditQuizzes extends EditRecord
                         ->warning()
                         ->title('DOCX Processing Warning')
                         ->body('DOCX text extraction failed. Please try with a different DOCX file or use text input instead.')
+                        ->persistent()
+                        ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                         ->send();
                 }
             }
@@ -723,6 +727,8 @@ class EditQuizzes extends EditRecord
                         ->success()
                         ->title('Questions Added Successfully')
                         ->body("Successfully added {$addedCount} additional questions to your exam.")
+                        ->persistent()
+                        ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                         ->send();
                     // Refresh the form so the placeholder counter updates
                     $this->fillForm();
@@ -731,6 +737,8 @@ class EditQuizzes extends EditRecord
                         ->warning()
                         ->title('No Questions Added')
                         ->body('No additional questions were generated. Please try again.')
+                        ->persistent()
+                        ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                         ->send();
                 }
             } else {
@@ -740,6 +748,8 @@ class EditQuizzes extends EditRecord
                     ->danger()
                     ->title('Error Adding Questions')
                     ->body('Failed to generate additional questions. Please try again.')
+                    ->persistent()
+                    ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                     ->send();
             }
         } else {
@@ -748,6 +758,8 @@ class EditQuizzes extends EditRecord
                 ->danger()
                 ->title('Error Adding Questions')
                 ->body('Failed to generate additional questions. Please try again.')
+                ->persistent()
+                ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                 ->send();
         }
     }

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 use Filament\Notifications\Notification;
+use Filament\Notifications\Actions\Action as NotificationAction;
 use App\Mail\NotifyQuizOwnerOnCompletion;
 use App\Http\Requests\CreateUserQuizRequest;
 use App\Mail\NotifyParticipantOfQuizCompletion;

@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Filament\Notifications\Actions\Action as NotificationAction;
 
 class QuizzesResource extends Resource implements HasForms
 {
@@ -99,6 +100,8 @@ class QuizzesResource extends Resource implements HasForms
                         Notification::make()
                             ->success()
                             ->title($state ? __('messages.quiz.quiz_active_successfully') : __('messages.quiz.quiz_deactive_successfully'))
+                            ->persistent()
+                            ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                             ->send();
                         return $state;
                     }),

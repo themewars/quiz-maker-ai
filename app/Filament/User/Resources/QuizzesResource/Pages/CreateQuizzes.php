@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Filament\Notifications\Actions\Action as NotificationAction;
 
 class CreateQuizzes extends CreateRecord
 {
@@ -46,7 +47,10 @@ class CreateQuizzes extends CreateRecord
         $userId = Auth::id();
         $subscription = getActiveSubscription();
         if (!$subscription || !$subscription->plan) {
-            Notification::make()->danger()->title(__('messages.plan.your_plan_expired_and_choose_plan'))->send();
+            Notification::make()->danger()->title(__('messages.plan.your_plan_expired_and_choose_plan'))
+                ->persistent()
+                ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
+                ->send();
             $this->halt();
         }
 
@@ -58,7 +62,10 @@ class CreateQuizzes extends CreateRecord
             Quiz::SINGLE_CHOICE => 'single_choice',
         ];
         if (!empty($allowedTypes) && isset($map[$incomingType]) && !in_array($map[$incomingType], $allowedTypes)) {
-            Notification::make()->danger()->title(__('This question type is not allowed in your plan.'))->send();
+            Notification::make()->danger()->title(__('This question type is not allowed in your plan.'))
+                ->persistent()
+                ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
+                ->send();
             $this->halt();
         }
 
@@ -99,7 +106,10 @@ class CreateQuizzes extends CreateRecord
                 })
                 ->count();
             if ($monthQuestions >= $maxQuestionsPerMonth) {
-                Notification::make()->danger()->title(__('You have reached your monthly question limit.'))->send();
+                Notification::make()->danger()->title(__('You have reached your monthly question limit.'))
+                    ->persistent()
+                    ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
+                    ->send();
                 $this->halt();
             }
         }
@@ -175,6 +185,8 @@ class CreateQuizzes extends CreateRecord
                             ->danger()
                             ->title('File Size Exceeded')
                             ->body('File size exceeds the maximum allowed limit of 10MB. Please upload a smaller file.')
+                            ->persistent()
+                            ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                             ->send();
                         $this->halt();
                     }
@@ -202,6 +214,8 @@ class CreateQuizzes extends CreateRecord
                                 ->danger()
                                 ->title('PDF Page Limit Exceeded')
                                 ->body("PDF has " . $pageCount . " pages, but your plan allows maximum " . $planLimitInt . " pages. Please upgrade your plan or use a smaller PDF.")
+                                ->persistent()
+                                ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                                 ->send();
                             $this->halt();
                         } else {
@@ -219,6 +233,8 @@ class CreateQuizzes extends CreateRecord
                                 ->warning()
                                 ->title('PDF Processing Warning')
                                 ->body('PDF text extraction failed. Please try with a different PDF file or use text input instead.')
+                                ->persistent()
+                                ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                                 ->send();
                         }
                     } elseif ($extension === 'docx') {
@@ -228,6 +244,8 @@ class CreateQuizzes extends CreateRecord
                                 ->warning()
                                 ->title('DOCX Processing Warning')
                                 ->body('DOCX text extraction failed. Please try with a different DOCX file or use text input instead.')
+                                ->persistent()
+                                ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                                 ->send();
                         }
                     }
@@ -396,6 +414,8 @@ class CreateQuizzes extends CreateRecord
                 Notification::make()
                     ->danger()
                     ->title(__('messages.quiz.set_openai_key_at_env'))
+                    ->persistent()
+                    ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                     ->send();
                 $this->halt();
             }
@@ -416,6 +436,8 @@ class CreateQuizzes extends CreateRecord
                 Notification::make()
                     ->danger()
                     ->title($geminiResponse->json()['error']['message'])
+                    ->persistent()
+                    ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                     ->send();
                 $this->halt();
             }
@@ -432,6 +454,8 @@ class CreateQuizzes extends CreateRecord
                 Notification::make()
                     ->danger()
                     ->title(__('messages.quiz.set_openai_key_at_env'))
+                    ->persistent()
+                    ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                     ->send();
                 $this->halt();
             }
@@ -453,7 +477,10 @@ class CreateQuizzes extends CreateRecord
 
             if ($quizResponse->failed()) {
                 $error = $quizResponse->json()['error']['message'] ?? 'Unknown error occurred';
-                Notification::make()->danger()->title(__('OpenAI Error'))->body($error)->send();
+                Notification::make()->danger()->title(__('OpenAI Error'))->body($error)
+                    ->persistent()
+                    ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
+                    ->send();
                 $this->halt();
             }
 
@@ -599,6 +626,8 @@ class CreateQuizzes extends CreateRecord
         Notification::make()
             ->danger()
             ->title(__('messages.setting.something_went_wrong'))
+            ->persistent()
+            ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
             ->send();
         $this->halt();
     }
