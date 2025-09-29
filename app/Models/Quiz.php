@@ -24,6 +24,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Placeholder;
 
 class Quiz extends Model implements HasMedia
 {
@@ -505,6 +506,26 @@ class Quiz extends Model implements HasMedia
                             return $quizType != Quiz::OPEN_ENDED;
                         }),
                 ]),
+
+            Section::make()
+                ->schema([
+                    Placeholder::make('created_questions_counter')
+                        ->label('Created Questions')
+                        ->content(function ($record) {
+                            if (!$record) {
+                                return '—';
+                            }
+                            try {
+                                return (string) $record->questions()->count();
+                            } catch (\Throwable $e) {
+                                return '—';
+                            }
+                        })
+                        ->hint('Updates after AI adds more questions')
+                        ->columnSpanFull(),
+                ])
+                ->visible(fn(string $operation): bool => $operation === 'edit')
+                ->columnSpanFull(),
 
         ];
     }

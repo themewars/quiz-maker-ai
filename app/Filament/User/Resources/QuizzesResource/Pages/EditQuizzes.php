@@ -714,6 +714,8 @@ class EditQuizzes extends EditRecord
                         ->title('Questions Added Successfully')
                         ->body("Successfully added {$addedCount} additional questions to your exam.")
                         ->send();
+                    // Refresh the form so the placeholder counter updates
+                    $this->fillForm();
                 } else {
                     Notification::make()
                         ->warning()
