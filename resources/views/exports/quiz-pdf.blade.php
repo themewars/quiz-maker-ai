@@ -9,9 +9,9 @@
         $fontBoldPath = public_path('fonts/NotoSansDevanagari-Bold.ttf');
         $fontRegularData = file_exists($fontRegularPath) ? base64_encode(file_get_contents($fontRegularPath)) : null;
         $fontBoldData = file_exists($fontBoldPath) ? base64_encode(file_get_contents($fontBoldPath)) : null;
-        $includeDescription = request()->boolean('include_description', true);
-        $includeAnswers = request()->boolean('include_answers', true);
-        $markCorrect = request()->boolean('mark_correct', true);
+        $includeDescription = (string)request()->input('include_description', '1') === '1';
+        $includeAnswers = (string)request()->input('include_answers', '1') === '1';
+        $markCorrect = (string)request()->input('mark_correct', '1') === '1';
     @endphp
     <style>
         /* Embed Hindi-capable fonts so viewers without system fonts still see text */

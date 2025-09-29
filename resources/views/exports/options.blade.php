@@ -60,8 +60,11 @@
                 </div>
                 <div class="field row-span card">
                     <label>Include elements</label>
+                    <input type="hidden" name="include_description" value="0">
                     <label><input type="checkbox" name="include_description" value="1" checked> Include description</label>
+                    <input type="hidden" name="include_answers" value="0">
                     <label><input type="checkbox" name="include_answers" value="1" checked> Include answers</label>
+                    <input type="hidden" name="mark_correct" value="0">
                     <label><input type="checkbox" name="mark_correct" value="1" checked> Mark correct answers</label>
                     <div class="hint">Uncheck to generate a "Question-only" sheet for students.</div>
                 </div>
