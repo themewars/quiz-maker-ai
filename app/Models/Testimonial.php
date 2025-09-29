@@ -27,7 +27,15 @@ class Testimonial extends Model implements HasMedia
 
     public function getIconAttribute()
     {
-        return $this->getFirstMediaUrl(self::ICON);
+        $url = $this->getFirstMediaUrl(self::ICON);
+        if (empty($url)) {
+            return asset('images/logo-ai.png');
+        }
+        // If URL is relative like "/uploads/...", normalize to absolute and avoid double slashes
+        if (!preg_match('#^https?://#i', $url)) {
+            $url = asset(ltrim($url, '/'));
+        }
+        return $url;
     }
 
     public static function getForm(): array
