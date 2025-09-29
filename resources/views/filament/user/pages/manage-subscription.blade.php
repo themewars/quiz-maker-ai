@@ -48,14 +48,25 @@
                 <div class="px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm sm:col-span-2 lg:col-span-3">
                     Allowed question types:
                     @php($allowed = (array)($plan->allowed_question_types ?? []))
-                    @php($map = [0=>'Multiple choice',1=>'Single choice',2=>'True/False',3=>'Open ended'])
-                    <span class="font-semibold">
-                        @if(empty($allowed))
-                            All
-                        @else
-                            {{ implode(', ', array_map(function($key) use ($map){ return $map[$key] ?? $key; }, array_keys(array_flip($allowed)) )) }}
-                        @endif
-                    </span>
+                    @php($labelMap = [
+                        0 => 'Multiple choice',
+                        1 => 'Single choice',
+                        2 => 'True/False',
+                        3 => 'Open ended',
+                        'multiple_choice' => 'Multiple choice',
+                        'single_choice' => 'Single choice',
+                        'true_false' => 'True/False',
+                        'open_ended' => 'Open ended',
+                    ])
+                    @php($labels = [])
+                    @if(empty($allowed))
+                        @php($labels = ['All'])
+                    @else
+                        @foreach($allowed as $item)
+                            @php($labels[] = $labelMap[$item] ?? (is_string($item) ? ucfirst(str_replace('_',' ', $item)) : (string)$item))
+                        @endforeach
+                    @endif
+                    <span class="font-semibold">{{ implode(', ', array_unique($labels)) }}</span>
                 </div>
             </div>
         </div>
