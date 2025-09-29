@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Forms;
 use fivefilters\Readability\Readability;
 use fivefilters\Readability\Configuration;
 use App\Filament\User\Resources\QuizzesResource;
@@ -268,10 +269,18 @@ class EditQuizzes extends EditRecord
                 ->label('Add More Questions With AI')
                 ->color('success')
                 ->action('addMoreQuestions')
-                ->requiresConfirmation()
                 ->modalHeading('Add More Questions')
-                ->modalDescription('This will add 20 more questions to your exam using AI.')
-                ->modalSubmitActionLabel('Add Questions'),
+                ->modalDescription('Choose how many additional questions to add using AI.')
+                ->modalSubmitActionLabel('Add Questions')
+                ->form([
+                    Forms\Components\TextInput::make('count')
+                        ->label('Number of questions')
+                        ->numeric()
+                        ->minValue(1)
+                        ->maxValue(50)
+                        ->default(10)
+                        ->required(),
+                ]),
 
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
@@ -281,7 +290,7 @@ class EditQuizzes extends EditRecord
         ];
     }
 
-    public function addMoreQuestions(): void
+    public function addMoreQuestions(array $actionData = []): void
     {
         $currentFormState = $this->form->getState();
         $currentFormState['type'] = getTabType();
@@ -348,8 +357,8 @@ class EditQuizzes extends EditRecord
             $description = substr($description, 0, 10000) . '...';
         }
 
-        // Add 20 more questions
-        $additionalQuestions = 20;
+        // Use requested number of additional questions (default 10)
+        $additionalQuestions = max(1, (int)($actionData['count'] ?? 10));
         $subscription = getActiveSubscription();
         if ($subscription && $subscription->plan) {
             // Safe conversion for max_questions_per_exam
