@@ -68,6 +68,14 @@ class Setting extends Model implements HasMedia
         'new_participant_mail_to_creator',
         'quiz_complete_mail_to_participant',
         'quiz_complete_mail_to_creator',
+        'custom_legal_pages',
+    ];
+
+    /**
+     * Attribute casting
+     */
+    protected $casts = [
+        'custom_legal_pages' => 'array',
     ];
 
     const APP_LOGO = 'app_logo';

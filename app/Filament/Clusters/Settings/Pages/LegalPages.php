@@ -38,7 +38,9 @@ class LegalPages extends Page implements HasForms
             'terms_and_condition' => $seeting->terms_and_condition,
             'privacy_policy' => $seeting->privacy_policy,
             'cookie_policy' => $seeting->cookie_policy,
-            'custom_legal_pages' => $seeting->custom_legal_pages ?? [],
+            'custom_legal_pages' => is_array($seeting->custom_legal_pages)
+                ? $seeting->custom_legal_pages
+                : (empty($seeting->custom_legal_pages) ? [] : (json_decode($seeting->custom_legal_pages, true) ?? [])),
         ]);
     }
 
