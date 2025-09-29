@@ -948,7 +948,27 @@
                                             <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
-                                        <span>Create up to {{ $plan->no_of_quiz ?? 0 }} quizzes</span>
+                                        <span>Max exams: {{ (int)($plan->no_of_quiz ?? 0) > 0 ? (int)$plan->no_of_quiz : 'Unlimited' }}</span>
+                                    </li>
+                                    <li class="feature-item">
+                                        <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                        <span>Max questions per exam: {{ (int)($plan->max_questions_per_exam ?? 0) > 0 ? (int)$plan->max_questions_per_exam : 'Unlimited' }}</span>
+                                    </li>
+                                    <li class="feature-item">
+                                        <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                        <span>Monthly question limit: {{ (int)($plan->max_questions_per_month ?? -1) >= 0 ? (int)$plan->max_questions_per_month : 'Unlimited' }}</span>
+                                    </li>
+                                    <li class="feature-item">
+                                        <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                        <span>Max PDF pages: {{ (int)($plan->max_pdf_pages ?? 0) > 0 ? (int)$plan->max_pdf_pages : 'Unlimited' }}</span>
+                                    </li>
+                                    <li class="feature-item">
+                                        <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                        <span>PDF export: {{ $plan->export_pdf ? 'Enabled' : 'Disabled' }}</span>
+                                    </li>
+                                    <li class="feature-item">
+                                        <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                        <span>Word export: {{ $plan->export_word ? 'Enabled' : 'Disabled' }}</span>
                                     </li>
                                     @if ($loop->index == 0)
                                         <li class="feature-item disabled">
