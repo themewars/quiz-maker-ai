@@ -94,12 +94,12 @@ class QuizSetting extends Page
                             ->label(__('messages.quiz.num_of_questions') . ':'),
                         ToggleButtons::make('public_default')
                             ->label(__('messages.quiz.make_public') . ':')
-                            ->options(['1' => __('messages.setting.yes'), '0' => __('messages.setting.no')])
+                            ->options(['1' => 'Yes', '0' => 'No'])
                             ->inline()
                             ->required(),
                         ToggleButtons::make('show_on_home_default')
-                            ->label(__('messages.quiz.show_home') . ':')
-                            ->options(['1' => __('messages.setting.yes'), '0' => __('messages.setting.no')])
+                            ->label('Show on Home:')
+                            ->options(['1' => 'Yes', '0' => 'No'])
                             ->inline()
                             ->required(),
                     ])->columns(2),
@@ -118,22 +118,22 @@ class QuizSetting extends Page
                             ->required(),
                         ToggleButtons::make('include_description_default')
                             ->label('Include description:')
-                            ->options(['1' => __('messages.setting.yes'), '0' => __('messages.setting.no')])
+                            ->options(['1' => 'Yes', '0' => 'No'])
                             ->inline()
                             ->required(),
                         ToggleButtons::make('include_answers_default')
                             ->label('Include answers:')
-                            ->options(['1' => __('messages.setting.yes'), '0' => __('messages.setting.no')])
+                            ->options(['1' => 'Yes', '0' => 'No'])
                             ->inline()
                             ->required(),
                         ToggleButtons::make('mark_correct_default')
                             ->label('Mark correct answers:')
-                            ->options(['1' => __('messages.setting.yes'), '0' => __('messages.setting.no')])
+                            ->options(['1' => 'Yes', '0' => 'No'])
                             ->inline()
                             ->required(),
                         ToggleButtons::make('show_qr_on_export')
                             ->label('Show QR code on export footer:')
-                            ->options(['1' => __('messages.setting.yes'), '0' => __('messages.setting.no')])
+                            ->options(['1' => 'Yes', '0' => 'No'])
                             ->inline()
                             ->required(),
                     ])->columns(2),
@@ -142,7 +142,7 @@ class QuizSetting extends Page
                     ->schema([
                         ToggleButtons::make('enable_public_share_link')
                             ->label('Enable public share link by default:')
-                            ->options(['1' => __('messages.setting.yes'), '0' => __('messages.setting.no')])
+                            ->options(['1' => 'Yes', '0' => 'No'])
                             ->inline()
                             ->required(),
                     ]),
