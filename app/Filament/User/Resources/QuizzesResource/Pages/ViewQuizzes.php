@@ -23,16 +23,16 @@ class ViewQuizzes extends ViewRecord
     {
         return [
             Action::make('export_pdf')
-                ->label(__('messages.quiz.export_quiz'))
+                ->label('PDF')
                 ->color('success')
-                ->icon('heroicon-o-document-arrow-down')
+                ->icon('heroicon-o-arrow-down-tray')
                 ->url(route('quiz.export.options', $this->record->id))
                 ->openUrlInNewTab()
                 ->visible(fn(Quiz $record): bool => $record->questions()->exists()),
             Action::make('export_word')
-                ->label(__('messages.quiz.export_word'))
+                ->label('Word')
                 ->color('info')
-                ->icon('heroicon-o-document-text')
+                ->icon('heroicon-o-document-arrow-down')
                 ->url(route('quiz.export.word', $this->record->id))
                 ->openUrlInNewTab()
                 ->visible(fn(Quiz $record): bool => $record->questions()->exists()),
