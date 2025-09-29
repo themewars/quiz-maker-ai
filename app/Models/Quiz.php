@@ -511,15 +511,9 @@ class Quiz extends Model implements HasMedia
                 ->schema([
                     Placeholder::make('created_questions_counter')
                         ->label('Created Questions')
-                        ->content(function ($record) {
-                            if (!$record) {
-                                return '—';
-                            }
-                            try {
-                                return (string) $record->questions()->count();
-                            } catch (\Throwable $e) {
-                                return '—';
-                            }
+                        ->content(function (?\Illuminate\Database\Eloquent\Model $record) {
+                            if (! $record) return '—';
+                            return (string) $record->questions()->count();
                         })
                         ->hint('Updates after AI adds more questions')
                         ->columnSpanFull(),
