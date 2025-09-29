@@ -16,6 +16,35 @@
     @php($sub = getActiveSubscription())
     @if($sub && $sub->plan)
         @php($plan = $sub->plan)
+        @php(
+            $userId = auth()->id()
+        )
+        @php(
+            $createdExams = \App\Models\Quiz::where('user_id', $userId)->count()
+        )
+        @php(
+            $examLimit = (int)($plan->no_of_quiz ?? 0)
+        )
+        @php(
+            $examsLeft = $examLimit > 0 ? max(0, $examLimit - $createdExams) : null
+        )
+        @php(
+            $periodStart = now()->startOfMonth()
+        )
+        @php(
+            $periodEnd = now()->endOfMonth()
+        )
+        @php(
+            $monthQuestions = \App\Models\Question::whereBetween('created_at', [$periodStart, $periodEnd])
+                ->whereHas('quiz', function($q) use ($userId){ $q->where('user_id', $userId); })
+                ->count()
+        )
+        @php(
+            $monthLimit = (int)($plan->max_questions_per_month ?? -1)
+        )
+        @php(
+            $monthLeft = $monthLimit >= 0 ? max(0, $monthLimit - $monthQuestions) : null
+        )
         <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
             <div class="flex items-center justify-between flex-wrap gap-3">
                 <div>
@@ -28,13 +57,19 @@
             </div>
             <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 <div class="px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm">
-                    Max exams: <span class="font-semibold">{{ (int)($plan->no_of_quiz ?? 0) > 0 ? (int)$plan->no_of_quiz : 'Unlimited' }}</span>
+                    Max exams: <span class="font-semibold">{{ $examLimit > 0 ? $examLimit : 'Unlimited' }}</span>
+                    @if(!is_null($examsLeft))
+                        <span class="text-gray-500">(used {{ $createdExams }}, left {{ $examsLeft }})</span>
+                    @endif
                 </div>
                 <div class="px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm">
                     Max questions per exam: <span class="font-semibold">{{ (int)($plan->max_questions_per_exam ?? 0) > 0 ? (int)$plan->max_questions_per_exam : 'Unlimited' }}</span>
                 </div>
                 <div class="px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm">
-                    Monthly question limit: <span class="font-semibold">{{ (int)($plan->max_questions_per_month ?? -1) >= 0 ? (int)$plan->max_questions_per_month : 'Unlimited' }}</span>
+                    Monthly question limit: <span class="font-semibold">{{ $monthLimit >= 0 ? $monthLimit : 'Unlimited' }}</span>
+                    @if(!is_null($monthLeft))
+                        <span class="text-gray-500">(used {{ $monthQuestions }}, left {{ $monthLeft }})</span>
+                    @endif
                 </div>
                 <div class="px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm">
                     Max PDF pages: <span class="font-semibold">{{ (int)($plan->max_pdf_pages ?? 0) > 0 ? (int)$plan->max_pdf_pages : 'Unlimited' }}</span>
