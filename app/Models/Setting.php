@@ -43,6 +43,7 @@ class Setting extends Model implements HasMedia
         'terms_and_condition',
         'privacy_policy',
         'cookie_policy',
+        'custom_legal_pages',
         'open_api_key',
         'open_ai_model',
         'hero_sub_title',

@@ -11,6 +11,8 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Actions\Action;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
@@ -36,6 +38,7 @@ class LegalPages extends Page implements HasForms
             'terms_and_condition' => $seeting->terms_and_condition,
             'privacy_policy' => $seeting->privacy_policy,
             'cookie_policy' => $seeting->cookie_policy,
+            'custom_legal_pages' => $seeting->custom_legal_pages ?? [],
         ]);
     }
 
@@ -61,6 +64,16 @@ class LegalPages extends Page implements HasForms
                 RichEditor::make('cookie_policy')
                     ->label(__('messages.home.cookie_policy'))
                     ->placeholder(__('messages.home.cookie_policy')),
+                Repeater::make('custom_legal_pages')
+                    ->label('Additional Pages')
+                    ->addActionLabel('Add page')
+                    ->schema([
+                        TextInput::make('title')->label('Page title')->required(),
+                        TextInput::make('slug')->label('Slug')->helperText('Unique URL slug, e.g., refund-policy')->required(),
+                        RichEditor::make('content')->label('Content')->required(),
+                    ])
+                    ->default([])
+                    ->grid(1),
             ])
             ->columns(1)
             ->statePath('data');
