@@ -26,7 +26,7 @@ class ViewQuizzes extends ViewRecord
                 ->label(__('messages.quiz.export_quiz'))
                 ->color('success')
                 ->icon('heroicon-o-document-arrow-down')
-                ->url(route('quiz.export.pdf', $this->record->id))
+                ->url(route('quiz.export.options', $this->record->id))
                 ->openUrlInNewTab()
                 ->visible(fn(Quiz $record): bool => $record->questions()->exists()),
             Action::make('export_word')

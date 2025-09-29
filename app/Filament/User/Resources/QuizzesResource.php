@@ -128,7 +128,7 @@ class QuizzesResource extends Resource implements HasForms
                 Tables\Actions\Action::make('export_pdf')
                     ->label(__('messages.quiz.export_quiz'))
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->url(fn(Quiz $record) => route('quiz.export.pdf', $record->id))
+                    ->url(fn(Quiz $record) => route('quiz.export.options', $record->id))
                     ->openUrlInNewTab()
                     ->visible(function(Quiz $record){
                         $sub = getActiveSubscription();

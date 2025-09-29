@@ -9,6 +9,9 @@
         $fontBoldPath = public_path('fonts/NotoSansDevanagari-Bold.ttf');
         $fontRegularData = file_exists($fontRegularPath) ? base64_encode(file_get_contents($fontRegularPath)) : null;
         $fontBoldData = file_exists($fontBoldPath) ? base64_encode(file_get_contents($fontBoldPath)) : null;
+        $includeDescription = request()->boolean('include_description', true);
+        $includeAnswers = request()->boolean('include_answers', true);
+        $markCorrect = request()->boolean('mark_correct', true);
     @endphp
     <style>
         /* Embed Hindi-capable fonts so viewers without system fonts still see text */
@@ -190,7 +193,7 @@
         <div class="quiz-meta">{{ __('messages.common.created_by') }}: {{ $quiz->user->name ?? 'N/A' }}</div>
     </div>
 
-    @if($quiz->quiz_description)
+    @if($includeDescription && $quiz->quiz_description)
     <div class="quiz-description">
         <strong>{{ __('messages.quiz.description') }}:</strong><br>
         {{ $quiz->quiz_description }}
@@ -235,12 +238,13 @@
             <div class="question-number">{{ $index + 1 }}.</div>
             <div class="question-text">{{ $question->title }}</div>
             
-            @if($question->answers->count() > 0)
+            @if($includeAnswers && $question->answers->count() > 0)
             <div class="answers">
                 @foreach($question->answers as $answerIndex => $answer)
+                @php($isCorrect = $markCorrect ? $answer->is_correct : false)
                 <div class="answer">
                     <span class="answer-option">{{ chr(65 + $answerIndex) }})</span>
-                    <span class="answer-text {{ $answer->is_correct ? 'correct-answer' : '' }}">
+                    <span class="answer-text {{ $isCorrect ? 'correct-answer' : '' }}">
                         {{ $answer->title }}
                     </span>
                 </div>

@@ -12,6 +12,19 @@ use Illuminate\Support\Facades\Auth;
 
 class QuizExportController extends Controller
 {
+    public function exportOptions(Request $request, Quiz $quiz)
+    {
+        if ($quiz->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to quiz');
+        }
+
+        $quiz->load(['questions.answers', 'category', 'user']);
+
+        return view('exports.options', [
+            'quiz' => $quiz,
+        ]);
+    }
+
     public function exportToPdf(Request $request, Quiz $quiz)
     {
         // Check if user owns this quiz
@@ -39,8 +52,12 @@ class QuizExportController extends Controller
             $filePath = $tmpPath . '/quiz_' . $quiz->id . '_' . date('Ymd_His') . '.pdf';
 
             $chromePath = env('BROWSERSHOT_CHROME_PATH');
+            $paper = strtoupper($request->input('paper', 'A4'));
+            $orientation = strtolower($request->input('orientation', 'portrait')) === 'landscape' ? 'landscape' : 'portrait';
+
             $b = Browsershot::html($html)
-                ->format('A4')
+                ->format($paper)
+                ->landscape($orientation === 'landscape')
                 ->margins(0, 0, 0, 0)
                 ->showBackground()
                 ->emulateMedia('print')
@@ -68,8 +85,8 @@ class QuizExportController extends Controller
                 ])->render();
 
                 $pdf = SnappyPdf::loadHTML($html)
-                    ->setPaper('a4')
-                    ->setOrientation('portrait')
+                    ->setPaper($paper)
+                    ->setOrientation($orientation)
                     ->setOption('encoding', 'UTF-8')
                     ->setOption('margin-top', 0)
                     ->setOption('margin-right', 0)
@@ -89,7 +106,7 @@ class QuizExportController extends Controller
                     'language' => $currentLanguage
                 ]);
 
-                $pdf->setPaper('A4', 'portrait');
+                $pdf->setPaper($paper, $orientation);
                 $pdf->setOptions([
                     'defaultFont' => 'DejaVu Sans',
                     'isRemoteEnabled' => true,
