@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 use Filament\Notifications\Notification;
+use Filament\Notifications\Actions\Action as NotificationAction;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Forms;
 use fivefilters\Readability\Readability;
@@ -378,8 +379,17 @@ class EditQuizzes extends EditRecord
                 if ($additionalQuestions <= 0) {
                     Notification::make()
                         ->danger()
+                        ->icon('heroicon-o-exclamation-triangle')
                         ->title('Question Limit Reached')
                         ->body('You have reached the maximum number of questions allowed for your plan.')
+                        ->persistent()
+                        ->actions([
+                            NotificationAction::make('close')
+                                ->label('Close')
+                                ->button()
+                                ->color('gray')
+                                ->close(),
+                        ])
                         ->send();
                     return;
                 }
