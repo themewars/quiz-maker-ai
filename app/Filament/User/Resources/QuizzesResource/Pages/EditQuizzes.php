@@ -279,7 +279,7 @@ class EditQuizzes extends EditRecord
                         ->numeric()
                         ->minValue(1)
                         ->maxValue(50)
-                        ->default(10)
+                        ->default((int)(getUserSettings('default_questions_count') ?? 10))
                         ->required(),
                 ]),
 

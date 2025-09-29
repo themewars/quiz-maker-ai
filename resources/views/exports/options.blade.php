@@ -43,8 +43,9 @@
                 <div class="field">
                     <label for="paper">Paper size</label>
                     <select id="paper" name="paper">
+                        @php($paperDefault = getUserSettings('default_paper') ?? 'A4')
                         @foreach($paperOptions as $key => $label)
-                            <option value="{{ $key }}">{{ $label }}</option>
+                            <option value="{{ $key }}" {{ $paperDefault === $key ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                     <div class="hint">Choose standard sizes like A4, A3, Letter, Legal.</div>
@@ -52,20 +53,24 @@
                 <div class="field">
                     <label for="orientation">Orientation</label>
                     <select id="orientation" name="orientation">
+                        @php($orientationDefault = getUserSettings('default_orientation') ?? 'portrait')
                         @foreach($orientationOptions as $key => $label)
-                            <option value="{{ $key }}">{{ $label }}</option>
+                            <option value="{{ $key }}" {{ $orientationDefault === $key ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                     <div class="hint">Portrait is default; Landscape fits wider content.</div>
                 </div>
                 <div class="field row-span card">
                     <label>Include elements</label>
+                    @php($descDef = (int)(getUserSettings('include_description_default') ?? 1))
+                    @php($ansDef = (int)(getUserSettings('include_answers_default') ?? 1))
+                    @php($markDef = (int)(getUserSettings('mark_correct_default') ?? 1))
                     <input type="hidden" name="include_description" value="0">
-                    <label><input type="checkbox" name="include_description" value="1" checked> Include description</label>
+                    <label><input type="checkbox" name="include_description" value="1" {{ $descDef ? 'checked' : '' }}> Include description</label>
                     <input type="hidden" name="include_answers" value="0">
-                    <label><input type="checkbox" name="include_answers" value="1" checked> Include answers</label>
+                    <label><input type="checkbox" name="include_answers" value="1" {{ $ansDef ? 'checked' : '' }}> Include answers</label>
                     <input type="hidden" name="mark_correct" value="0">
-                    <label><input type="checkbox" name="mark_correct" value="1" checked> Mark correct answers</label>
+                    <label><input type="checkbox" name="mark_correct" value="1" {{ $markDef ? 'checked' : '' }}> Mark correct answers</label>
                     <div class="hint">Uncheck to generate a "Question-only" sheet for students.</div>
                 </div>
             </div>

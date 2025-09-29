@@ -36,7 +36,7 @@ class QuizExportController extends Controller
         $quiz->load(['questions.answers', 'category', 'user']);
 
         // Get current language
-        $currentLanguage = session('language', 'en');
+        $currentLanguage = session('language', getUserSettings('default_language') ?? 'en');
         
         // Try Chrome (Browsershot) first – best Indic shaping support
         try {
@@ -52,8 +52,12 @@ class QuizExportController extends Controller
             $filePath = $tmpPath . '/quiz_' . $quiz->id . '_' . date('Ymd_His') . '.pdf';
 
             $chromePath = env('BROWSERSHOT_CHROME_PATH');
-            $paper = strtoupper($request->input('paper', 'A4'));
-            $orientation = strtolower($request->input('orientation', 'portrait')) === 'landscape' ? 'landscape' : 'portrait';
+            $paper = strtoupper($request->input('paper', getUserSettings('default_paper') ?? 'A4'));
+            $orientation = strtolower($request->input('orientation', getUserSettings('default_orientation') ?? 'portrait')) === 'landscape' ? 'landscape' : 'portrait';
+            $paper = strtoupper($request->input('paper', getUserSettings('default_paper') ?? 'A4'));
+            $orientation = strtolower($request->input('orientation', getUserSettings('default_orientation') ?? 'portrait')) === 'landscape' ? 'landscape' : 'portrait';
+            $paper = strtoupper($request->input('paper', getUserSettings('default_paper') ?? 'A4'));
+            $orientation = strtolower($request->input('orientation', getUserSettings('default_orientation') ?? 'portrait')) === 'landscape' ? 'landscape' : 'portrait';
 
             $b = Browsershot::html($html)
                 ->format($paper)

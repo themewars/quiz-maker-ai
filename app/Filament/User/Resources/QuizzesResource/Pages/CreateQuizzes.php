@@ -69,8 +69,9 @@ class CreateQuizzes extends CreateRecord
             $this->halt();
         }
 
-        // Default to 10 questions for initial creation (faster generation)
-        $maxQuestions = 10;
+        // Apply user default questions count (fallback to 10)
+        $userDefaultCount = (int) (getUserSettings('default_questions_count') ?? 10);
+        $maxQuestions = max(1, $userDefaultCount);
         
         // Safe conversion for max_questions_per_exam
         $maxQuestionsPerExam = 0;
@@ -141,16 +142,17 @@ class CreateQuizzes extends CreateRecord
             'quiz_description' => $description,
             'type' => $activeTab,
             'status' => 1,
-            'quiz_type' => $data['quiz_type'] ?? 0,
+            'quiz_type' => $data['quiz_type'] ?? (int)(getUserSettings('default_question_type') ?? 0),
             'max_questions' => $maxQuestions,
-            'diff_level' => $data['diff_level'] ?? 0,
+            'diff_level' => $data['diff_level'] ?? (int)(getUserSettings('default_difficulty') ?? 0),
             'unique_code' => generateUniqueCode(),
-            'language' => $data['language'] ?? 'en',
+            'language' => $data['language'] ?? (getUserSettings('default_language') ?? 'en'),
             'time_configuration' => $data['time_configuration'] ?? 0,
             'time' => $data['time'] ?? 0,
             'time_type' => $data['time_type'] ?? null,
             'quiz_expiry_date' => $data['quiz_expiry_date'] ?? null,
-            'is_public' => $data['is_public'] ?? false,
+            'is_public' => $data['is_public'] ?? ((int)(getUserSettings('public_default') ?? 0) === 1),
+            'is_show_home' => $data['is_show_home'] ?? ((int)(getUserSettings('show_on_home_default') ?? 0) === 1),
         ];
 
         if ($activeTab == Quiz::URL_TYPE && $data['quiz_description_url'] != null) {
