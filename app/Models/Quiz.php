@@ -278,6 +278,10 @@ class Quiz extends Model implements HasMedia
                                         ->tabs([
                                             Tab::make('Text')
                                                 ->label(__('messages.quiz.text'))
+                                                ->icon('heroicon-m-question-mark-circle')
+                                                ->extraAttributes([
+                                                    'title' => __('messages.quiz.text_tab_help'),
+                                                ])
                                                 ->schema([
                                                     Textarea::make('quiz_description_text')
                                                         ->label(__('messages.quiz.description') . ':')
@@ -297,6 +301,10 @@ class Quiz extends Model implements HasMedia
                                                 ]),
                                             Tab::make('Subject')
                                                 ->label(__('messages.quiz.subject'))
+                                                ->icon('heroicon-m-question-mark-circle')
+                                                ->extraAttributes([
+                                                    'title' => __('messages.quiz.subject_tab_help'),
+                                                ])
                                                 ->schema([
                                                     TextInput::make('quiz_description_sub')
                                                         ->label(__('messages.quiz.subject') . ':')
@@ -317,6 +325,10 @@ class Quiz extends Model implements HasMedia
                                                 ]),
                                             Tab::make('URL')
                                                 ->label(__('messages.quiz.url'))
+                                                ->icon('heroicon-m-question-mark-circle')
+                                                ->extraAttributes([
+                                                    'title' => __('messages.quiz.url_tab_help'),
+                                                ])
                                                 ->schema([
                                                     TextInput::make('quiz_description_url')
                                                         ->label(__('messages.quiz.url') . ':')
@@ -335,6 +347,10 @@ class Quiz extends Model implements HasMedia
                                                 ]),
                                             Tab::make('Upload')
                                                 ->label(__('messages.quiz.upload'))
+                                                ->icon('heroicon-m-question-mark-circle')
+                                                ->extraAttributes([
+                                                    'title' => __('messages.quiz.upload_tab_help'),
+                                                ])
                                                 ->schema([
                                                     SpatieMediaLibraryFileUpload::make('file_upload')
                                                         ->label(__('messages.quiz.document') . ':')
