@@ -253,7 +253,9 @@ class QuizExportController extends Controller
 
         // Title slide
         $slide = $ppt->createSlide();
-        $slide->setBackground(new SlideBgColor(new PptColor('FFFFFFFF')));
+        $bg = new SlideBgColor();
+        $bg->setColor(new PptColor('FFFFFFFF'));
+        $slide->setBackground($bg);
         $shape = $slide->createRichTextShape()->setHeight(100)->setWidth(900)->setOffsetX(40)->setOffsetY(150);
         $shape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $shape->getActiveParagraph()->getFont()->setColor(new PptColor('FF333333'));
@@ -261,7 +263,9 @@ class QuizExportController extends Controller
 
         foreach ($quiz->questions as $index => $question) {
             $slide = $ppt->createSlide();
-            $slide->setBackground(new SlideBgColor(new PptColor('FFFFFFFF')));
+            $bg2 = new SlideBgColor();
+            $bg2->setColor(new PptColor('FFFFFFFF'));
+            $slide->setBackground($bg2);
 
             // Question text
             $qShape = $slide->createRichTextShape()->setHeight(200)->setWidth(900)->setOffsetX(40)->setOffsetY(40);
