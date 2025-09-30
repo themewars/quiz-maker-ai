@@ -285,6 +285,7 @@ class Quiz extends Model implements HasMedia
                                                 ->schema([
                                                     Textarea::make('quiz_description_text')
                                                         ->label(__('messages.quiz.description') . ':')
+                                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('messages.quiz.text_tab_help'))
                                                         ->placeholder(__('messages.quiz.quiz_description'))
                                                         ->formatStateUsing(function ($get, $operation) {
                                                             if ($operation == 'edit' && $get('type') == 1) {
@@ -308,6 +309,7 @@ class Quiz extends Model implements HasMedia
                                                 ->schema([
                                                     TextInput::make('quiz_description_sub')
                                                         ->label(__('messages.quiz.subject') . ':')
+                                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('messages.quiz.subject_tab_help'))
                                                         ->placeholder(__('messages.quiz.e_g_biology'))
                                                         ->formatStateUsing(function ($get, $operation) {
                                                             if ($operation == 'edit' && $get('type') == 2) {
@@ -332,6 +334,7 @@ class Quiz extends Model implements HasMedia
                                                 ->schema([
                                                     TextInput::make('quiz_description_url')
                                                         ->label(__('messages.quiz.url') . ':')
+                                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('messages.quiz.url_tab_help'))
                                                         ->formatStateUsing(function ($get, $operation) {
                                                             if ($operation == 'edit' && $get('type') == 3) {
                                                                 return $get('quiz_description');
