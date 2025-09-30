@@ -269,8 +269,14 @@ class QuizExportController extends Controller
 
             if ($question->answers->count() > 0) {
                 $aShape = $slide->createRichTextShape()->setHeight(400)->setWidth(900)->setOffsetX(60)->setOffsetY(160);
+                $first = true;
                 foreach ($question->answers as $aIndex => $answer) {
-                    $run = $aShape->createTextRun(chr(65 + $aIndex) . ') ' . $answer->title . "\n");
+                    if (! $first) {
+                        // Start a new paragraph for each answer to avoid implicit null-colored breaks
+                        $aShape->createParagraph();
+                    }
+                    $first = false;
+                    $run = $aShape->createTextRun(chr(65 + $aIndex) . ') ' . $answer->title);
                     $run->getFont()->setSize(16)->setColor(new PptColor($answer->is_correct ? 'FF2ECC71' : 'FF444444'));
                 }
             }
