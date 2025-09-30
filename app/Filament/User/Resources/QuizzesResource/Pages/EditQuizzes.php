@@ -147,6 +147,34 @@ class EditQuizzes extends EditRecord
             Action::make('back')
                 ->label(__('messages.common.back'))
                 ->url($this->getResource()::getUrl('index')),
+            Action::make('manageTeachers')
+                ->label('Manage Teachers')
+                ->icon('heroicon-o-user-group')
+                ->visible(function(){
+                    $sub = getActiveSubscription();
+                    return $sub && optional($sub->plan)->multi_teacher;
+                })
+                ->form([
+                    \Filament\Forms\Components\Select::make('teachers')
+                        ->label('Co-Teachers')
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                        ->options(\App\Models\User::where('id', '!=', auth()->id())->pluck('name','id'))
+                        ->default(fn() => $this->record?->teachers()->pluck('users.id')->toArray() ?? [])
+                ])
+                ->action(function(array $data){
+                    if(!$this->record) return;
+                    $sub = getActiveSubscription();
+                    if(!($sub && optional($sub->plan)->multi_teacher)){
+                        Notification::make()->danger()->title('Your plan does not allow multiple teachers.')->send();
+                        return;
+                    }
+                    $teacherIds = $data['teachers'] ?? [];
+                    $teacherIds = array_values(array_diff($teacherIds, [auth()->id()]));
+                    $this->record->teachers()->sync($teacherIds);
+                    Notification::make()->success()->title('Teachers updated.')->send();
+                }),
         ];
     }
 
