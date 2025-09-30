@@ -336,6 +336,16 @@ class EditQuizzes extends EditRecord
                 ->color('gray')
                 ->url(QuizzesResource::getUrl('index')),
 
+            // Show after questions are added via AI to guide user to edit
+            Action::make('edit_questions')
+                ->label('Edit Questions')
+                ->color('warning')
+                ->visible(function(){
+                    return Session::has('just_added_questions');
+                })
+                ->url(fn() => QuizzesResource::getUrl('edit', ['record' => $this->record?->id]))
+                ->extraAttributes(['style' => 'margin-left:8px;']),
+
         ];
     }
 
@@ -799,6 +809,7 @@ class EditQuizzes extends EditRecord
                         ->persistent()
                         ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                         ->send();
+                    Session::put('just_added_questions', true);
                     // Hard refresh to ensure Livewire state fully reloads with DB
                     $this->record->refresh();
                     $this->redirect($this->getResource()::getUrl('edit', ['record' => $this->record->id]));
