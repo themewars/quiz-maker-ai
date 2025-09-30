@@ -36,6 +36,7 @@ class UserPanelProvider extends PanelProvider
             ->path('user')
             ->brandName(getAppName())
             ->brandLogo(fn() => view('filament.logo'))
+            ->brandLogoHeight('2.5rem')
             ->favicon(getFaviconUrl())
             ->colors([
                 'primary' => Color::Purple,

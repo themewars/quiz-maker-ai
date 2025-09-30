@@ -1,1 +1,3 @@
-<a href="{{ route('home') }}"><img width="50" height="50" src="{{ getAppLogo() }}" alt="{{ getAppName() }}"></a>
+<a href="{{ route('home') }}">
+	<img class="h-10 w-auto" src="{{ getAppLogo() }}" alt="{{ getAppName() }}">
+</a>
