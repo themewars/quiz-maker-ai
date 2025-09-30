@@ -78,8 +78,8 @@
                 </div>
                 </div>
                 <div class="trust-badge">
-                <div class="colored-badge quiz-badge">
-                    <span>QUIZ MASTER</span>
+                <div class="colored-badge exam-badge">
+                    <span>EXAM MASTER</span>
                 </div>
                 </div>
                 <div class="trust-badge">
@@ -127,8 +127,8 @@
                                                 stroke-linejoin="round" />
                                         </svg>
                                     </div>
-                                    <h3>{{ __('messages.home.pdf_to_quiz') }}</h3>
-                                    <p class="feature-description">{{ __('messages.home.pdf_to_quiz_description') }}</p>
+                                    <h3>{{ __('messages.home.pdf_to_exam') }}</h3>
+                                    <p class="feature-description">{{ __('messages.home.pdf_to_exam_description') }}</p>
                                     <div class="feature-benefits">
                                         <div class="feature-benefit">
                                             <div class="benefit-icon">
@@ -322,10 +322,10 @@
             <div class="container">
                 <div class="grid-2-col">
                     <div class="about-text animate-fade-in-left">
-                        <div class="badge badge-primary-light">{{ __('messages.home.about_quizwhiz') }}</div>
-                        <h2>{{ __('messages.home.about_quizwhiz_title') }}</h2>
-                        <p class="lead">{{ __('messages.home.about_quizwhiz_description') }}</p>
-                        <p>{{ __('messages.home.about_quizwhiz_description_2') }}</p>
+                        <div class="badge badge-primary-light">{{ __('messages.home.about_examgenerator') }}</div>
+                        <h2>{{ __('messages.home.about_examgenerator_title') }}</h2>
+                        <p class="lead">{{ __('messages.home.about_examgenerator_description') }}</p>
+                        <p>{{ __('messages.home.about_examgenerator_description_2') }}</p>
 
                         <div class="about-users">
                             <h3>{{ __('messages.home.who_uses', ['app_name' => getAppName()]) }}</h3>
@@ -404,9 +404,9 @@
                                     <div class="step-content">
                                         <div class="step-number">3</div>
                                         <div class="step-text">
-                                            <h4>{{ __('messages.home.smart_quiz_generation') }}</h4>
+                                            <h4>{{ __('messages.home.smart_exam_generation') }}</h4>
                                             <p class="text-light-gray">
-                                                {{ __('messages.home.smart_quiz_generation_description') }}</p>
+                                                {{ __('messages.home.smart_exam_generation_description') }}</p>
                                         </div>
                                     </div>
                                     <div class="step-connector"></div>
@@ -460,35 +460,35 @@
                     ->toArray();
             @endphp
 
-            <!-- Latest Quizzes Examples Section -->
+            <!-- Latest Exams Examples Section -->
             <section id="examples" class="examples">
                 <div class="container">
                     <div class="section-header">
-                        <div class="badge badge-primary-light">{{ __('messages.dashboard.quizzes') }}</div>
-                        <h2>{{ __('messages.home.latest_generated_quizzes') }}</h2>
-                        <p class="text-light-gray">{{ __('messages.home.latest_generated_quizzes_description') }}</p>
+                        <div class="badge badge-primary-light">{{ __('messages.dashboard.exams') }}</div>
+                        <h2>{{ __('messages.home.latest_generated_exams') }}</h2>
+                        <p class="text-light-gray">{{ __('messages.home.latest_generated_exams_description') }}</p>
                     </div>
 
                     <!-- Category selection -->
                     <div class="category-pills">
-                        <button class="pill active" data-category="all">{{ __('messages.home.all_quizzes') }}</button>
+                        <button class="pill active" data-category="all">{{ __('messages.home.all_exams') }}</button>
                         @foreach ($categories as $id => $category)
                             <button class="pill" data-category="{{ $id }}">{{ $category }}</button>
                         @endforeach
                     </div>
 
-                    <!-- Quiz content containers -->
-                    <div id="all-quizzes" class="quiz-category-content active">
-                        <!-- Featured quiz with larger card -->
+                    <!-- Exam content containers -->
+                    <div id="all-exams" class="exam-category-content active">
+                        <!-- Featured exam with larger card -->
                         @php
                             $allFirstQuiz = collect($quizzes)->first();
                         @endphp
-                        <div class="featured-quiz animate-fade-in">
-                            <div class="featured-quiz-card">
+                        <div class="featured-exam animate-fade-in">
+                            <div class="featured-exam-card">
                                 <div class="grid-2-col">
-                                    <!-- Left side - Quiz preview -->
-                                    <div class="quiz-info">
-                                        <div class="quiz-header">
+                                    <!-- Left side - Exam preview -->
+                                    <div class="exam-info">
+                                        <div class="exam-header">
                                             <div class="badge badge-blue">{{ __('messages.home.featured') }} •
                                                 {{ $allFirstQuiz->category->name ?? '' }}</div>
                                             <div class="question-count">
@@ -521,15 +521,15 @@
                                             </div>
                                         </div>
 
-                                        <div class="quiz-footer">
-                                            <div class="quiz-author">
+                                        <div class="exam-footer">
+                                            <div class="exam-author">
                                                 <div class="author-avatar blue-gradient">
                                                     <img src="{{ $allFirstQuiz->user->profile_url ?? '' }}"
                                                         alt="{{ $allFirstQuiz->user->name ?? '' }}">
                                                 </div>
                                                 <div class="author-info">
                                                     <div class="author-name">{{ $allFirstQuiz->user->name ?? '' }}</div>
-                                                    <div class="quiz-date">
+                                                    <div class="exam-date">
                                                         {{ __('messages.home.generated') }}
                                                         {{ \Carbon\Carbon::parse($allFirstQuiz->created_at)->diffForHumans() }}
                                                     </div>
@@ -546,12 +546,12 @@
                                                         stroke-width="2" stroke-linecap="round"
                                                         stroke-linejoin="round" />
                                                 </svg>
-                                                {{ __('messages.home.preview_quiz') }}
+                                                {{ __('messages.home.preview_exam') }}
                                             </a>
                                         </div>
                                     </div>
 
-                                    <!-- Right side - Quiz sample -->
+                                    <!-- Right side - Exam sample -->
                                     @php
                                         $firstQuestion = $allFirstQuiz->questions
                                             ? collect($allFirstQuiz->questions)->first()
@@ -559,7 +559,7 @@
                                     @endphp
 
                                     @if ($firstQuestion)
-                                        <div class="quiz-sample">
+                                        <div class="exam-sample">
                                             <div class="sample-question-card">
                                                 <div class="sample-question-header">
                                                     <div class="sample-title">{{ __('messages.home.sample_question') }}
@@ -594,20 +594,20 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Additional quizzes in grid -->
-                        <div class="quizzes-grid">
+                        <!-- Additional exams in grid -->
+                        <div class="exams-grid">
                             @php
                                 $allQuizzes = collect($quizzes)->skip(1)->take(3);
                             @endphp
 
-                            <!-- Quiz 1 -->
+                            <!-- Exam 1 -->
                             @foreach ($allQuizzes as $quiz)
-                                <div class="quiz-card animate-fade-in" data-delay="0.{{ $loop->index }}">
+                                <div class="exam-card animate-fade-in" data-delay="0.{{ $loop->index }}">
                                     <div
-                                        class="quiz-card-header {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
+                                        class="exam-card-header {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
                                     </div>
-                                    <div class="quiz-card-content">
-                                        <div class="quiz-card-top">
+                                    <div class="exam-card-content">
+                                        <div class="exam-card-top">
                                             <div
                                                 class="badge {{ $loop->index == 1 ? 'badge-emerald' : ($loop->index == 2 ? 'badge-amber' : 'badge-indigo') }}">
                                                 {{ $quiz->category->name ?? '' }}</div>
@@ -623,8 +623,8 @@
                                         </div>
                                         <h3 class="line-clamp-1">{{ $quiz->title ?? '' }}</h3>
                                         <p class="line-clamp-2">{{ $quiz->quiz_description ?? '' }}</p>
-                                        <div class="quiz-card-footer">
-                                            <div class="quiz-author">
+                                        <div class="exam-card-footer">
+                                            <div class="exam-author">
                                                 <div
                                                     class="author-avatar {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
                                                     <img src="{{ $quiz->user->profile_url ?? '' }}"
@@ -632,7 +632,7 @@
                                                 </div>
                                                 <div class="author-info">
                                                     <div class="author-name">{{ $quiz->user->name ?? '' }}</div>
-                                                    <div class="quiz-date">
+                                                    <div class="exam-date">
                                                         {{ __('messages.home.generated') }}
                                                         {{ \Carbon\Carbon::parse($quiz->created_at)->diffForHumans() }}
                                                     </div>
@@ -651,17 +651,17 @@
                     </div>
 
                     @foreach ($categories as $id => $category)
-                        <div id="{{ $id }}-quizzes" class="quiz-category-content">
+                        <div id="{{ $id }}-exams" class="exam-category-content">
                             @php
                                 $categoryQuizzes = $quizzes->where('category_id', $id);
                                 $categoryFirstQuiz = $categoryQuizzes->first();
                             @endphp
-                            <div class="featured-quiz animate-fade-in">
-                                <div class="featured-quiz-card">
+                            <div class="featured-exam animate-fade-in">
+                                <div class="featured-exam-card">
                                     <div class="grid-2-col">
-                                        <!-- Left side - Quiz preview -->
-                                        <div class="quiz-info">
-                                            <div class="quiz-header">
+                                        <!-- Left side - Exam preview -->
+                                        <div class="exam-info">
+                                            <div class="exam-header">
                                                 <div class="badge badge-blue">{{ __('messages.home.featured') }} •
                                                     {{ $categoryFirstQuiz->category->name ?? '' }}</div>
                                                 <div class="question-count">
@@ -690,7 +690,7 @@
                                             </div>
 
                                             <div class="quiz-footer">
-                                                <div class="quiz-author">
+                                                <div class="exam-author">
                                                     <div class="author-avatar blue-gradient">
                                                         <img src="{{ $categoryFirstQuiz->user->profile_url ?? '' }}"
                                                             alt="{{ $categoryFirstQuiz->user->name ?? '' }}">
@@ -698,7 +698,7 @@
                                                     <div class="author-info">
                                                         <div class="author-name">
                                                             {{ $categoryFirstQuiz->user->name ?? '' }}</div>
-                                                        <div class="quiz-date">
+                                                        <div class="exam-date">
                                                             {{ __('messages.home.generated') }}
                                                             {{ \Carbon\Carbon::parse($categoryFirstQuiz->created_at)->diffForHumans() }}
                                                         </div>
@@ -716,12 +716,12 @@
                                                             stroke-width="2" stroke-linecap="round"
                                                             stroke-linejoin="round" />
                                                     </svg>
-                                                    {{ __('messages.home.preview_quiz') }}
+                                                    {{ __('messages.home.preview_exam') }}
                                                 </a>
                                             </div>
                                         </div>
 
-                                        <!-- Right side - Quiz sample -->
+                                        <!-- Right side - Exam sample -->
                                         @php
                                             $categoryFirstQuestion = $categoryFirstQuiz->questions
                                                 ? collect($categoryFirstQuiz->questions)->first()
@@ -729,7 +729,7 @@
                                         @endphp
 
                                         @if ($categoryFirstQuestion)
-                                            <div class="quiz-sample">
+                                            <div class="exam-sample">
                                                 <div class="sample-question-card">
                                                     <div class="sample-question-header">
                                                         <div class="sample-title">
@@ -764,20 +764,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Additional quizzes in grid -->
-                            <div class="quizzes-grid">
+                            <!-- Additional exams in grid -->
+                            <div class="exams-grid">
                                 @php
                                     $allCategoryQuizzes = collect($categoryQuizzes)->skip(1)->take(3);
                                 @endphp
 
-                                <!-- Quiz 1 -->
+                                <!-- Exam 1 -->
                                 @foreach ($allCategoryQuizzes as $quiz)
-                                    <div class="quiz-card animate-fade-in" data-delay="0.{{ $loop->index }}">
+                                    <div class="exam-card animate-fade-in" data-delay="0.{{ $loop->index }}">
                                         <div
-                                            class="quiz-card-header {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
+                                            class="exam-card-header {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
                                         </div>
-                                        <div class="quiz-card-content">
-                                            <div class="quiz-card-top">
+                                        <div class="exam-card-content">
+                                            <div class="exam-card-top">
                                                 <div
                                                     class="badge {{ $loop->index == 1 ? 'badge-emerald' : ($loop->index == 2 ? 'badge-amber' : 'badge-indigo') }}">
                                                     {{ $quiz->category->name ?? '' }}</div>
@@ -794,8 +794,8 @@
                                             </div>
                                             <h3 class="line-clamp-2">{{ $quiz->title ?? '' }}</h3>
                                             <p class="line-clamp-4">{{ $quiz->quiz_description ?? '' }}</p>
-                                            <div class="quiz-card-footer">
-                                                <div class="quiz-author">
+                                            <div class="exam-card-footer">
+                                                <div class="exam-author">
                                                     <div
                                                         class="author-avatar {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
                                                         <img src="{{ $quiz->user->profile_url ?? '' }}"
@@ -804,7 +804,7 @@
                                                     <div class="author-info">
                                                         <div class="author-name">{{ $quiz->user->name ?? '' }}
                                                         </div>
-                                                        <div class="quiz-date">
+                                                        <div class="exam-date">
                                                             {{ __('messages.home.generated') }}
                                                             {{ \Carbon\Carbon::parse($quiz->created_at)->diffForHumans() }}
                                                         </div>
