@@ -471,7 +471,7 @@ class Quiz extends Model implements HasMedia
                         })
                         ->visible(fn(Get $get) => !empty($get('answers'))),
                 ])
-                ->visible(fn(Get $get) => !empty($get('questions')))
+                ->visible(fn(string $operation): bool => $operation === 'edit')
                 ->hidden(fn(string $operation): bool => $operation === 'create')
                 ->addable(false),
 
