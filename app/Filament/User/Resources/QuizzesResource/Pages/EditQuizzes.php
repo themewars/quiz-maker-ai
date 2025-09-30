@@ -469,7 +469,12 @@ class EditQuizzes extends EditRecord
 
         $prompt = <<<PROMPT
 
-        You are an expert in crafting engaging quizzes. Based on the quiz details provided, your task is to meticulously generate {$additionalQuestions} additional questions according to the specified question type. Your output should be exclusively in properly formatted JSON.
+        You are an expert in crafting engaging quizzes. Generate exactly {$additionalQuestions} additional questions according to the specified question type.
+
+        STRICT OUTPUT REQUIREMENTS:
+        - Output MUST be a JSON array with LENGTH exactly {$additionalQuestions}. Do not exceed or go under.
+        - Do NOT include any surrounding prose, markdown, headings, or keys other than the array itself.
+        - If you produce more than {$additionalQuestions} internally, RETURN ONLY the first {$additionalQuestions} items.
 
         **Quiz Details:**
 
@@ -497,7 +502,7 @@ class EditQuizzes extends EditRecord
         **Instructions:**
 
         1. **Language Requirement**: Write all quiz questions and answers in {$quizData['language']}.
-        2. **Number of Questions**: Create exactly {$additionalQuestions} additional questions.
+        2. **Number of Questions**: Create exactly {$additionalQuestions} additional questions. Return an array of length {$additionalQuestions} only.
         3. **Difficulty Level**: Ensure each question adheres to the specified difficulty level: {$quizData['Difficulty']}.
         4. **Description Alignment**: Ensure that each question is relevant to and reflects key aspects of the provided description.
         5. **Question Type**: Follow the format specified below based on the question type:
