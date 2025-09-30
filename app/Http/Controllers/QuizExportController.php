@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpPresentation\PhpPresentation;
 use PhpOffice\PhpPresentation\IOFactory as PptWriterFactory;
 use PhpOffice\PhpPresentation\Slide\Background\Color as SlideBgColor;
+use PhpOffice\PhpPresentation\Style\Fill as PptFill;
 use PhpOffice\PhpPresentation\Style\Alignment;
 use PhpOffice\PhpPresentation\Style\Color as PptColor;
 
@@ -254,6 +255,9 @@ class QuizExportController extends Controller
         $slide = $ppt->createSlide();
         $slide->setBackground(new SlideBgColor(new PptColor('FFFFFFFF')));
         $shape = $slide->createRichTextShape()->setHeight(100)->setWidth(900)->setOffsetX(40)->setOffsetY(150);
+        // Ensure non-null fill and border colors
+        $shape->getFill()->setFillType(PptFill::FILL_SOLID)->setStartColor(new PptColor('FFFFFFFF'));
+        $shape->getBorder()->getColor()->setARGB('FFFFFFFF');
         $shape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $shape->getActiveParagraph()->getFont()->setColor(new PptColor('FF333333'));
         $shape->createTextRun($quiz->title)->getFont()->setBold(true)->setSize(28)->setColor(new PptColor('FF333333'));
@@ -264,6 +268,8 @@ class QuizExportController extends Controller
 
             // Question text
             $qShape = $slide->createRichTextShape()->setHeight(200)->setWidth(900)->setOffsetX(40)->setOffsetY(40);
+            $qShape->getFill()->setFillType(PptFill::FILL_SOLID)->setStartColor(new PptColor('FFFFFFFF'));
+            $qShape->getBorder()->getColor()->setARGB('FFFFFFFF');
             $qShape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             $qShape->getActiveParagraph()->getFont()->setColor(new PptColor('FF222222'));
             $qShape->createTextRun(($index + 1) . '. ' . $question->title)
@@ -271,6 +277,8 @@ class QuizExportController extends Controller
 
             if ($question->answers->count() > 0) {
                 $aShape = $slide->createRichTextShape()->setHeight(400)->setWidth(900)->setOffsetX(60)->setOffsetY(160);
+                $aShape->getFill()->setFillType(PptFill::FILL_SOLID)->setStartColor(new PptColor('FFFFFFFF'));
+                $aShape->getBorder()->getColor()->setARGB('FFFFFFFF');
                 $aShape->getActiveParagraph()->getFont()->setColor(new PptColor('FF444444'));
                 $first = true;
                 foreach ($question->answers as $aIndex => $answer) {
