@@ -298,16 +298,17 @@ class EditQuizzes extends EditRecord
                 ->label('Add More Questions With AI')
                 ->color('success')
                 ->action('addMoreQuestions')
+                ->requiresConfirmation()
                 ->modalHeading('Add More Questions')
-                ->modalDescription('Choose how many additional questions to add using AI.')
-                ->modalSubmitActionLabel('Add Questions')
+                ->modalDescription('Select how many new questions to generate. Default is 25, you can choose fewer or more (up to 50).')
+                ->modalSubmitActionLabel('Generate')
                 ->form([
                     Forms\Components\TextInput::make('count')
-                        ->label('Number of questions')
+                        ->label('Number of questions to add')
                         ->numeric()
                         ->minValue(1)
                         ->maxValue(50)
-                        ->default((int)(getUserSettings('default_questions_count') ?? 10))
+                        ->default(25)
                         ->required(),
                 ]),
 
