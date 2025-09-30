@@ -255,6 +255,7 @@ class QuizExportController extends Controller
         $slide->setBackground(new SlideBgColor(new PptColor('FFFFFFFF')));
         $shape = $slide->createRichTextShape()->setHeight(100)->setWidth(900)->setOffsetX(40)->setOffsetY(150);
         $shape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $shape->getActiveParagraph()->getFont()->setColor(new PptColor('FF333333'));
         $shape->createTextRun($quiz->title)->getFont()->setBold(true)->setSize(28)->setColor(new PptColor('FF333333'));
 
         foreach ($quiz->questions as $index => $question) {
@@ -264,16 +265,19 @@ class QuizExportController extends Controller
             // Question text
             $qShape = $slide->createRichTextShape()->setHeight(200)->setWidth(900)->setOffsetX(40)->setOffsetY(40);
             $qShape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $qShape->getActiveParagraph()->getFont()->setColor(new PptColor('FF222222'));
             $qShape->createTextRun(($index + 1) . '. ' . $question->title)
                 ->getFont()->setBold(true)->setSize(20)->setColor(new PptColor('FF222222'));
 
             if ($question->answers->count() > 0) {
                 $aShape = $slide->createRichTextShape()->setHeight(400)->setWidth(900)->setOffsetX(60)->setOffsetY(160);
+                $aShape->getActiveParagraph()->getFont()->setColor(new PptColor('FF444444'));
                 $first = true;
                 foreach ($question->answers as $aIndex => $answer) {
                     if (! $first) {
                         // Start a new paragraph for each answer to avoid implicit null-colored breaks
                         $aShape->createParagraph();
+                        $aShape->getActiveParagraph()->getFont()->setColor(new PptColor('FF444444'));
                     }
                     $first = false;
                     $run = $aShape->createTextRun(chr(65 + $aIndex) . ') ' . $answer->title);
