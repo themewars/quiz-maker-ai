@@ -623,13 +623,109 @@ class CreateQuizzes extends CreateRecord
                 
                 Log::info("Total questions created in this loop: " . $questionsCreated);
                 
-                // Check if any questions were actually created
-                $totalQuestions = Question::where('quiz_id', $quiz->id)->count();
-                Log::info("Total questions created for quiz {$quiz->id}: {$totalQuestions}");
-                
-                if ($totalQuestions == 0) {
-                    Log::error("No questions were created despite AI response being processed");
-                }
+               // Check if any questions were actually created
+               $targetCount = (int)($data['max_questions'] ?? 0);
+               $totalQuestions = Question::where('quiz_id', $quiz->id)->count();
+               Log::info("Total questions created for quiz {$quiz->id}: {$totalQuestions} (target {$targetCount})");
+               
+               if ($totalQuestions == 0) {
+                   Log::error("No questions were created despite AI response being processed");
+               }
+
+               // If AI returned fewer than requested, try one backfill pass to generate remaining
+               $remaining = max(0, $targetCount - $totalQuestions);
+               if ($remaining > 0) {
+                   Log::warning("Backfill: attempting to generate remaining {$remaining} questions");
+
+                   $quizData2 = [
+                       'Difficulty' => Quiz::DIFF_LEVEL[$data['diff_level']],
+                       'question_type' => Quiz::QUIZ_TYPE[$data['quiz_type']],
+                       'language' => getAllLanguages()[$data['language']] ?? 'English'
+                   ];
+                   $prompt2 = <<<PROMPT
+
+You are an expert in crafting engaging quizzes. Based on the quiz details provided, generate exactly {$remaining} additional questions. Output must be valid JSON array as described.
+
+- Title: {$data['title']}
+- Description: {$description}
+- Number of Questions: {$remaining}
+- Difficulty: {$quizData2['Difficulty']}
+- Question Type: {$quizData2['question_type']}
+- Language: {$quizData2['language']}
+
+Follow the same formats previously specified for each question type. Create exactly {$remaining} items.
+PROMPT;
+
+                   $extraText = null;
+                   if ($aiType == Quiz::GEMINI_AI) {
+                       $geminiApiKey = getSetting()->gemini_api_key;
+                       $model = getSetting()->gemini_ai_model;
+                       if ($geminiApiKey) {
+                           $geminiResponse2 = \Illuminate\Support\Facades\Http::withHeaders(['Content-Type'=>'application/json'])
+                               ->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$geminiApiKey}", [
+                                   'contents' => [[ 'parts' => [['text' => $prompt2]] ]],
+                               ]);
+                           if ($geminiResponse2->ok()) {
+                               $raw2 = $geminiResponse2->json()['candidates'][0]['content']['parts'][0]['text'] ?? null;
+                               $extraText = preg_replace('/^```(?:json)?|```$/im', '', $raw2);
+                           }
+                       }
+                   } elseif ($aiType == Quiz::OPEN_AI) {
+                       $key = getSetting()->open_api_key;
+                       $openAiKey = (! empty($key)) ? $key : config('services.open_ai.open_api_key');
+                       $model = getSetting()->open_ai_model;
+                       if ($openAiKey) {
+                           $resp2 = \Illuminate\Support\Facades\Http::withToken($openAiKey)
+                               ->withHeaders(['Content-Type'=>'application/json'])
+                               ->timeout(90)
+                               ->post('https://api.openai.com/v1/chat/completions', [
+                                   'model' => $model,
+                                   'messages' => [[ 'role' => 'user', 'content' => $prompt2 ]],
+                               ]);
+                           if ($resp2->ok()) {
+                               $extraText = $resp2['choices'][0]['message']['content'] ?? null;
+                           }
+                       }
+                   }
+
+                   if ($extraText) {
+                       $extraData = trim($extraText);
+                       if (stripos($extraData, '```json') === 0) {
+                           $extraData = preg_replace('/^```json\s*|\s*```$/', '', $extraData);
+                           $extraData = trim($extraData);
+                       }
+                       $moreQuestions = json_decode($extraData, true);
+                       Log::info("Backfill parsed count: ".(is_array($moreQuestions)?count($moreQuestions):'not array'));
+                       if (is_array($moreQuestions)) {
+                           foreach ($moreQuestions as $mq) {
+                               if (isset($mq['question'], $mq['answers'])) {
+                                   $questionModel = Question::create([
+                                       'quiz_id' => $quiz->id,
+                                       'title' => $mq['question'],
+                                   ]);
+                                   if (is_array($mq['answers']) && !empty($mq['answers'])) {
+                                       $correctKey = $mq['correct_answer_key'] ?? '';
+                                       foreach ($mq['answers'] as $ans) {
+                                           $isCorrect = false;
+                                           if (is_array($correctKey)) {
+                                               $isCorrect = in_array($ans['title'], $correctKey);
+                                           } else {
+                                               $isCorrect = $ans['title'] === $correctKey || ($ans['is_correct'] ?? false);
+                                           }
+                                           Answer::create([
+                                               'question_id' => $questionModel->id,
+                                               'title' => $ans['title'],
+                                               'is_correct' => $isCorrect,
+                                           ]);
+                                       }
+                                   }
+                               }
+                               $totalQuestions++;
+                               if ($totalQuestions >= $targetCount) break;
+                           }
+                       }
+                   }
+               }
             } else {
                 Log::error('AI response is not a valid array: ' . $quizData);
                 Log::error('JSON decode error: ' . json_last_error_msg());
