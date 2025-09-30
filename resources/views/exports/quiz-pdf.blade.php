@@ -184,9 +184,44 @@
                 page-break-inside: avoid;
             }
         }
+        /* Watermark styles */
+        .watermark-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            width: 80%;
+            text-align: center;
+        }
+        .watermark-container img {
+            max-width: 240px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+        .watermark-text {
+            font-size: 64px;
+            font-weight: 700;
+            color: #000;
+            letter-spacing: 2px;
+        }
+        /* Ensure content appears above watermark */
+        .content-wrapper { position: relative; z-index: 1; }
     </style>
 </head>
 <body>
+    @if(!empty($watermarkEnabled))
+        <div class="watermark-container">
+            @if(!empty($watermarkLogo))
+                <img src="{{ $watermarkLogo }}" alt="{{ $watermarkText }}">
+            @endif
+            <div class="watermark-text">{{ $watermarkText }}</div>
+        </div>
+    @endif
+    <div class="content-wrapper">
     <div class="header">
         <div class="quiz-title">{{ $quiz->title }}</div>
         <div class="quiz-meta">{{ __('messages.quiz.quiz_export') }} - {{ date('d/m/Y H:i') }}</div>
@@ -263,6 +298,7 @@
         <div>{{ __('messages.quiz.exported_from') }} ExamGenerator AI</div>
         <div>{{ __('messages.quiz.export_date') }}: {{ date('d/m/Y H:i:s') }}</div>
         <div>{{ __('messages.quiz.quiz_code') }}: {{ $quiz->unique_code }}</div>
+    </div>
     </div>
 </body>
 </html>

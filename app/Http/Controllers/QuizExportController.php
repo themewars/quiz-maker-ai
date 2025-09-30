@@ -37,12 +37,21 @@ class QuizExportController extends Controller
 
         // Get current language
         $currentLanguage = session('language', getUserSettings('default_language') ?? 'en');
+
+        // Watermark: enabled if user's active plan has watermark flag
+        $subscription = getActiveSubscription();
+        $watermarkEnabled = (bool)($subscription && $subscription->plan ? ($subscription->plan->watermark ?? false) : false);
+        $watermarkText = getAppName();
+        $watermarkLogo = getAppLogo();
         
         // Try Chrome (Browsershot) first – best Indic shaping support
         try {
             $html = view('exports.quiz-pdf', [
                 'quiz' => $quiz,
                 'language' => $currentLanguage,
+                'watermarkEnabled' => $watermarkEnabled,
+                'watermarkText' => $watermarkText,
+                'watermarkLogo' => $watermarkLogo,
             ])->render();
 
             $tmpPath = storage_path('app/tmp');
@@ -85,7 +94,10 @@ class QuizExportController extends Controller
             try {
                 $html = view('exports.quiz-pdf', [
                     'quiz' => $quiz,
-                    'language' => $currentLanguage
+                    'language' => $currentLanguage,
+                    'watermarkEnabled' => $watermarkEnabled,
+                    'watermarkText' => $watermarkText,
+                    'watermarkLogo' => $watermarkLogo,
                 ])->render();
 
                 $pdf = SnappyPdf::loadHTML($html)
@@ -107,7 +119,10 @@ class QuizExportController extends Controller
                 // Fallback 2: DomPDF as last resort
                 $pdf = Pdf::loadView('exports.quiz-pdf', [
                     'quiz' => $quiz,
-                    'language' => $currentLanguage
+                    'language' => $currentLanguage,
+                    'watermarkEnabled' => $watermarkEnabled,
+                    'watermarkText' => $watermarkText,
+                    'watermarkLogo' => $watermarkLogo,
                 ]);
 
                 $pdf->setPaper($paper, $orientation);
