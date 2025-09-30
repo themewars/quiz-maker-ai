@@ -246,105 +246,123 @@
                 <div class="additional-features">
                     <div class="grid-2-col">
                         <!-- Text to Exam Generator -->
-                        <div class="feature-card-large animate-fade-in" data-delay="0.1">
-                            <div class="feature-icon-large blue-gradient">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <h3>{{ __('messages.home.text_to_exam') }}</h3>
-                            <p class="feature-description">{{ __('messages.home.text_to_exam_description') }}</p>
-                            <div class="feature-benefits">
-                                <div class="feature-benefit">
-                                    <div class="benefit-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <div class="animate-fade-in-left">
+                            <div class="feature-card-gradient">
+                                <div class="feature-card-inner">
+                                    <div class="feature-icon-large">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </div>
-                                    <span>{{ __('messages.home.instant_generation') }}</span>
-                                </div>
-                                <div class="feature-benefit">
-                                    <div class="benefit-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
+                                    <h3>{{ __('messages.home.text_to_exam') }}</h3>
+                                    <p class="feature-description">{{ __('messages.home.text_to_exam_description') }}</p>
+                                    <div class="feature-benefits">
+                                        <div class="feature-benefit">
+                                            <div class="benefit-icon">
+                                                <svg class="text-green" width="16" height="16" viewBox="0 0 24 24"
+                                                    fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <span>{{ __('messages.home.instant_generation') }}</span>
+                                        </div>
+                                        <div class="feature-benefit">
+                                            <div class="benefit-icon">
+                                                <svg class="text-green" width="16" height="16" viewBox="0 0 24 24"
+                                                    fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <span>{{ __('messages.home.custom_questions') }}</span>
+                                        </div>
+                                        <div class="feature-benefit">
+                                            <div class="benefit-icon">
+                                                <svg class="text-green" width="16" height="16" viewBox="0 0 24 24"
+                                                    fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <span>{{ __('messages.home.multiple_formats') }}</span>
+                                        </div>
+                                        <div class="feature-benefit">
+                                            <div class="benefit-icon">
+                                                <svg class="text-green" width="16" height="16"
+                                                    viewBox="0 0 24 24" fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <span>{{ __('messages.home.ai_optimized') }}</span>
+                                        </div>
                                     </div>
-                                    <span>{{ __('messages.home.custom_questions') }}</span>
-                                </div>
-                                <div class="feature-benefit">
-                                    <div class="benefit-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
-                                    </div>
-                                    <span>{{ __('messages.home.multiple_formats') }}</span>
-                                </div>
-                                <div class="feature-benefit">
-                                    <div class="benefit-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
-                                    </div>
-                                    <span>{{ __('messages.home.ai_optimized') }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Subject to Exam Generator -->
-                        <div class="feature-card-large animate-fade-in" data-delay="0.2">
-                            <div class="feature-icon-large green-gradient">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <h3>{{ __('messages.home.subject_to_exam') }}</h3>
-                            <p class="feature-description">{{ __('messages.home.subject_to_exam_description') }}</p>
-                            <div class="feature-benefits">
-                                <div class="feature-benefit">
-                                    <div class="benefit-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <div class="animate-fade-in-right">
+                            <div class="feature-card-gradient">
+                                <div class="feature-card-inner">
+                                    <div class="feature-icon-large">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M8 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 8v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </div>
-                                    <span>{{ __('messages.home.subject_based') }}</span>
-                                </div>
-                                <div class="feature-benefit">
-                                    <div class="benefit-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
+                                    <h3>{{ __('messages.home.subject_to_exam') }}</h3>
+                                    <p class="feature-description">{{ __('messages.home.subject_to_exam_description') }}</p>
+                                    <div class="feature-benefits">
+                                        <div class="feature-benefit">
+                                            <div class="benefit-icon">
+                                                <svg class="text-green" width="16" height="16" viewBox="0 0 24 24"
+                                                    fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <span>{{ __('messages.home.subject_based') }}</span>
+                                        </div>
+                                        <div class="feature-benefit">
+                                            <div class="benefit-icon">
+                                                <svg class="text-green" width="16" height="16" viewBox="0 0 24 24"
+                                                    fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <span>{{ __('messages.home.comprehensive_coverage') }}</span>
+                                        </div>
+                                        <div class="feature-benefit">
+                                            <div class="benefit-icon">
+                                                <svg class="text-green" width="16" height="16" viewBox="0 0 24 24"
+                                                    fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <span>{{ __('messages.home.difficulty_levels') }}</span>
+                                        </div>
+                                        <div class="feature-benefit">
+                                            <div class="benefit-icon">
+                                                <svg class="text-green" width="16" height="16"
+                                                    viewBox="0 0 24 24" fill="none">
+                                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            <span>{{ __('messages.home.educational_aligned') }}</span>
+                                        </div>
                                     </div>
-                                    <span>{{ __('messages.home.comprehensive_coverage') }}</span>
-                                </div>
-                                <div class="feature-benefit">
-                                    <div class="benefit-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
-                                    </div>
-                                    <span>{{ __('messages.home.difficulty_levels') }}</span>
-                                </div>
-                                <div class="feature-benefit">
-                                    <div class="benefit-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                        </svg>
-                                    </div>
-                                    <span>{{ __('messages.home.educational_aligned') }}</span>
                                 </div>
                             </div>
                         </div>
