@@ -19,10 +19,16 @@ use Filament\Forms;
 use fivefilters\Readability\Readability;
 use fivefilters\Readability\Configuration;
 use App\Filament\User\Resources\QuizzesResource;
+use App\Filament\User\Resources\QuizzesResource\RelationManagers\QuestionsRelationManager;
 
 class EditQuizzes extends EditRecord
 {
     protected static string $resource = QuizzesResource::class;
+    protected function getRelationManagers(): array
+    {
+        // Always show a live table of questions sourced from DB below the form
+        return [QuestionsRelationManager::class];
+    }
 
     public static $tab = Quiz::TEXT_TYPE;
     public function currentActiveTab()
