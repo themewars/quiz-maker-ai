@@ -532,6 +532,21 @@ class Quiz extends Model implements HasMedia
                         })
                         ->hint('Updates after AI adds more questions')
                         ->columnSpanFull(),
+                    Placeholder::make('questions_preview')
+                        ->label('Questions Preview')
+                        ->content(function (?\Illuminate\Database\Eloquent\Model $record) {
+                            if (! $record) return '';
+                            $titles = $record->questions()->orderBy('id')->limit(50)->pluck('title')->toArray();
+                            if (empty($titles)) return 'No questions yet.';
+                            $html = '<ol style="margin:0;padding-left:18px;line-height:1.5">';
+                            foreach ($titles as $t) {
+                                $safe = e($t);
+                                $html .= "<li>{$safe}</li>";
+                            }
+                            $html .= '</ol>';
+                            return new \Illuminate\Support\HtmlString($html);
+                        })
+                        ->columnSpanFull(),
                 ])
                 ->visible(fn(string $operation): bool => $operation === 'edit')
                 ->columnSpanFull(),
