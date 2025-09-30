@@ -15,6 +15,7 @@
         "vite": "^6.3.5"
     },
     "dependencies": {
-        "jquery": "^3.7.1"
+        "jquery": "^3.7.1",
+        "puppeteer": "^24.22.3"
     }
 }
