@@ -75,6 +75,21 @@ class HomeController extends Controller
         return view('home.cookie', compact('cookie'));
     }
 
+    public function customLegal($slug)
+    {
+        $setting = Setting::first();
+        $customPages = $setting->custom_legal_pages ?? [];
+        
+        // Find the page with matching slug
+        $page = collect($customPages)->firstWhere('slug', $slug);
+        
+        if (!$page) {
+            abort(404, 'Legal page not found');
+        }
+
+        return view('home.custom-legal', compact('page'));
+    }
+
     // public function index()
     // {
     //     /** @var User $user */

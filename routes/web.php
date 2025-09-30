@@ -68,6 +68,7 @@ Route::middleware('SetLanguage')->group(function () {
     Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
     Route::get('/privacy', [HomeController::class, 'policy'])->name('policy');
     Route::get('/cookie', [HomeController::class, 'cookie'])->name('cookie');
+    Route::get('/legal/{slug}', [HomeController::class, 'customLegal'])->name('custom.legal');
 
     // Route of Poll votes
     Route::get('p/{code}', [PollResultController::class, 'create'])->name('poll.create');

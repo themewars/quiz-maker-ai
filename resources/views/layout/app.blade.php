@@ -117,7 +117,7 @@
                     </div>
                 </div>
 
-                @if (getSetting() && (getSetting()->terms_and_condition || getSetting()->privacy_policy || getSetting()->cookie_policy))
+                @if (getSetting() && (getSetting()->terms_and_condition || getSetting()->privacy_policy || getSetting()->cookie_policy || !empty(getSetting()->custom_legal_pages)))
                     <div class="footer-links">
                         <ul>
                             @if (getSetting() && getSetting()->terms_and_condition)
@@ -129,6 +129,11 @@
                             @endif
                             @if (getSetting() && getSetting()->cookie_policy)
                                 <li><a href="{{ route('cookie') }}">{{ __('messages.home.cookie_policy') }}</a></li>
+                            @endif
+                            @if (getSetting() && !empty(getSetting()->custom_legal_pages))
+                                @foreach (getSetting()->custom_legal_pages as $page)
+                                    <li><a href="{{ route('custom.legal', $page['slug']) }}">{{ $page['title'] }}</a></li>
+                                @endforeach
                             @endif
                         </ul>
                     </div>
