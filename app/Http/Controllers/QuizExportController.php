@@ -271,11 +271,14 @@ class QuizExportController extends Controller
 
             if ($question->answers->count() > 0) {
                 $aShape = $slide->createRichTextShape()->setHeight(400)->setWidth(900)->setOffsetX(60)->setOffsetY(160);
+                // Ensure the first paragraph has an explicit font color
+                $aShape->getActiveParagraph()->getFont()->setColor(new PptColor('FF444444'));
                 $first = true;
                 foreach ($question->answers as $aIndex => $answer) {
                     if (! $first) {
                         // Start a new paragraph for each answer to avoid implicit null-colored breaks
                         $aShape->createParagraph();
+                        $aShape->getActiveParagraph()->getFont()->setColor(new PptColor('FF444444'));
                     }
                     $first = false;
                     $run = $aShape->createTextRun(chr(65 + $aIndex) . ') ' . $answer->title);
