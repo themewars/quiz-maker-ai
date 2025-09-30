@@ -597,7 +597,7 @@
                         <!-- Additional exams in grid -->
                         <div class="exams-grid">
                             @php
-                                $allQuizzes = collect($quizzes)->skip(1)->take(3);
+                                $allQuizzes = collect($quizzes)->skip(1);
                             @endphp
 
                             <!-- Exam 1 -->
@@ -766,8 +766,8 @@
                             </div>
                             <!-- Additional exams in grid -->
                             <div class="exams-grid">
-                                @php
-                                    $allCategoryQuizzes = collect($categoryQuizzes)->skip(1)->take(3);
+                            @php
+                                $allCategoryQuizzes = collect($categoryQuizzes)->skip(1);
                                 @endphp
 
                                 <!-- Exam 1 -->
