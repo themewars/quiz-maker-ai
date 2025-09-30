@@ -41,6 +41,7 @@ class QuizExportController extends Controller
         // Watermark: enabled if user's active plan has watermark flag
         $subscription = getActiveSubscription();
         $watermarkEnabled = (bool)($subscription && $subscription->plan ? ($subscription->plan->watermark ?? false) : false);
+        $whiteLabelEnabled = (bool)($subscription && $subscription->plan ? ($subscription->plan->white_label ?? false) : false);
         $watermarkText = getAppName();
         $watermarkLogo = getAppLogo();
         
@@ -50,6 +51,7 @@ class QuizExportController extends Controller
                 'quiz' => $quiz,
                 'language' => $currentLanguage,
                 'watermarkEnabled' => $watermarkEnabled,
+                'whiteLabelEnabled' => $whiteLabelEnabled,
                 'watermarkText' => $watermarkText,
                 'watermarkLogo' => $watermarkLogo,
             ])->render();
@@ -96,6 +98,7 @@ class QuizExportController extends Controller
                     'quiz' => $quiz,
                     'language' => $currentLanguage,
                     'watermarkEnabled' => $watermarkEnabled,
+                    'whiteLabelEnabled' => $whiteLabelEnabled,
                     'watermarkText' => $watermarkText,
                     'watermarkLogo' => $watermarkLogo,
                 ])->render();
@@ -121,6 +124,7 @@ class QuizExportController extends Controller
                     'quiz' => $quiz,
                     'language' => $currentLanguage,
                     'watermarkEnabled' => $watermarkEnabled,
+                    'whiteLabelEnabled' => $whiteLabelEnabled,
                     'watermarkText' => $watermarkText,
                     'watermarkLogo' => $watermarkLogo,
                 ]);
@@ -203,6 +207,14 @@ class QuizExportController extends Controller
                 }
             }
             $section->addTextBreak();
+        }
+
+        // Footer branding (skip when white-label enabled)
+        $subscription = getActiveSubscription();
+        $whiteLabelEnabledWord = (bool)($subscription && $subscription->plan ? ($subscription->plan->white_label ?? false) : false);
+        if (! $whiteLabelEnabledWord) {
+            $footer = $section->addFooter();
+            $footer->addPreserveText('Exported from ExamGenerator AI - ' . date('d/m/Y H:i'));
         }
 
         // Generate filename

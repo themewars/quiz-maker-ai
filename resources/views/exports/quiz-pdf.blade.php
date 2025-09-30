@@ -215,7 +215,7 @@
 <body>
     @if(!empty($watermarkEnabled))
         <div class="watermark-container">
-            @if(!empty($watermarkLogo))
+            @if(!empty($watermarkLogo) && empty($whiteLabelEnabled))
                 <img src="{{ $watermarkLogo }}" alt="{{ $watermarkText }}">
             @endif
             <div class="watermark-text">{{ $watermarkText }}</div>
@@ -295,7 +295,9 @@
     </div>
 
     <div class="footer">
-        <div>{{ __('messages.quiz.exported_from') }} ExamGenerator AI</div>
+        @unless(!empty($whiteLabelEnabled))
+            <div>{{ __('messages.quiz.exported_from') }} ExamGenerator AI</div>
+        @endunless
         <div>{{ __('messages.quiz.export_date') }}: {{ date('d/m/Y H:i:s') }}</div>
         <div>{{ __('messages.quiz.quiz_code') }}: {{ $quiz->unique_code }}</div>
     </div>
