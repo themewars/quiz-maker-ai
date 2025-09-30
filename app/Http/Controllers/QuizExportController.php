@@ -31,6 +31,28 @@ class QuizExportController extends Controller
         ]);
     }
 
+    public function exportPptOptions(Request $request, Quiz $quiz)
+    {
+        if ($quiz->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to quiz');
+        }
+        $quiz->load(['questions.answers', 'category', 'user']);
+        return view('exports.options-ppt', [
+            'quiz' => $quiz,
+        ]);
+    }
+
+    public function exportWordOptions(Request $request, Quiz $quiz)
+    {
+        if ($quiz->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to quiz');
+        }
+        $quiz->load(['questions.answers', 'category', 'user']);
+        return view('exports.options-word', [
+            'quiz' => $quiz,
+        ]);
+    }
+
     public function exportToPdf(Request $request, Quiz $quiz)
     {
         // Check if user owns this quiz
@@ -181,7 +203,7 @@ class QuizExportController extends Controller
         $section->addTextBreak();
 
         // Add description if exists
-        if ($quiz->quiz_description) {
+        if ((bool)$request->input('include_description', 1) && $quiz->quiz_description) {
             $section->addText('Description:', ['bold' => true]);
             $section->addText($quiz->quiz_description);
             $section->addTextBreak();
@@ -202,11 +224,11 @@ class QuizExportController extends Controller
         foreach ($quiz->questions as $index => $question) {
             $section->addText(($index + 1) . '. ' . $question->title, ['bold' => true]);
             
-            if ($question->answers->count() > 0) {
+            if ((bool)$request->input('include_answers', 1) && $question->answers->count() > 0) {
                 $section->addText('Options:', ['bold' => true]);
                 foreach ($question->answers as $answerIndex => $answer) {
                     $optionText = chr(65 + $answerIndex) . ') ' . $answer->title;
-                    if ($answer->is_correct) {
+                    if ((bool)$request->input('mark_correct', 1) && $answer->is_correct) {
                         $optionText .= ' ✓ (Correct)';
                     }
                     $section->addText($optionText);

@@ -146,7 +146,7 @@ class QuizzesResource extends Resource implements HasForms
                 Tables\Actions\Action::make('export_ppt')
                     ->label('PPT')
                     ->icon('heroicon-o-presentation-chart-bar')
-                    ->url(fn(Quiz $record) => route('quiz.export.ppt', $record->id))
+                    ->url(fn(Quiz $record) => route('quiz.export.ppt.options', $record->id))
                     ->openUrlInNewTab()
                     ->visible(function(Quiz $record){
                         $sub = getActiveSubscription();
