@@ -78,7 +78,28 @@ class EditQuizzes extends EditRecord
             $data = $this->mutateFormDataBeforeFill($data);
         }
 
+        // Start with existing questions from DB so that old ones remain visible
         $data['questions'] = [];
+        if (isset($data['id'])) {
+            $existingQuestions = Question::where('quiz_id', $data['id'])->with('answers')->orderBy('id')->get();
+            foreach ($existingQuestions as $question) {
+                $answersOption = $question->answers->map(function ($answer) {
+                    return [
+                        'title' => $answer->title,
+                        'is_correct' => $answer->is_correct,
+                    ];
+                })->toArray();
+
+                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+
+                $data['questions'][] = [
+                    'title' => $question->title,
+                    'answers' => $answersOption,
+                    'is_correct' => $correctAnswer,
+                    'question_id' => $question->id,
+                ];
+            }
+        }
 
         if (is_array($questionData) && !empty($questionData)) {
             $questionsArray = isset($questionData['questions']) && is_array($questionData['questions'])
@@ -118,23 +139,22 @@ class EditQuizzes extends EditRecord
             }
         }
 
-        if (empty($data['questions']) && !is_array($questionData) && isset($data['id'])) {
-            $questions = Question::where('quiz_id', $data['id'])->with('answers')->get();
+        // If no questions were assembled from either source, fallback to DB
+        if (empty($data['questions']) && isset($data['id'])) {
+            $questions = Question::where('quiz_id', $data['id'])->with('answers')->orderBy('id')->get();
             foreach ($questions as $question) {
                 $answersOption = $question->answers->map(function ($answer) {
                     return [
                         'title' => $answer->title,
-                        'is_correct' => $answer->is_correct
+                        'is_correct' => $answer->is_correct,
                     ];
                 })->toArray();
-
                 $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-
                 $data['questions'][] = [
                     'title' => $question->title,
                     'answers' => $answersOption,
                     'is_correct' => $correctAnswer,
-                    'question_id' => $question->id
+                    'question_id' => $question->id,
                 ];
             }
         }
