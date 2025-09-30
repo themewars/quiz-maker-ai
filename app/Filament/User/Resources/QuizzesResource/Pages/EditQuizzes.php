@@ -383,6 +383,17 @@ class EditQuizzes extends EditRecord
                         ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                         ->send();
                 }
+            } elseif ($extension === 'pptx') {
+                $description = pptxToText($filePath);
+                if (empty($description)) {
+                    Notification::make()
+                        ->warning()
+                        ->title('PPTX Processing Warning')
+                        ->body('PPTX text extraction failed. Please try with a different PPTX file or use text input instead.')
+                        ->persistent()
+                        ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
+                        ->send();
+                }
             }
         }
 

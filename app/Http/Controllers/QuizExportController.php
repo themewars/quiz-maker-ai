@@ -9,6 +9,11 @@ use Spatie\Browsershot\Browsershot;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpPresentation\PhpPresentation;
+use PhpOffice\PhpPresentation\IOFactory as PptWriterFactory;
+use PhpOffice\PhpPresentation\Slide\Background\Color as SlideBgColor;
+use PhpOffice\PhpPresentation\Style\Alignment;
+use PhpOffice\PhpPresentation\Style\Color as PptColor;
 
 class QuizExportController extends Controller
 {
@@ -226,5 +231,55 @@ class QuizExportController extends Controller
         $objWriter->save($tempFile);
 
         return response()->download($tempFile, $filename)->deleteFileAfterSend(true);
+    }
+
+    public function exportToPpt(Request $request, Quiz $quiz)
+    {
+        if ($quiz->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to quiz');
+        }
+
+        $sub = getActiveSubscription();
+        if (!($sub && optional($sub->plan)->ppt_quiz)) {
+            abort(403, 'PPT export is not enabled for your plan');
+        }
+
+        $quiz->load(['questions.answers']);
+
+        $ppt = new PhpPresentation();
+        // Remove default first slide
+        $ppt->removeSlideByIndex(0);
+
+        // Title slide
+        $slide = $ppt->createSlide();
+        $slide->setBackground(new SlideBgColor(new PptColor('FFFFFFFF')));
+        $shape = $slide->createRichTextShape()->setHeight(100)->setWidth(900)->setOffsetX(40)->setOffsetY(150);
+        $shape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $shape->createTextRun($quiz->title)->getFont()->setBold(true)->setSize(28)->setColor(new PptColor('FF333333'));
+
+        foreach ($quiz->questions as $index => $question) {
+            $slide = $ppt->createSlide();
+            $slide->setBackground(new SlideBgColor(new PptColor('FFFFFFFF')));
+
+            // Question text
+            $qShape = $slide->createRichTextShape()->setHeight(200)->setWidth(900)->setOffsetX(40)->setOffsetY(40);
+            $qShape->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $qShape->createTextRun(($index + 1) . '. ' . $question->title)
+                ->getFont()->setBold(true)->setSize(20)->setColor(new PptColor('FF222222'));
+
+            if ($question->answers->count() > 0) {
+                $aShape = $slide->createRichTextShape()->setHeight(400)->setWidth(900)->setOffsetX(60)->setOffsetY(160);
+                foreach ($question->answers as $aIndex => $answer) {
+                    $run = $aShape->createTextRun(chr(65 + $aIndex) . ') ' . $answer->title . "\n");
+                    $run->getFont()->setSize(16)->setColor(new PptColor($answer->is_correct ? 'FF2ECC71' : 'FF444444'));
+                }
+            }
+        }
+
+        $writer = PptWriterFactory::createWriter($ppt, 'PowerPoint2007');
+        $temp = tempnam(sys_get_temp_dir(), 'ppt_');
+        $filename = 'quiz_' . $quiz->id . '_' . date('Y-m-d_H-i-s') . '.pptx';
+        $writer->save($temp);
+        return response()->download($temp, $filename)->deleteFileAfterSend(true);
     }
 }

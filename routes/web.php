@@ -58,8 +58,9 @@ Route::middleware('SetLanguage')->group(function () {
 
     // Route of Quiz Export
     Route::middleware('auth')->group(function () {
-        Route::get('quiz/{quiz}/export/options', [QuizExportController::class, 'exportOptions'])->name('quiz.export.options');
+    Route::get('quiz/{quiz}/export/options', [QuizExportController::class, 'exportOptions'])->name('quiz.export.options');
         Route::get('quiz/{quiz}/export/pdf', [QuizExportController::class, 'exportToPdf'])->name('quiz.export.pdf');
+    Route::get('quiz/{quiz}/export/ppt', [QuizExportController::class, 'exportToPpt'])->name('quiz.export.ppt');
         Route::get('quiz/{quiz}/export/word', [QuizExportController::class, 'exportToWord'])->name('quiz.export.word');
     });
 

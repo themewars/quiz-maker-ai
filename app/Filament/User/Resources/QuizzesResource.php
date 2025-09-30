@@ -143,6 +143,15 @@ class QuizzesResource extends Resource implements HasForms
                         $sub = getActiveSubscription();
                         return $record->questions()->exists() && $sub && optional($sub->plan)->export_word;
                     }),
+                Tables\Actions\Action::make('export_ppt')
+                    ->label('PPT')
+                    ->icon('heroicon-o-presentation-chart-bar')
+                    ->url(fn(Quiz $record) => route('quiz.export.ppt', $record->id))
+                    ->openUrlInNewTab()
+                    ->visible(function(Quiz $record){
+                        $sub = getActiveSubscription();
+                        return $record->questions()->exists() && $sub && optional($sub->plan)->ppt_quiz;
+                    }),
                 \App\Filament\Actions\CustomDeleteAction::make()
                     ->setCommonProperties()
                     ->successNotificationTitle(__('messages.quiz.quiz_deleted_success'))

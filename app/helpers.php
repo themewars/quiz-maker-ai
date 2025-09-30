@@ -14,6 +14,9 @@ use Smalot\PdfParser\Parser;
 use App\Models\PaymentSetting;
 use App\Models\QuestionAnswer;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpPresentation\IOFactory as PptIOFactory;
+use PhpOffice\PhpPresentation\PhpPresentation;
+use PhpOffice\PhpPresentation\IOFactory as PhpPresentationIOFactory;
 use App\Enums\SubscriptionStatus;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
@@ -72,6 +75,60 @@ if (! function_exists('pdfToText')) {
             }
         }
 
+        return $text;
+    }
+}
+
+if (! function_exists('pptxToText')) {
+    function pptxToText(string $filePath): string
+    {
+        $text = '';
+        $tempFilePath = null;
+        try {
+            $tempDir = public_path('uploads/temp-file');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $content = file_get_contents($filePath, false, $context);
+            if (! $content) {
+                Log::error('Failed to read PPTX file content from: ' . $filePath);
+                return '';
+            }
+            $fileName = Str::random(6) . basename($filePath);
+            $tempFilePath = $tempDir . '/' . $fileName;
+            if (! file_put_contents($tempFilePath, $content)) {
+                Log::error('Failed to write PPTX file to temp location: ' . $tempFilePath);
+                return '';
+            }
+
+            $reader = PptIOFactory::createReader('PowerPoint2007');
+            $presentation = $reader->load($tempFilePath);
+            foreach ($presentation->getAllSlides() as $slide) {
+                foreach ($slide->getShapeCollection() as $shape) {
+                    if (method_exists($shape, 'getText')) {
+                        $text .= trim($shape->getText()) . "\n";
+                    }
+                }
+                $text .= "\n";
+            }
+
+            if (file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
+            Log::info('PPTX text extraction successful. Text length: ' . strlen($text));
+        } catch (\Exception $e) {
+            Log::error('PPTX text extraction failed: ' . $e->getMessage() . ' for file: ' . $filePath);
+            if ($tempFilePath && file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
+        }
         return $text;
     }
 }
