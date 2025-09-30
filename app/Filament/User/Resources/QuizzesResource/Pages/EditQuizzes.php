@@ -19,16 +19,10 @@ use Filament\Forms;
 use fivefilters\Readability\Readability;
 use fivefilters\Readability\Configuration;
 use App\Filament\User\Resources\QuizzesResource;
-use App\Filament\User\Resources\QuizzesResource\RelationManagers\QuestionsRelationManager;
 
 class EditQuizzes extends EditRecord
 {
     protected static string $resource = QuizzesResource::class;
-    public function getRelationManagers(): array
-    {
-        // Always show a live table of questions sourced from DB below the form
-        return [QuestionsRelationManager::class];
-    }
 
     public static $tab = Quiz::TEXT_TYPE;
     public function currentActiveTab()
@@ -700,15 +694,17 @@ class EditQuizzes extends EditRecord
             Log::info("Parsed additional questions count: " . (is_array($quizQuestions) ? count($quizQuestions) : 'not array'));
             Log::info("JSON decode error: " . json_last_error_msg());
 
-            if (is_array($quizQuestions)) {
+                if (is_array($quizQuestions)) {
                 $addedCount = 0;
                 foreach ($quizQuestions as $index => $question) {
+                    if ($addedCount >= $additionalQuestions) { break; }
                     Log::info("Processing additional question " . (intval($index) + 1) . ": " . json_encode($question));
                     
                     // Check if this is a nested array of questions
                     if (is_array($question) && isset($question[0]) && is_array($question[0]) && isset($question[0]['question'])) {
                         Log::info("Found nested questions array, processing " . count($question) . " questions");
                         foreach ($question as $nestedIndex => $nestedQuestion) {
+                            if ($addedCount >= $additionalQuestions) { break; }
                             if (isset($nestedQuestion['question'], $nestedQuestion['answers'])) {
                                 $questionModel = Question::create([
                                     'quiz_id' => $this->record->id,
@@ -744,6 +740,7 @@ class EditQuizzes extends EditRecord
                             }
                         }
                     } elseif (isset($question['question'], $question['answers'])) {
+                        if ($addedCount >= $additionalQuestions) { break; }
                         $questionModel = Question::create([
                             'quiz_id' => $this->record->id,
                             'title' => $question['question'],
