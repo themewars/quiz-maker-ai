@@ -791,9 +791,9 @@ class EditQuizzes extends EditRecord
                         ->persistent()
                         ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                         ->send();
-                    // Refresh from DB so both old and new questions are shown
+                    // Hard refresh to ensure Livewire state fully reloads with DB
                     $this->record->refresh();
-                    $this->fillForm();
+                    $this->redirect($this->getResource()::getUrl('edit', ['record' => $this->record->id]));
                 } else {
                     Notification::make()
                         ->warning()
