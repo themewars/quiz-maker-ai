@@ -330,6 +330,8 @@ class EditQuizzes extends EditRecord
         } elseif ($currentFormState['type'] == Quiz::URL_TYPE) {
             $currentFormState['quiz_description'] = $currentFormState['quiz_description_url'];
         }
+        // Ensure we refresh from DB after adding more – avoid keeping stale repeater state
+        unset($currentFormState['questions'], $currentFormState['custom_questions']);
         Session::put('editedQuizDataForRegeneration', $currentFormState);
 
         $data = $this->data;
@@ -769,7 +771,8 @@ class EditQuizzes extends EditRecord
                         ->persistent()
                         ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                         ->send();
-                    // Refresh the form so the placeholder counter updates
+                    // Refresh from DB so both old and new questions are shown
+                    $this->record->refresh();
                     $this->fillForm();
                 } else {
                     Notification::make()
