@@ -1,4 +1,3 @@
-@php($userSettings = getUserSettings())
 <!DOCTYPE html>
 <html>
 <head>
