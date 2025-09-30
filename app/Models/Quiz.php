@@ -243,6 +243,7 @@ class Quiz extends Model implements HasMedia
                                                 ->integer()
                                                 ->required()
                                                 ->minValue(1)
+                                                ->default(25)
                                                 ->label(__('messages.quiz.num_of_questions') . ':')
                                                 ->hintIcon('heroicon-m-question-mark-circle', tooltip: function(){
                                                     $sub = getActiveSubscription();
