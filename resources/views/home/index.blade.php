@@ -654,132 +654,18 @@
                         <div id="{{ $id }}-exams" class="exam-category-content">
                             @php
                                 $categoryQuizzes = $quizzes->where('category_id', $id);
-                                $categoryFirstQuiz = $categoryQuizzes->first();
                             @endphp
-                            <div class="featured-exam animate-fade-in">
-                                <div class="featured-exam-card">
-                                    <div class="grid-2-col">
-                                        <!-- Left side - Exam preview -->
-                                        <div class="exam-info">
-                                            <div class="exam-header">
-                                                <div class="badge badge-blue">{{ __('messages.home.featured') }} •
-                                                    {{ $categoryFirstQuiz->category->name ?? '' }}</div>
-                                                <div class="question-count">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24"
-                                                        fill="none">
-                                                        <path
-                                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                            stroke-linejoin="round" />
-                                                    </svg>
-                                                    {{ __('messages.home.questions_count', ['count' => collect($categoryFirstQuiz->questions ?? [])->count()]) }}
-                                                </div>
-                                            </div>
-
-                                            <h3 class="line-clamp-2">{{ $categoryFirstQuiz->title ?? '' }}</h3>
-                                            <p class="line-clamp-4">{{ $categoryFirstQuiz->quiz_description ?? '' }}</p>
-
-                                            <div class="topics">
-                                                <div class="topics-title">{{ __('messages.home.topics_covered') }}</div>
-                                                <div class="topic-tags">
-                                                    <span class="topic-tag">{{ __('messages.home.cell_biology') }}</span>
-                                                    <span class="topic-tag">{{ __('messages.home.genetics') }}</span>
-                                                    <span class="topic-tag">{{ __('messages.home.evolution') }}</span>
-                                                    <span class="topic-tag">{{ __('messages.home.ecology') }}</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="quiz-footer">
-                                                <div class="exam-author">
-                                                    <div class="author-avatar blue-gradient">
-                                                        <img src="{{ $categoryFirstQuiz->user->profile_url ?? '' }}"
-                                                            alt="{{ $categoryFirstQuiz->user->name ?? '' }}">
-                                                    </div>
-                                                    <div class="author-info">
-                                                        <div class="author-name">
-                                                            {{ $categoryFirstQuiz->user->name ?? '' }}</div>
-                                                        <div class="exam-date">
-                                                            {{ __('messages.home.generated') }}
-                                                            {{ \Carbon\Carbon::parse($categoryFirstQuiz->created_at)->diffForHumans() }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <a href="{{ route('quiz-player', ['code' => $categoryFirstQuiz->unique_code]) }}"
-                                                    target="_blank" class="btn btn-primary icon-btn">
-                                                    <svg width="16" height="16" viewBox="0 0 24 24"
-                                                        fill="none">
-                                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
-                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                            stroke-linejoin="round" />
-                                                        <circle cx="12" cy="12" r="3" stroke="currentColor"
-                                                            stroke-width="2" stroke-linecap="round"
-                                                            stroke-linejoin="round" />
-                                                    </svg>
-                                                    {{ __('messages.home.preview_exam') }}
-                                                </a>
-                                            </div>
-                                        </div>
-
-                                        <!-- Right side - Exam sample -->
-                                        @php
-                                            $categoryFirstQuestion = $categoryFirstQuiz->questions
-                                                ? collect($categoryFirstQuiz->questions)->first()
-                                                : null;
-                                        @endphp
-
-                                        @if ($categoryFirstQuestion)
-                                            <div class="exam-sample">
-                                                <div class="sample-question-card">
-                                                    <div class="sample-question-header">
-                                                        <div class="sample-title">
-                                                            {{ __('messages.home.sample_question') }}</div>
-                                                        <div class="sample-question line-clamp-4">
-                                                            {{ $categoryFirstQuestion->title ?? '' }}</div>
-                                                    </div>
-
-                                                    <div class="sample-options">
-                                                        @foreach ($categoryFirstQuestion->answers as $answer)
-                                                            <div
-                                                                class="sample-option {{ $answer->is_correct ? 'selected' : '' }}">
-                                                                @if ($answer->is_correct)
-                                                                    <div class="option-circle selected">
-                                                                        <svg width="10" height="10"
-                                                                            viewBox="0 0 24 24" fill="none">
-                                                                            <path d="M5 13l4 4L19 7" stroke="currentColor"
-                                                                                stroke-width="3" stroke-linecap="round"
-                                                                                stroke-linejoin="round" />
-                                                                        </svg>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="option-circle"></div>
-                                                                @endif
-                                                                <span>{{ $answer->title }}</span>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Additional exams in grid -->
+                            <!-- All exams in this category in grid format -->
                             <div class="exams-grid">
-                            @php
-                                $allCategoryQuizzes = collect($categoryQuizzes)->skip(1);
-                                @endphp
-
-                                <!-- Exam 1 -->
-                                @foreach ($allCategoryQuizzes as $quiz)
+                                @foreach ($categoryQuizzes as $quiz)
                                     <div class="exam-card animate-fade-in" data-delay="0.{{ $loop->index }}">
                                         <div
-                                            class="exam-card-header {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
-                                        </div>
+                                            class="exam-card-header {{ $loop->index % 3 == 1 ? 'green-gradient' : ($loop->index % 3 == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
+                                                                    </div>
                                         <div class="exam-card-content">
                                             <div class="exam-card-top">
                                                 <div
-                                                    class="badge {{ $loop->index == 1 ? 'badge-emerald' : ($loop->index == 2 ? 'badge-amber' : 'badge-indigo') }}">
+                                                    class="badge {{ $loop->index % 3 == 1 ? 'badge-emerald' : ($loop->index % 3 == 2 ? 'badge-amber' : 'badge-indigo') }}">
                                                     {{ $quiz->category->name ?? '' }}</div>
                                                 <div class="questions-tag">
                                                     <svg width="14" height="14" viewBox="0 0 24 24"
@@ -797,7 +683,7 @@
                                             <div class="exam-card-footer">
                                                 <div class="exam-author">
                                                     <div
-                                                        class="author-avatar {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
+                                                        class="author-avatar {{ $loop->index % 3 == 1 ? 'green-gradient' : ($loop->index % 3 == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
                                                         <img src="{{ $quiz->user->profile_url ?? '' }}"
                                                             alt="{{ $quiz->user->name ?? '' }}">
                                                     </div>
