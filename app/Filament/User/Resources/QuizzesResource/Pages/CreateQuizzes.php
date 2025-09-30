@@ -85,6 +85,13 @@ class CreateQuizzes extends CreateRecord
         if ($maxQuestionsPerExam > 0 && $maxQuestions > $maxQuestionsPerExam) {
             $maxQuestions = $maxQuestionsPerExam;
         }
+
+        // Initial generation cap for paid plans: limit to 25 on create
+        if ($subscription && $subscription->plan) {
+            if ($maxQuestions > 25) {
+                $maxQuestions = 25;
+            }
+        }
         
         // Update data for AI prompt
         $data['max_questions'] = $maxQuestions;

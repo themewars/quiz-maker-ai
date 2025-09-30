@@ -416,7 +416,7 @@ class EditQuizzes extends EditRecord
             // Check current question count
             $currentQuestionCount = Question::where('quiz_id', $this->record->id)->count();
             
-            // Ensure we don't exceed plan limits
+            // Ensure we don't exceed plan limits (additional can exceed 25 initial cap)
             if ($maxQuestionsPerExam > 0 && ($currentQuestionCount + $additionalQuestions) > $maxQuestionsPerExam) {
                 $additionalQuestions = $maxQuestionsPerExam - $currentQuestionCount;
                 if ($additionalQuestions <= 0) {
