@@ -24,7 +24,7 @@ use App\Filament\User\Resources\QuizzesResource\RelationManagers\QuestionsRelati
 class EditQuizzes extends EditRecord
 {
     protected static string $resource = QuizzesResource::class;
-    protected function getRelationManagers(): array
+    public function getRelationManagers(): array
     {
         // Always show a live table of questions sourced from DB below the form
         return [QuestionsRelationManager::class];
