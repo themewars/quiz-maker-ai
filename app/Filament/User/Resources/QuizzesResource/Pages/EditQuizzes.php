@@ -686,32 +686,69 @@ class EditQuizzes extends EditRecord
                 return;
             }
 
-            $quizResponse = Http::withToken($openAiKey)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                ])
-                ->connectTimeout(20)
-                ->timeout(180)
-                ->retry(3, 2000)
-                ->post('https://api.openai.com/v1/chat/completions', [
-                    'model' => $model,
-                    'temperature' => 0.7,
-                    'max_tokens' => 12000,
-                    'messages' => [
-                        [
-                            'role' => 'user',
-                            'content' => $prompt,
-                        ],
-                    ],
-                ]);
+            // Chunked generation: request in batches (max 25 items per API call)
+            $allItems = [];
+            $remainingTotal = $additionalQuestions;
+            $maxPerRequest = 25;
 
-            if ($quizResponse->failed()) {
-                $error = $quizResponse->json()['error']['message'] ?? 'Unknown error occurred';
-                Notification::make()->danger()->title(__('OpenAI Error'))->body($error)->send();
-                return;
+            while ($remainingTotal > 0) {
+                $thisBatch = min($maxPerRequest, $remainingTotal);
+                $chunkPrompt = <<<PROMPT
+
+                You are an expert in crafting engaging quizzes. Generate exactly {$thisBatch} additional questions according to the specified question type.
+
+                STRICT OUTPUT REQUIREMENTS:
+                - Output MUST be a JSON array with LENGTH exactly {$thisBatch}. Do not exceed or go under.
+                - Do NOT include any surrounding prose, markdown, headings, or keys other than the array itself.
+
+                **Quiz Details:**
+                - **Title**: {$data['title']}
+                - **Description**: {$description}
+                - **Number of Additional Questions**: {$thisBatch}
+                - **Difficulty**: {$quizData['Difficulty']}
+                - **Question Type**: {$quizData['question_type']}
+                - **Language**: {$quizData['language']}
+
+                [Return ONLY the JSON array as described.]
+                PROMPT;
+
+                $resp = Http::withToken($openAiKey)
+                    ->withHeaders(['Content-Type' => 'application/json'])
+                    ->connectTimeout(20)
+                    ->timeout(180)
+                    ->retry(3, 2000)
+                    ->post('https://api.openai.com/v1/chat/completions', [
+                        'model' => $model,
+                        'temperature' => 0.7,
+                        'max_tokens' => 12000,
+                        'messages' => [[
+                            'role' => 'user',
+                            'content' => $chunkPrompt,
+                        ]],
+                    ]);
+
+                if ($resp->failed()) {
+                    $error = $resp->json()['error']['message'] ?? 'Unknown error occurred';
+                    Notification::make()->danger()->title(__('OpenAI Error'))->body($error)->send();
+                    break;
+                }
+
+                $chunkText = $resp['choices'][0]['message']['content'] ?? '';
+                $chunkText = trim(preg_replace('/^```json\s*|\s*```$/', '', $chunkText));
+                $chunkItems = json_decode($chunkText, true);
+                if (is_array($chunkItems)) {
+                    $allItems = array_merge($allItems, $chunkItems);
+                    $remainingTotal = $additionalQuestions - count($allItems);
+                } else {
+                    Log::warning('Chunk decode failed: ' . json_last_error_msg());
+                    break;
+                }
             }
 
-            $quizText = $quizResponse['choices'][0]['message']['content'] ?? null;
+            if (count($allItems) > $additionalQuestions) {
+                $allItems = array_slice($allItems, 0, $additionalQuestions);
+            }
+            $quizText = json_encode($allItems, JSON_UNESCAPED_UNICODE);
         }
 
         Log::info("Additional questions AI response received: " . ($quizText ? 'yes' : 'no'));
