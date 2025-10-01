@@ -16,6 +16,7 @@ use Filament\Notifications\Notification;
 use Filament\Notifications\Actions\Action as NotificationAction;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Forms;
+use App\Jobs\GenerateAdditionalQuestions;
 use fivefilters\Readability\Readability;
 use fivefilters\Readability\Configuration;
 use App\Filament\User\Resources\QuizzesResource;
@@ -687,69 +688,27 @@ class EditQuizzes extends EditRecord
                 return;
             }
 
-            // Chunked generation: request in batches (max 25 items per API call)
-            $allItems = [];
-            $remainingTotal = $additionalQuestions;
-            $maxPerRequest = 25;
-
-            while ($remainingTotal > 0) {
-                $thisBatch = min($maxPerRequest, $remainingTotal);
-                $chunkPrompt = <<<PROMPT
-
-                You are an expert in crafting engaging quizzes. Generate exactly {$thisBatch} additional questions according to the specified question type.
-
-                STRICT OUTPUT REQUIREMENTS:
-                - Output MUST be a JSON array with LENGTH exactly {$thisBatch}. Do not exceed or go under.
-                - Do NOT include any surrounding prose, markdown, headings, or keys other than the array itself.
-
-                **Quiz Details:**
-                - **Title**: {$data['title']}
-                - **Description**: {$description}
-                - **Number of Additional Questions**: {$thisBatch}
-                - **Difficulty**: {$quizMeta['Difficulty']}
-                - **Question Type**: {$quizMeta['question_type']}
-                - **Language**: {$quizMeta['language']}
-
-                [Return ONLY the JSON array as described.]
-                PROMPT;
-
-                $resp = Http::withToken($openAiKey)
-                    ->withHeaders(['Content-Type' => 'application/json'])
-                    ->connectTimeout(20)
-                    ->timeout(180)
-                    ->retry(3, 2000)
-                    ->post('https://api.openai.com/v1/chat/completions', [
-                        'model' => $model,
-                        'temperature' => 0.7,
-                        'max_tokens' => 12000,
-                        'messages' => [[
-                            'role' => 'user',
-                            'content' => $chunkPrompt,
-                        ]],
-                    ]);
-
-                if ($resp->failed()) {
-                    $error = $resp->json()['error']['message'] ?? 'Unknown error occurred';
-                    Notification::make()->danger()->title(__('OpenAI Error'))->body($error)->send();
-                    break;
-                }
-
-                $chunkText = $resp['choices'][0]['message']['content'] ?? '';
-                $chunkText = trim(preg_replace('/^```json\s*|\s*```$/', '', $chunkText));
-                $chunkItems = json_decode($chunkText, true);
-                if (is_array($chunkItems)) {
-                    $allItems = array_merge($allItems, $chunkItems);
-                    $remainingTotal = $additionalQuestions - count($allItems);
-                } else {
-                    Log::warning('Chunk decode failed: ' . json_last_error_msg());
-                    break;
-                }
-            }
-
-            if (count($allItems) > $additionalQuestions) {
-                $allItems = array_slice($allItems, 0, $additionalQuestions);
-            }
-            $quizText = json_encode($allItems, JSON_UNESCAPED_UNICODE);
+            // Dispatch background job instead of doing long-running HTTP work in request
+            GenerateAdditionalQuestions::dispatch(
+                $this->record->id,
+                $additionalQuestions,
+                (string)$description,
+                [
+                    'title' => $data['title'],
+                    'difficulty' => $quizMeta['Difficulty'],
+                    'question_type' => $quizMeta['question_type'],
+                    'language' => $quizMeta['language'],
+                    'ai_type' => Quiz::OPEN_AI,
+                    'open_ai_key' => $openAiKey,
+                    'open_ai_model' => $model,
+                ]
+            );
+            Notification::make()
+                ->success()
+                ->title('Generation started')
+                ->body('We are generating questions in the background. You will see them shortly.')
+                ->send();
+            return;
         }
 
         Log::info("Additional questions AI response received: " . ($quizText ? 'yes' : 'no'));
