@@ -1022,7 +1022,7 @@ class EditQuizzes extends EditRecord
             }
         }
 
-        $quizData = [
+        $quizMeta = [
             'Difficulty' => Quiz::DIFF_LEVEL[$data['diff_level']],
             'question_type' => Quiz::QUIZ_TYPE[$data['quiz_type']],
             'language' => getAllLanguages()[$data['language']] ?? 'English'
