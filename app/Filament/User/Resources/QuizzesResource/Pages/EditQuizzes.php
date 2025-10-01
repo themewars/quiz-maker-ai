@@ -705,6 +705,13 @@ class EditQuizzes extends EditRecord
 
         $aiType = getSetting()->ai_type;
 
+        // Show notification for both AI types
+        Notification::make()
+            ->success()
+            ->title('Generation started')
+            ->body('Generating questions... Watch the progress bar below for real-time updates.')
+            ->send();
+
         if ($aiType == Quiz::GEMINI_AI) {
             $geminiApiKey = getSetting()->gemini_api_key;
             $model = getSetting()->gemini_ai_model;
@@ -770,11 +777,6 @@ class EditQuizzes extends EditRecord
             );
             // Start live progress polling on client via temporary state field
             Session::put('gen_progress_key', "quiz:".$this->record->id.":gen_progress");
-            Notification::make()
-                ->success()
-                ->title('Generation started')
-                ->body('Generating questions... Watch the progress bar below for real-time updates.')
-                ->send();
             return;
         }
 
