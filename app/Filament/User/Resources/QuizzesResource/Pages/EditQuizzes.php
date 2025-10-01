@@ -217,15 +217,7 @@ class EditQuizzes extends EditRecord
         }
     }
 
-    public function refreshWhenCompleted(): void
-    {
-        if (! $this->record) return;
-        $key = "quiz:".$this->record->id.":gen_progress";
-        $data = Cache::get($key);
-        if (is_array($data) && ($data['status'] ?? '') === 'completed') {
-            $this->refreshQuestions();
-        }
-    }
+    // Removed background auto-refresh hooks per simplified UX
 
     protected function getHeaderActions(): array
     {
@@ -703,11 +695,11 @@ class EditQuizzes extends EditRecord
 
         $aiType = getSetting()->ai_type;
 
-        // Show notification for both AI types
+        // Minimal notification (no progress instructions)
         Notification::make()
             ->success()
             ->title('Generation started')
-            ->body('Generating questions... Watch the progress bar below for real-time updates.')
+            ->body('Generating questions...')
             ->send();
 
         if ($aiType == Quiz::GEMINI_AI) {
