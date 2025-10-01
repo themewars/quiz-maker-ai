@@ -167,6 +167,17 @@ class EditQuizzes extends EditRecord
         $this->form->fill($data);
     }
 
+    public function refreshQuestions(): void
+    {
+        if ($this->record) {
+            $this->record->refresh()->load(['questions.answers']);
+            // Reset session flags and refill the form with latest DB state
+            Session::forget('quizQuestions');
+            $data = $this->record->attributesToArray();
+            $this->form->fill($this->mutateFormDataBeforeFill($data));
+        }
+    }
+
     protected function getHeaderActions(): array
     {
         return [

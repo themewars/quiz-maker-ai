@@ -30,6 +30,9 @@
                     <div class="h-2 bg-indigo-500 rounded" :style="`width: ${total ? (done/total*100) : 0}%`"></div>
                 </div>
                 <div class="text-xs mt-1" x-text="status"></div>
+                <div class="mt-2">
+                    <button type="button" class="fi-btn fi-btn-size-md fi-color-primary" @click="$wire.refreshQuestions()">Refresh list now</button>
+                </div>
             </div>
         </template>
     </div>
