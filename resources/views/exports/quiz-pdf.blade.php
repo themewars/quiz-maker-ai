@@ -217,6 +217,7 @@
     </style>
 </head>
 <body>
+    {{-- Live progress bar snippet is not for PDF; no change here --}}
     @if(!empty($watermarkEnabled))
         <div class="watermark-container">
             @if(!empty($watermarkLogo) && empty($whiteLabelEnabled))
