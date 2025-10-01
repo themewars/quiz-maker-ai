@@ -25,7 +25,6 @@ use App\Filament\User\Resources\QuizzesResource;
 class EditQuizzes extends EditRecord
 {
     protected static string $resource = QuizzesResource::class;
-    protected static string $view = 'filament.user.resources.quizzes-resource.pages.edit-quizzes';
 
     public static $tab = Quiz::TEXT_TYPE;
     public function currentActiveTab()

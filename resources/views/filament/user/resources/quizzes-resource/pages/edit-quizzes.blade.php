@@ -1,4 +1,4 @@
-@extends('filament-panels::page')
+@extends('filament::page')
 
 @section('content')
     @parent
