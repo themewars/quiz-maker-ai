@@ -695,12 +695,7 @@ class EditQuizzes extends EditRecord
 
         $aiType = getSetting()->ai_type;
 
-        // Minimal notification
-        Notification::make()
-            ->success()
-            ->title('Generation started')
-            ->body('Generating questions... We will refresh the list when done.')
-            ->send();
+        // No notification per UX; list will auto-refresh on completion
 
         if ($aiType == Quiz::GEMINI_AI) {
             $geminiApiKey = getSetting()->gemini_api_key;
