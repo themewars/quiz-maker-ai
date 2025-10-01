@@ -381,15 +381,13 @@ class EditQuizzes extends EditRecord
                 ->action('regenerateQuestions'),
 
             Action::make('addMoreQuestions')
-                ->label('Add More Questions With AI')
+                ->label('Add More')
                 ->color('success')
                 ->action(function(array $data) { $this->addMoreQuestions($data); })
-                ->modalHeading('Add More Questions')
-                ->modalDescription('Select how many new questions to generate. You can choose any number (up to 50).')
-                ->modalSubmitActionLabel('Generate')
+                ->modalHeading('Add More')
                 ->form([
                     Forms\Components\TextInput::make('count')
-                        ->label('Number of questions to add')
+                        ->label('Count')
                         ->numeric()
                         ->minValue(1)
                         ->maxValue(50)
