@@ -1,4 +1,4 @@
-@extends('filament::page')
+@extends('filament-panels::page')
 
 @section('content')
     @parent
@@ -8,6 +8,7 @@
             done: 0,
             status: 'idle',
             timer: null,
+            quizId: {{ $quizId ?? 'null' }},
             start() {
                 if (!this.quizId) return;
                 this.timer = setInterval(async () => {
@@ -21,7 +22,7 @@
                     }
                 }, 1500);
             },
-        }" x-init="quizId = {{ $quizId ?? 'null' }}; start()" class="mt-4">
+        }" x-init="start()" class="mt-4">
         <template x-if="status !== 'idle'">
             <div class="p-3 rounded-md border border-gray-200 bg-white dark:bg-gray-900">
                 <div class="text-sm mb-2">Generating questions: <span x-text="done"></span>/<span x-text="total"></span> (<span x-text="total ? Math.round((done/total)*100) : 0"></span>%)</div>
