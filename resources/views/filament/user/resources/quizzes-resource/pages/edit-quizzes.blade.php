@@ -9,6 +9,7 @@
             status: 'idle',
             timer: null,
             quizId: {{ $quizId ?? 'null' }},
+            lastDone: -1,
             start() {
                 if (!this.quizId) return;
                 this.timer = setInterval(async () => {
@@ -16,7 +17,9 @@
                     if (res.ok) {
                         const data = await res.json();
                         this.total = data.total || 0;
-                        this.done = data.done || 0;
+                        const newDone = data.done || 0;
+                        if (newDone !== this.done && $wire && $wire.refreshQuestions) { $wire.refreshQuestions(); }
+                        this.done = newDone;
                         this.status = data.status || 'idle';
                         // Trigger a Livewire-side check to refresh from cache (server authoritative)
                         if ($wire && $wire.refreshWhenCompleted) { $wire.refreshWhenCompleted(); }
