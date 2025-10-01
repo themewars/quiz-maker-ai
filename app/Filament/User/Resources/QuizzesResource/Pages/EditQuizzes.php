@@ -372,6 +372,20 @@ class EditQuizzes extends EditRecord
                 ->color('gray')
                 ->action('regenerateQuestions'),
 
+            Action::make('addMoreQuestions')
+                ->label('Add More Questions')
+                ->color('success')
+                ->action(function(array $data) { $this->addMoreQuestions($data); })
+                ->modalHeading('Add More Questions')
+                ->form([
+                    Forms\Components\TextInput::make('count')
+                        ->label('Count')
+                        ->numeric()
+                        ->minValue(1)
+                        ->maxValue(50)
+                        ->default(5)
+                        ->required(),
+                ]),
 
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
@@ -681,11 +695,11 @@ class EditQuizzes extends EditRecord
 
         $aiType = getSetting()->ai_type;
 
-        // Minimal notification (no progress instructions)
+        // Minimal notification
         Notification::make()
             ->success()
             ->title('Generation started')
-            ->body('Generating questions...')
+            ->body('Generating questions... We will refresh the list when done.')
             ->send();
 
         if ($aiType == Quiz::GEMINI_AI) {
