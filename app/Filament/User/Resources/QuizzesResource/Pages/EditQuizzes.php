@@ -773,7 +773,7 @@ class EditQuizzes extends EditRecord
             Notification::make()
                 ->success()
                 ->title('Generation started')
-                ->body('We are generating more questions in the background. This page will auto-update when ready.')
+                ->body('Generating questions... Watch the progress bar below for real-time updates.')
                 ->send();
             return;
         }
