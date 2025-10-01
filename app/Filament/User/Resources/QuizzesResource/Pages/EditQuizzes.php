@@ -204,6 +204,16 @@ class EditQuizzes extends EditRecord
         }
     }
 
+    public function refreshWhenCompleted(): void
+    {
+        if (! $this->record) return;
+        $key = "quiz:".$this->record->id.":gen_progress";
+        $data = Cache::get($key);
+        if (is_array($data) && ($data['status'] ?? '') === 'completed') {
+            $this->refreshQuestions();
+        }
+    }
+
     protected function getHeaderActions(): array
     {
         return [
