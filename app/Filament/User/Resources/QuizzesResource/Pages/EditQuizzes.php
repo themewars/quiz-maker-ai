@@ -690,7 +690,9 @@ class EditQuizzes extends EditRecord
                 ->withHeaders([
                     'Content-Type' => 'application/json',
                 ])
-                ->timeout(90)
+                ->connectTimeout(20)
+                ->timeout(180)
+                ->retry(3, 2000)
                 ->post('https://api.openai.com/v1/chat/completions', [
                     'model' => $model,
                     'messages' => [
@@ -1139,7 +1141,9 @@ class EditQuizzes extends EditRecord
             try {
                 $quizResponse = Http::withToken($openAiKey)
                     ->withHeaders(['Content-Type' => 'application/json'])
-                    ->timeout(90)
+                    ->connectTimeout(20)
+                    ->timeout(180)
+                    ->retry(3, 2000)
                     ->post('https://api.openai.com/v1/chat/completions', [
                         'model' => $model,
                         'messages' => [['role' => 'user', 'content' => $prompt]]
