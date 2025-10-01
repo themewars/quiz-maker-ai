@@ -448,15 +448,31 @@ class EditQuizzes extends EditRecord
             // Check current question count
             $currentQuestionCount = Question::where('quiz_id', $this->record->id)->count();
             
-            // Ensure we don't exceed plan limits (additional can exceed 25 initial cap)
+            // Check plan limits and show clear error message
             if ($maxQuestionsPerExam > 0 && ($currentQuestionCount + $additionalQuestions) > $maxQuestionsPerExam) {
-                $additionalQuestions = $maxQuestionsPerExam - $currentQuestionCount;
-                if ($additionalQuestions <= 0) {
+                $maxAllowed = $maxQuestionsPerExam - $currentQuestionCount;
+                if ($maxAllowed <= 0) {
                     Notification::make()
                         ->danger()
                         ->icon('heroicon-o-exclamation-triangle')
                         ->title('Question Limit Reached')
                         ->body('You have reached the maximum number of questions allowed for your plan.')
+                        ->persistent()
+                        ->actions([
+                            NotificationAction::make('close')
+                                ->label('Close')
+                                ->button()
+                                ->color('gray')
+                                ->close(),
+                        ])
+                        ->send();
+                    return;
+                } else {
+                    Notification::make()
+                        ->danger()
+                        ->icon('heroicon-o-exclamation-triangle')
+                        ->title('Question Limit Exceeded')
+                        ->body("You requested {$additionalQuestions} questions, but your plan allows only {$maxAllowed} more questions. Current: {$currentQuestionCount}, Plan limit: {$maxQuestionsPerExam}")
                         ->persistent()
                         ->actions([
                             NotificationAction::make('close')
