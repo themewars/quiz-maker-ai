@@ -176,15 +176,21 @@ class EditQuizzes extends EditRecord
     {
         if ($this->record) {
             $this->record->refresh()->load(['questions.answers']);
-            // Build questions array from DB like first load
+            // Clear session data to force fresh load from DB
             Session::forget('quizQuestions');
+            Session::forget('editedQuizDataForRegeneration');
+            
+            // Get fresh data from database
             $data = $this->record->attributesToArray();
             $data = $this->mutateFormDataBeforeFill($data);
+            
+            // Build questions array from DB
             $data['questions'] = [];
             $existingQuestions = \App\Models\Question::where('quiz_id', $this->record->id)
                 ->with('answers')
                 ->orderBy('id')
                 ->get();
+                
             foreach ($existingQuestions as $question) {
                 $answersOption = $question->answers->map(function ($answer) {
                     return [
@@ -192,7 +198,9 @@ class EditQuizzes extends EditRecord
                         'is_correct' => $answer->is_correct,
                     ];
                 })->toArray();
+                
                 $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+                
                 $data['questions'][] = [
                     'title' => $question->title,
                     'answers' => $answersOption,
@@ -200,7 +208,12 @@ class EditQuizzes extends EditRecord
                     'question_id' => $question->id,
                 ];
             }
+            
+            // Force form refresh with new data
             $this->form->fill($data);
+            
+            // Trigger Livewire re-render
+            $this->dispatch('$refresh');
         }
     }
 
