@@ -12,6 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class GenerateAdditionalQuestions implements ShouldQueue
 {
@@ -47,6 +48,15 @@ class GenerateAdditionalQuestions implements ShouldQueue
                 Log::error('GenerateAdditionalQuestions: OpenAI key missing');
                 return;
             }
+
+            // Initialize progress cache
+            $cacheKey = "quiz:{$this->quizId}:gen_progress";
+            Cache::put($cacheKey, [
+                'total' => $this->additionalQuestions,
+                'done' => 0,
+                'status' => 'running',
+                'updated_at' => now()->toDateTimeString(),
+            ], now()->addHour());
 
             $allItems = [];
             $remainingTotal = $this->additionalQuestions;
@@ -85,6 +95,13 @@ class GenerateAdditionalQuestions implements ShouldQueue
                 }
                 $allItems = array_merge($allItems, $chunkItems);
                 $remainingTotal = $this->additionalQuestions - count($allItems);
+                // Update progress after each chunk
+                Cache::put($cacheKey, [
+                    'total' => $this->additionalQuestions,
+                    'done' => count($allItems),
+                    'status' => $remainingTotal > 0 ? 'running' : 'finalizing',
+                    'updated_at' => now()->toDateTimeString(),
+                ], now()->addHour());
             }
 
             if (count($allItems) > $this->additionalQuestions) {
@@ -92,6 +109,14 @@ class GenerateAdditionalQuestions implements ShouldQueue
             }
 
             $this->persistQuestions($quiz, $allItems);
+
+            // Mark completed
+            Cache::put($cacheKey, [
+                'total' => $this->additionalQuestions,
+                'done' => min(count($allItems), $this->additionalQuestions),
+                'status' => 'completed',
+                'updated_at' => now()->toDateTimeString(),
+            ], now()->addMinutes(10));
         }
     }
 
@@ -125,6 +150,7 @@ PROMPT;
     protected function persistQuestions(Quiz $quiz, array $items): void
     {
         $added = 0;
+        $doneSoFar = 0;
         foreach ($items as $question) {
             if (!isset($question['question'])) { continue; }
             $q = Question::create([
@@ -163,6 +189,14 @@ PROMPT;
                 }
             }
             $added++;
+            $doneSoFar++;
+            // Optional per-item progress bump if chunks were small
+            Cache::put("quiz:{$quiz->id}:gen_progress", [
+                'total' => $this->additionalQuestions,
+                'done' => $doneSoFar,
+                'status' => 'saving',
+                'updated_at' => now()->toDateTimeString(),
+            ], now()->addHour());
         }
         Log::info("GenerateAdditionalQuestions job added {$added} questions to quiz {$quiz->id}");
     }

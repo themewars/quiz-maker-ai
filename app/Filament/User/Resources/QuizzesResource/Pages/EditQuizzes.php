@@ -17,6 +17,7 @@ use Filament\Notifications\Actions\Action as NotificationAction;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Forms;
 use App\Jobs\GenerateAdditionalQuestions;
+use Illuminate\Support\Facades\Cache;
 use fivefilters\Readability\Readability;
 use fivefilters\Readability\Configuration;
 use App\Filament\User\Resources\QuizzesResource;
@@ -707,11 +708,8 @@ class EditQuizzes extends EditRecord
                     'open_ai_model' => $model,
                 ]
             );
-            Notification::make()
-                ->success()
-                ->title('Generation started')
-                ->body('We are generating questions in the background. You will see them shortly.')
-                ->send();
+            // Start live progress polling on client via temporary state field
+            Session::put('gen_progress_key', "quiz:".$this->record->id.":gen_progress");
             return;
         }
 

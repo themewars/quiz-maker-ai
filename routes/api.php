@@ -1,3 +1,6 @@
+use App\Http\Controllers\Api\ProgressController;
+
+Route::middleware('auth:sanctum')->get('/quizzes/{quiz}/progress', [ProgressController::class, 'show']);
 <?php
 
 use Illuminate\Http\Request;
