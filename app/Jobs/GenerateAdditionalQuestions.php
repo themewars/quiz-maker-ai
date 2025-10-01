@@ -157,7 +157,18 @@ PROMPT;
                 'quiz_id' => $quiz->id,
                 'title' => (string)$question['question'],
             ]);
+            // Normalize schema: support {options, answer/correct_answer}
             $answers = is_array($question['answers'] ?? null) ? $question['answers'] : [];
+            if (empty($answers) && is_array($question['options'] ?? null)) {
+                $answers = array_map(function ($opt) {
+                    return ['title' => (string)$opt];
+                }, $question['options']);
+                if (isset($question['answer'])) {
+                    $question['correct_answer_key'] = $question['answer'];
+                } elseif (isset($question['correct_answer'])) {
+                    $question['correct_answer_key'] = $question['correct_answer'];
+                }
+            }
             $correctKey = $question['correct_answer_key'] ?? '';
 
             // If API didn't return answers, synthesize based on question type where possible
