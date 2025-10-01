@@ -18,7 +18,15 @@
                         this.total = data.total || 0;
                         this.done = data.done || 0;
                         this.status = data.status || 'idle';
-                        if (this.status === 'completed') { clearInterval(this.timer); }
+                        if (this.status === 'completed') {
+                            clearInterval(this.timer);
+                            // Auto-refresh the questions list so user doesn't need to click anything
+                            if ($wire && $wire.refreshQuestions) {
+                                $wire.refreshQuestions();
+                            }
+                            // Hide the progress bar after refresh
+                            setTimeout(() => { this.status = 'idle'; }, 500);
+                        }
                     }
                 }, 1500);
             },
@@ -30,9 +38,6 @@
                     <div class="h-2 bg-indigo-500 rounded" :style="`width: ${total ? (done/total*100) : 0}%`"></div>
                 </div>
                 <div class="text-xs mt-1" x-text="status"></div>
-                <div class="mt-2">
-                    <button type="button" class="fi-btn fi-btn-size-md fi-color-primary" @click="$wire.refreshQuestions()">Refresh list now</button>
-                </div>
             </div>
         </template>
     </div>
