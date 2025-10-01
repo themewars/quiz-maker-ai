@@ -695,6 +695,8 @@ class EditQuizzes extends EditRecord
                 ->retry(3, 2000)
                 ->post('https://api.openai.com/v1/chat/completions', [
                     'model' => $model,
+                    'temperature' => 0.7,
+                    'max_tokens' => 12000,
                     'messages' => [
                         [
                             'role' => 'user',
@@ -816,6 +818,77 @@ class EditQuizzes extends EditRecord
                         if (is_array($question)) {
                             Log::warning('Question keys: ' . implode(', ', array_keys($question)));
                         }
+                    }
+                }
+                // If model returned fewer than requested, try once more for the remaining
+                if ($addedCount < $additionalQuestions && $aiType == Quiz::OPEN_AI) {
+                    $remaining = $additionalQuestions - $addedCount;
+                    Log::info("Attempting second request for remaining questions: {$remaining}");
+                    $prompt2 = <<<PROMPT
+
+                    You are an expert in crafting engaging quizzes. Generate exactly {$remaining} additional questions according to the specified question type.
+
+                    STRICT OUTPUT REQUIREMENTS:
+                    - Output MUST be a JSON array with LENGTH exactly {$remaining}. Do not exceed or go under.
+                    - Do NOT include any surrounding prose, markdown, headings, or keys other than the array itself.
+                    - If you produce more than {$remaining} internally, RETURN ONLY the first {$remaining} items.
+
+                    **Quiz Details:**
+
+                    - **Title**: {$data['title']}
+                    - **Description**: {$description}
+                    - **Number of Additional Questions**: {$remaining}
+                    - **Difficulty**: {$quizData['Difficulty']}
+                    - **Question Type**: {$quizData['question_type']}
+                    - **Language**: {$quizData['language']}
+
+                    [Return ONLY the JSON array as described.]
+
+                    PROMPT;
+
+                    try {
+                        $resp2 = Http::withToken($openAiKey)
+                            ->withHeaders(['Content-Type' => 'application/json'])
+                            ->connectTimeout(20)
+                            ->timeout(180)
+                            ->retry(3, 2000)
+                            ->post('https://api.openai.com/v1/chat/completions', [
+                                'model' => $model,
+                                'temperature' => 0.7,
+                                'max_tokens' => 12000,
+                                'messages' => [['role' => 'user', 'content' => $prompt2]],
+                            ]);
+
+                        if ($resp2->successful()) {
+                            $txt2 = $resp2['choices'][0]['message']['content'] ?? '';
+                            $txt2 = trim(preg_replace('/^```json\s*|\s*```$/', '', $txt2));
+                            $arr2 = json_decode($txt2, true);
+                            if (is_array($arr2)) {
+                                foreach ($arr2 as $q) {
+                                    if ($addedCount >= $additionalQuestions) { break; }
+                                    if (isset($q['question'], $q['answers'])) {
+                                        $questionModel = Question::create([
+                                            'quiz_id' => $this->record->id,
+                                            'title' => $q['question'],
+                                        ]);
+                                        if (is_array($q['answers']) && !empty($q['answers'])) {
+                                            $correctKey = $q['correct_answer_key'] ?? '';
+                                            foreach ($q['answers'] as $ans) {
+                                                $isCorrect = is_array($correctKey) ? in_array($ans['title'], $correctKey) : ($ans['title'] === $correctKey);
+                                                Answer::create([
+                                                    'question_id' => $questionModel->id,
+                                                    'title' => $ans['title'],
+                                                    'is_correct' => $isCorrect,
+                                                ]);
+                                            }
+                                        }
+                                        $addedCount++;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        Log::warning('Second request for remaining questions failed: ' . $e->getMessage());
                     }
                 }
                 
