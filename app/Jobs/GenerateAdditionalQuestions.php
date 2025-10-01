@@ -133,16 +133,34 @@ PROMPT;
             ]);
             $answers = is_array($question['answers'] ?? null) ? $question['answers'] : [];
             $correctKey = $question['correct_answer_key'] ?? '';
-            foreach ($answers as $ans) {
-                $title = is_array($ans) ? ($ans['title'] ?? '') : '';
-                $isCorrect = false;
-                if (is_array($correctKey)) { $isCorrect = in_array($title, $correctKey); }
-                else { $isCorrect = $title === $correctKey; }
-                Answer::create([
-                    'question_id' => $q->id,
-                    'title' => $title,
-                    'is_correct' => $isCorrect,
-                ]);
+
+            // If API didn't return answers, synthesize based on question type where possible
+            if (empty($answers)) {
+                $qtype = strtolower((string)($this->meta['question_type'] ?? ''));
+                if (strpos($qtype, 'true') !== false && strpos($qtype, 'false') !== false) {
+                    // True/False: create two options
+                    $trueCorrect = (is_string($correctKey) && strtolower($correctKey) === 'true');
+                    $falseCorrect = (is_string($correctKey) && strtolower($correctKey) === 'false');
+                    Answer::create(['question_id' => $q->id, 'title' => 'True', 'is_correct' => $trueCorrect]);
+                    Answer::create(['question_id' => $q->id, 'title' => 'False', 'is_correct' => $falseCorrect]);
+                }
+            } else {
+                foreach ($answers as $ans) {
+                    $title = is_array($ans) ? ($ans['title'] ?? '') : '';
+                    $isCorrect = false;
+                    if (is_array($correctKey)) { $isCorrect = in_array($title, $correctKey); }
+                    else { $isCorrect = $title === $correctKey; }
+                    // if API already provided is_correct, prefer it unless empty
+                    if (is_array($ans) && array_key_exists('is_correct', $ans)) {
+                        $provided = filter_var($ans['is_correct'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                        if (!is_null($provided)) { $isCorrect = (bool)$provided; }
+                    }
+                    Answer::create([
+                        'question_id' => $q->id,
+                        'title' => $title,
+                        'is_correct' => $isCorrect,
+                    ]);
+                }
             }
             $added++;
         }
