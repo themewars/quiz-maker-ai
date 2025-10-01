@@ -176,10 +176,31 @@ class EditQuizzes extends EditRecord
     {
         if ($this->record) {
             $this->record->refresh()->load(['questions.answers']);
-            // Reset session flags and refill the form with latest DB state
+            // Build questions array from DB like first load
             Session::forget('quizQuestions');
             $data = $this->record->attributesToArray();
-            $this->form->fill($this->mutateFormDataBeforeFill($data));
+            $data = $this->mutateFormDataBeforeFill($data);
+            $data['questions'] = [];
+            $existingQuestions = \App\Models\Question::where('quiz_id', $this->record->id)
+                ->with('answers')
+                ->orderBy('id')
+                ->get();
+            foreach ($existingQuestions as $question) {
+                $answersOption = $question->answers->map(function ($answer) {
+                    return [
+                        'title' => $answer->title,
+                        'is_correct' => $answer->is_correct,
+                    ];
+                })->toArray();
+                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+                $data['questions'][] = [
+                    'title' => $question->title,
+                    'answers' => $answersOption,
+                    'is_correct' => $correctAnswer,
+                    'question_id' => $question->id,
+                ];
+            }
+            $this->form->fill($data);
         }
     }
 
