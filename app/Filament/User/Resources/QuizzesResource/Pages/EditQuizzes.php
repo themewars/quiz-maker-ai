@@ -876,8 +876,8 @@ class EditQuizzes extends EditRecord
                     - **Title**: {$data['title']}
                     - **Description**: {$description}
                     - **Number of Additional Questions**: {$remaining}
-                    - **Difficulty**: {$quizData['Difficulty']}
-                    - **Question Type**: {$quizData['question_type']}
+                    - **Difficulty**: {$quizMeta['Difficulty']}
+                    - **Question Type**: {$quizMeta['question_type']}
                     - **Language**: {$quizMeta['language']}
 
                     [Return ONLY the JSON array as described.]
@@ -1078,12 +1078,12 @@ class EditQuizzes extends EditRecord
         - **Title**: {$data['title']}
         - **Description**: {$description}
         - **Number of Questions**: {$data['max_questions']}
-        - **Difficulty**: {$quizData['Difficulty']}
-        - **Question Type**: {$quizData['question_type']}
+        - **Difficulty**: {$quizMeta['Difficulty']}
+        - **Question Type**: {$quizMeta['question_type']}
         - **Language**: {$quizMeta['language']}
 
         **CRITICAL LANGUAGE REQUIREMENT:**
-        - You MUST write ALL questions and answers EXCLUSIVELY in {$quizData['language']} language.
+        - You MUST write ALL questions and answers EXCLUSIVELY in {$quizMeta['language']} language.
         - Do NOT use English or any other language.
         - If the language is "Hindi", write everything in Hindi (Devanagari script).
         - If the language is "Arabic", write everything in Arabic script.
