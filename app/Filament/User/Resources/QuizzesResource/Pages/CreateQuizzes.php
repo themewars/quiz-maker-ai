@@ -764,8 +764,10 @@ PROMPT;
     protected function getRedirectUrl(): string
     {
         $recordId = $this->record->id ?? null;
-
-        return $recordId ? $this->getResource()::getUrl('edit', ['record' => $recordId]) : $this->getResource()::getUrl('index');
+        // Append cache-buster to ensure fresh load on first edit view
+        return $recordId
+            ? $this->getResource()::getUrl('edit', ['record' => $recordId, 't' => time()])
+            : $this->getResource()::getUrl('index');
     }
 
     protected function getFormActions(): array
