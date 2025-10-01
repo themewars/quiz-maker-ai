@@ -513,7 +513,7 @@ class EditQuizzes extends EditRecord
         - **Language**: {$quizMeta['language']}
 
         **CRITICAL LANGUAGE REQUIREMENT:**
-        - You MUST write ALL questions and answers EXCLUSIVELY in {$quizData['language']} language.
+        - You MUST write ALL questions and answers EXCLUSIVELY in {$quizMeta['language']} language.
         - Do NOT use English or any other language.
         - If the language is "Hindi", write everything in Hindi (Devanagari script).
         - If the language is "Arabic", write everything in Arabic script.
@@ -878,7 +878,7 @@ class EditQuizzes extends EditRecord
                     - **Number of Additional Questions**: {$remaining}
                     - **Difficulty**: {$quizData['Difficulty']}
                     - **Question Type**: {$quizData['question_type']}
-                    - **Language**: {$quizData['language']}
+                    - **Language**: {$quizMeta['language']}
 
                     [Return ONLY the JSON array as described.]
 
@@ -1080,7 +1080,7 @@ class EditQuizzes extends EditRecord
         - **Number of Questions**: {$data['max_questions']}
         - **Difficulty**: {$quizData['Difficulty']}
         - **Question Type**: {$quizData['question_type']}
-        - **Language**: {$quizData['language']}
+        - **Language**: {$quizMeta['language']}
 
         **CRITICAL LANGUAGE REQUIREMENT:**
         - You MUST write ALL questions and answers EXCLUSIVELY in {$quizData['language']} language.
@@ -1098,9 +1098,9 @@ class EditQuizzes extends EditRecord
 
         **Instructions:**
 
-        1. **Language Requirement**: Write all quiz questions and answers in {$quizData['language']}.
+        1. **Language Requirement**: Write all quiz questions and answers in {$quizMeta['language']}.
         2. **Number of Questions**: Create exactly {$data['max_questions']} questions.
-        3. **Difficulty Level**: Ensure each question adheres to the specified difficulty level: {$quizData['Difficulty']}.
+        3. **Difficulty Level**: Ensure each question adheres to the specified difficulty level: {$quizMeta['Difficulty']}.
         4. **Description Alignment**: Ensure that each question is relevant to and reflects key aspects of the provided description.
         5. **Question Type**: Follow the format specified below based on the question type:
 
@@ -1201,7 +1201,7 @@ class EditQuizzes extends EditRecord
         - For Open Ended questions, provide no answer options (empty answers array).
         - The correct_answer_key should match the correct answer's title value(s) for Multiple Choice, Single Choice, and True/False questions.
         - Ensure that each question is diverse and well-crafted, covering various relevant concepts.
-        - **LANGUAGE COMPLIANCE**: Every single word in questions and answers MUST be in {$quizData['language']}. No exceptions.
+        - **LANGUAGE COMPLIANCE**: Every single word in questions and answers MUST be in {$quizMeta['language']}. No exceptions.
 
         Your responses should be formatted impeccably in JSON, capturing the essence of the provided quiz details.
 
