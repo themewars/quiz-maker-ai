@@ -319,7 +319,7 @@ class EditQuizzes extends EditRecord
                 ->color('success')
                 ->action(function(array $data) { $this->addMoreQuestions($data); })
                 ->modalHeading('Add More Questions')
-                ->modalDescription('Select how many new questions to generate. Default is 25, you can choose fewer or more (up to 50).')
+                ->modalDescription('Select how many new questions to generate. You can choose any number (up to 50).')
                 ->modalSubmitActionLabel('Generate')
                 ->form([
                     Forms\Components\TextInput::make('count')
@@ -327,7 +327,7 @@ class EditQuizzes extends EditRecord
                         ->numeric()
                         ->minValue(1)
                         ->maxValue(50)
-                        ->default(25)
+                        ->default(5)
                         ->required(),
                 ]),
 
@@ -433,8 +433,8 @@ class EditQuizzes extends EditRecord
             $description = substr($description, 0, 10000) . '...';
         }
 
-        // Use requested number of additional questions (default 10)
-        $additionalQuestions = max(1, (int)($actionData['count'] ?? 10));
+        // Use requested number of additional questions (respect user input)
+        $additionalQuestions = max(1, (int)($actionData['count'] ?? 5));
         $subscription = getActiveSubscription();
         if ($subscription && $subscription->plan) {
             // Safe conversion for max_questions_per_exam

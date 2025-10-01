@@ -69,11 +69,14 @@ class CreateQuizzes extends CreateRecord
             $this->halt();
         }
 
-        // Apply default questions: paid plans default to 25 for initial generation
+        // Apply default questions: respect user input first, then use defaults
         $userDefaultCount = (int) (getUserSettings('default_questions_count') ?? 10);
-        $maxQuestions = ($subscription && $subscription->plan)
-            ? 25
-            : max(1, $userDefaultCount);
+        $userInputQuestions = (int) ($data['max_questions'] ?? 0);
+        
+        // Use user input if provided, otherwise use defaults
+        $maxQuestions = $userInputQuestions > 0 
+            ? $userInputQuestions 
+            : (($subscription && $subscription->plan) ? 25 : max(1, $userDefaultCount));
         
         // Safe conversion for max_questions_per_exam
         $maxQuestionsPerExam = 0;
