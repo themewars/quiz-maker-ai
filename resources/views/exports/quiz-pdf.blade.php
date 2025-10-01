@@ -15,7 +15,8 @@
     @endphp
     <style>
         /* Embed Hindi-capable fonts so viewers without system fonts still see text */
-        /* Only use base64-embedded sources to avoid external HTTP fetch issues */
+        /* Only embed when font files actually exist to avoid invalid CSS */
+        @if(!empty($fontRegularData))
         @font-face {
             font-family: 'Noto Sans Devanagari';
             src: url('data:font/ttf;base64,{!! $fontRegularData !!}') format('truetype');
@@ -23,6 +24,8 @@
             font-style: normal;
             font-display: swap;
         }
+        @endif
+        @if(!empty($fontBoldData))
         @font-face {
             font-family: 'Noto Sans Devanagari';
             src: url('data:font/ttf;base64,{!! $fontBoldData !!}') format('truetype');
@@ -30,6 +33,7 @@
             font-style: normal;
             font-display: swap;
         }
+        @endif
 
         body {
             font-family: 'Noto Sans Devanagari', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif;
@@ -44,7 +48,7 @@
 
         /* Force font on all elements to avoid fallback boxes */
         * {
-            font-family: 'Noto Sans Devanagari', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif !important;
+            font-family: 'Noto Sans Devanagari', 'Noto Sans Devanagari UI', 'Noto Serif Devanagari', 'Arial Unicode MS', 'DejaVu Sans', Arial, sans-serif !important;
         }
         
         .header {
