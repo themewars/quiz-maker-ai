@@ -471,8 +471,8 @@ class Quiz extends Model implements HasMedia
                         })
                         ->visible(fn(Get $get) => !empty($get('answers'))),
                 ])
-                ->visible(fn(string $operation): bool => $operation === 'edit')
-                ->hidden(fn(string $operation): bool => $operation === 'create')
+                // Ensure questions are visible on edit even if state is initially empty
+                ->visible(fn(string $operation): bool => $operation !== 'create')
                 ->addable(false),
 
             Repeater::make('custom_questions')
