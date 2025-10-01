@@ -453,8 +453,8 @@ class Exam extends Model implements HasMedia
                         })
                         ->visible(fn(Get $get) => !empty($get('answers'))),
                 ])
-                ->visible(fn(Get $get) => !empty($get('questions')))
-                ->hidden(fn(string $operation): bool => $operation === 'create')
+                // Always show on edit even if state is still empty on first load
+                ->visible(fn(string $operation): bool => $operation !== 'create')
                 ->addable(false),
 
             Repeater::make('custom_questions')

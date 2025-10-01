@@ -62,6 +62,11 @@ class EditQuizzes extends EditRecord
         if ($this->record) {
             $this->record->refresh()->load(['questions.answers']);
         }
+        // If redirected right after creation, ensure questions are rehydrated into form state
+        if (request()->query('first')) {
+            $data = $this->record?->attributesToArray() ?? [];
+            $this->form->fill($this->mutateFormDataBeforeFill($data));
+        }
         $quizQuestions = Session::get('quizQuestions');
         $editedBaseData = Session::get('editedQuizDataForRegeneration');
         Session::forget('editedQuizDataForRegeneration');

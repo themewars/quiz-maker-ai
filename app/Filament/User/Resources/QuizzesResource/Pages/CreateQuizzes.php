@@ -764,9 +764,9 @@ PROMPT;
     protected function getRedirectUrl(): string
     {
         $recordId = $this->record->id ?? null;
-        // Append cache-buster to ensure fresh load on first edit view
+        // Append cache-buster and a hint to force full load of questions on first edit
         return $recordId
-            ? $this->getResource()::getUrl('edit', ['record' => $recordId, 't' => time()])
+            ? $this->getResource()::getUrl('edit', ['record' => $recordId, 't' => time(), 'first' => 1])
             : $this->getResource()::getUrl('index');
     }
 
