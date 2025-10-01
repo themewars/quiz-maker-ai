@@ -372,20 +372,6 @@ class EditQuizzes extends EditRecord
                 ->color('gray')
                 ->action('regenerateQuestions'),
 
-            Action::make('addMoreQuestions')
-                ->label('Add More')
-                ->color('success')
-                ->action(function(array $data) { $this->addMoreQuestions($data); })
-                ->modalHeading('Add More')
-                ->form([
-                    Forms\Components\TextInput::make('count')
-                        ->label('Count')
-                        ->numeric()
-                        ->minValue(1)
-                        ->maxValue(50)
-                        ->default(5)
-                        ->required(),
-                ]),
 
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
