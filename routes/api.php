@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Progress endpoint for AI generation
-Route::middleware('auth:sanctum')->get('/quizzes/{quiz}/progress', [ProgressController::class, 'show']);
+// Progress endpoint for AI generation (no Sanctum; controller will optionally check session user)
+Route::get('/quizzes/{quiz}/progress', [ProgressController::class, 'show']);

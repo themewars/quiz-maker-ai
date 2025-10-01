@@ -770,6 +770,11 @@ class EditQuizzes extends EditRecord
             );
             // Start live progress polling on client via temporary state field
             Session::put('gen_progress_key', "quiz:".$this->record->id.":gen_progress");
+            Notification::make()
+                ->success()
+                ->title('Generation started')
+                ->body('We are generating more questions in the background. This page will auto-update when ready.')
+                ->send();
             return;
         }
 
