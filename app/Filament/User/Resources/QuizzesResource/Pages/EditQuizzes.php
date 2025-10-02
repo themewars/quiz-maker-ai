@@ -26,9 +26,15 @@ class EditQuizzes extends EditRecord
 {
     protected static string $resource = QuizzesResource::class;
 
-    protected static string $view = 'filament.user.resources.quizzes-resource.pages.edit-quizzes';
-
     public static $tab = Quiz::TEXT_TYPE;
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            \App\Filament\Widgets\QuestionCountWidget::class,
+        ];
+    }
+
     public function currentActiveTab()
     {
         $pre = URL::previous();
