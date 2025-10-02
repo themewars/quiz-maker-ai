@@ -117,6 +117,9 @@ class GenerateAdditionalQuestions implements ShouldQueue
                 'status' => 'completed',
                 'updated_at' => now()->toDateTimeString(),
             ], now()->addMinutes(10));
+            
+            // Clear session flags
+            \Illuminate\Support\Facades\Session::forget(['generating_questions', 'generating_count']);
         }
     }
 

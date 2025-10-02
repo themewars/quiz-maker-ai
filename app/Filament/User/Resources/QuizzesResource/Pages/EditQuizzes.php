@@ -385,7 +385,8 @@ class EditQuizzes extends EditRecord
                         ->maxValue(50)
                         ->default(5)
                         ->required(),
-                ]),
+                ])
+                ->visible(fn() => !Session::has('generating_questions')),
 
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
@@ -695,7 +696,9 @@ class EditQuizzes extends EditRecord
 
         $aiType = getSetting()->ai_type;
 
-        // No notification per UX; list will auto-refresh on completion
+        // Set session flag to show generating state
+        Session::put('generating_questions', true);
+        Session::put('generating_count', $additionalQuestions);
 
         if ($aiType == Quiz::GEMINI_AI) {
             $geminiApiKey = getSetting()->gemini_api_key;
