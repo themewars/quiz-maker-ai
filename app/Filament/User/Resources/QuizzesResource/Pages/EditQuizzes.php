@@ -101,19 +101,19 @@ class EditQuizzes extends EditRecord
             if ($dbQuestions->count() > 0) {
                 $data['questions'] = [];
                 foreach ($dbQuestions as $question) {
-                    $answersOption = $question->answers->map(function ($answer) {
-                        return [
-                            'title' => $answer->title,
-                            'is_correct' => $answer->is_correct,
-                        ];
-                    })->toArray();
-                    $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-                    $data['questions'][] = [
-                        'title' => $question->title,
-                        'answers' => $answersOption,
-                        'is_correct' => $correctAnswer,
-                        'question_id' => $question->id,
+                $answersOption = $question->answers->map(function ($answer) {
+                    return [
+                        'title' => $answer->title,
+                        'is_correct' => $answer->is_correct,
                     ];
+                })->toArray();
+                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+                $data['questions'][] = [
+                    'title' => $question->title,
+                    'answers' => $answersOption,
+                    'is_correct' => $correctAnswer,
+                    'question_id' => $question->id,
+                ];
                 }
             }
         }
@@ -162,19 +162,19 @@ class EditQuizzes extends EditRecord
             if ($dbQuestions->count() > 0) {
                 $data['questions'] = [];
                 foreach ($dbQuestions as $question) {
-                    $answersOption = $question->answers->map(function ($answer) {
-                        return [
-                            'title' => $answer->title,
-                            'is_correct' => $answer->is_correct,
-                        ];
-                    })->toArray();
-                    $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-                    $data['questions'][] = [
-                        'title' => $question->title,
-                        'answers' => $answersOption,
-                        'is_correct' => $correctAnswer,
-                        'question_id' => $question->id,
+                $answersOption = $question->answers->map(function ($answer) {
+                    return [
+                        'title' => $answer->title,
+                        'is_correct' => $answer->is_correct,
                     ];
+                })->toArray();
+                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+                $data['questions'][] = [
+                    'title' => $question->title,
+                    'answers' => $answersOption,
+                    'is_correct' => $correctAnswer,
+                    'question_id' => $question->id,
+                ];
                 }
             }
         }
@@ -818,7 +818,7 @@ class EditQuizzes extends EditRecord
             );
             // Start live progress polling on client via temporary state field
             Session::put('gen_progress_key', "quiz:".$this->record->id.":gen_progress");
-            return;
+                return;
         }
 
         Log::info("Additional questions AI response received: " . ($quizText ? 'yes' : 'no'));
@@ -1387,8 +1387,55 @@ class EditQuizzes extends EditRecord
         }
 
         if ($quizText) {
-            Session::put('quizQuestions', $quizText);
-            $this->fillForm();
+            // Instead of refilling entire form (which can wipe user inputs),
+            // only replace the questions in the current form state.
+            $raw = trim($quizText);
+            if (stripos($raw, '```json') === 0) {
+                $raw = preg_replace('/^```json\s*|\s*```$/', '', $raw);
+                $raw = trim($raw);
+            }
+            $parsed = json_decode($raw, true);
+
+            if (is_array($parsed)) {
+                $newQuestions = [];
+                $questionsArray = isset($parsed['questions']) && is_array($parsed['questions']) ? $parsed['questions'] : $parsed;
+
+                foreach ($questionsArray as $q) {
+                    if (isset($q['question'])) {
+                        $answersOption = [];
+                        if (isset($q['answers']) && is_array($q['answers'])) {
+                            foreach ($q['answers'] as $ans) {
+                                $answersOption[] = [
+                                    'title' => $ans['title'] ?? '',
+                                    'is_correct' => (bool)($ans['is_correct'] ?? false),
+                                ];
+                            }
+                        }
+                        // Determine correct indices based on is_correct flags
+                        $correctIndices = [];
+                        foreach ($answersOption as $idx => $ans) {
+                            if (!empty($ans['is_correct'])) { $correctIndices[] = $idx; }
+                        }
+
+                        $newQuestions[] = [
+                            'title' => $q['question'],
+                            'answers' => $answersOption,
+                            'is_correct' => $correctIndices,
+                        ];
+                    }
+                }
+
+                // Merge into current form state without touching other fields
+                $state = $this->form->getState();
+                $state['questions'] = $newQuestions;
+                $this->form->fill($state);
+            } else {
+                Notification::make()
+                    ->danger()
+                    ->title('Regeneration failed')
+                    ->body('Invalid AI response.')
+                    ->send();
+            }
         } else {
             Notification::make()
                 ->danger()
