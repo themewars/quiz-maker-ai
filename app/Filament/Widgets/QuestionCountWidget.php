@@ -3,15 +3,12 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Question;
-use Filament\Widgets\Widget;
+use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
-class QuestionCountWidget extends Widget
+class QuestionCountWidget extends BaseWidget
 {
-    protected static string $view = 'filament.widgets.question-count-widget';
-
-    protected int | string | array $columnSpan = 'full';
-
-    public function getViewData(): array
+    protected function getStats(): array
     {
         $record = $this->getRecord();
         $currentQuestionCount = Question::where('quiz_id', $record->id ?? 0)->count();
@@ -26,9 +23,15 @@ class QuestionCountWidget extends Widget
             }
         }
 
+        $remaining = $maxQuestions > 0 ? $maxQuestions - $currentQuestionCount : 0;
+        $percentage = $maxQuestions > 0 ? ($currentQuestionCount / $maxQuestions) * 100 : 0;
+
         return [
-            'currentQuestionCount' => $currentQuestionCount,
-            'maxQuestions' => $maxQuestions,
+            Stat::make('Questions in this Exam', $currentQuestionCount)
+                ->description($maxQuestions > 0 ? "of {$maxQuestions} questions ({$remaining} remaining)" : 'questions')
+                ->descriptionIcon('heroicon-m-question-mark-circle')
+                ->color($percentage > 80 ? 'warning' : 'success')
+                ->chart([$currentQuestionCount]),
         ];
     }
 }
