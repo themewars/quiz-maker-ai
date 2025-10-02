@@ -375,18 +375,53 @@ class EditQuizzes extends EditRecord
     protected function getFormActions(): array
     {
         return [
-            parent::getFormActions()[0],
+            Action::make('save')
+                ->label('Save changes')
+                ->color('primary')
+                ->form([
+                    \Filament\Forms\Components\Placeholder::make('review_confirmation')
+                        ->label('Review Confirmation')
+                        ->content('Do you want to review all questions before saving?')
+                ])
+                ->action(function() {
+                    $this->save();
+                }),
             Action::make('addMoreQuestions')
                 ->label('Add More Questions With AI')
                 ->color('success')
-                ->action(function() { 
-                    $this->addMoreQuestions(['count' => 15]); // Default 15 questions
+                ->form([
+                    \Filament\Forms\Components\TextInput::make('count')
+                        ->label('Number of Questions to Add')
+                        ->numeric()
+                        ->required()
+                        ->default(15)
+                        ->minValue(1)
+                        ->maxValue(15)
+                        ->helperText('Maximum 15 questions can be added at once')
+                ])
+                ->action(function(array $data) { 
+                    $this->addMoreQuestions(['count' => $data['count']]);
                 })
                 ->visible(fn() => !Session::has('generating_questions')),
 
             Action::make('regenerate')
                 ->label(__('messages.common.re_generate'))
                 ->color('warning')
+                ->form([
+                    \Filament\Forms\Components\Placeholder::make('regeneration_info')
+                        ->label('Regeneration Limits')
+                        ->content(function() {
+                            $userId = auth()->id();
+                            $currentMonth = now()->format('Y-m');
+                            $currentDay = now()->format('Y-m-d');
+                            $regenerationKey = "regenerations_{$userId}_{$currentMonth}";
+                            $dailyRegenerationKey = "daily_regenerations_{$userId}_{$currentDay}";
+                            $currentRegenerations = Cache::get($regenerationKey, 0);
+                            $currentDailyRegenerations = Cache::get($dailyRegenerationKey, 0);
+                            
+                            return "Daily: {$currentDailyRegenerations}/3 | Monthly: {$currentRegenerations}/10";
+                        })
+                ])
                 ->action('regenerateQuestions'),
 
             Action::make('addQuestionManual')
