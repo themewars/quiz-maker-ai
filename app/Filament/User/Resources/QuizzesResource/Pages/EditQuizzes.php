@@ -376,6 +376,19 @@ class EditQuizzes extends EditRecord
     {
         return [
             parent::getFormActions()[0],
+            Action::make('addMoreQuestions')
+                ->label('Add More Questions With AI')
+                ->color('success')
+                ->action(function() { 
+                    $this->addMoreQuestions(['count' => 15]); // Default 15 questions
+                })
+                ->visible(fn() => !Session::has('generating_questions')),
+
+            Action::make('regenerate')
+                ->label(__('messages.common.re_generate'))
+                ->color('warning')
+                ->action('regenerateQuestions'),
+
             Action::make('addQuestionManual')
                 ->label('Add Question Manual')
                 ->color('info')
@@ -392,19 +405,6 @@ class EditQuizzes extends EditRecord
                     ];
                     $this->form->fill(['questions' => $currentQuestions]);
                 }),
-
-            Action::make('regenerate')
-                ->label(__('messages.common.re_generate'))
-                ->color('warning')
-                ->action('regenerateQuestions'),
-
-            Action::make('addMoreQuestions')
-                ->label('Add More Questions With AI')
-                ->color('success')
-                ->action(function() { 
-                    $this->addMoreQuestions(['count' => 15]); // Default 15 questions
-                })
-                ->visible(fn() => !Session::has('generating_questions')),
 
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
