@@ -407,6 +407,7 @@ class EditQuizzes extends EditRecord
             Action::make('regenerate')
                 ->label(__('messages.common.re_generate'))
                 ->color('warning')
+                ->requiresConfirmation()
                 ->modalHeading('Re-Generate Questions')
                 ->modalDescription(function(){
                     $userId = auth()->id();
@@ -425,6 +426,7 @@ class EditQuizzes extends EditRecord
                         ->content('You can re-generate up to 3 times per day and 10 times per month.')
                         ->columnSpanFull()
                 ])
+                ->modalSubmitActionLabel('Re-Generate')
                 ->action('regenerateQuestions'),
 
             Action::make('addQuestionManual')
