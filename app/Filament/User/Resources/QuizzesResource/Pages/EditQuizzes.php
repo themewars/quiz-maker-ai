@@ -62,13 +62,11 @@ class EditQuizzes extends EditRecord
         if ($this->record) {
             $this->record->refresh()->load(['questions.answers']);
         }
-        // If redirected right after creation, ensure questions are rehydrated into form state
-        if (request()->query('first')) {
-            $data = $this->record?->attributesToArray() ?? [];
-            $this->form->fill($this->mutateFormDataBeforeFill($data));
-        }
+        
         $quizQuestions = Session::get('quizQuestions');
         $editedBaseData = Session::get('editedQuizDataForRegeneration');
+        
+        // Clear session data AFTER we've retrieved it
         Session::forget('editedQuizDataForRegeneration');
         Session::forget('quizQuestions');
 
@@ -150,23 +148,26 @@ class EditQuizzes extends EditRecord
             }
         }
 
-        // If no questions were assembled from either source, fallback to DB
-        if (empty($data['questions']) && isset($data['id'])) {
-            $questions = Question::where('quiz_id', $data['id'])->with('answers')->orderBy('id')->get();
-            foreach ($questions as $question) {
-                $answersOption = $question->answers->map(function ($answer) {
-                    return [
-                        'title' => $answer->title,
-                        'is_correct' => $answer->is_correct,
+        // Always prioritize DB questions over session data for reliability
+        if (isset($data['id'])) {
+            $dbQuestions = Question::where('quiz_id', $data['id'])->with('answers')->orderBy('id')->get();
+            if ($dbQuestions->count() > 0) {
+                $data['questions'] = [];
+                foreach ($dbQuestions as $question) {
+                    $answersOption = $question->answers->map(function ($answer) {
+                        return [
+                            'title' => $answer->title,
+                            'is_correct' => $answer->is_correct,
+                        ];
+                    })->toArray();
+                    $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+                    $data['questions'][] = [
+                        'title' => $question->title,
+                        'answers' => $answersOption,
+                        'is_correct' => $correctAnswer,
+                        'question_id' => $question->id,
                     ];
-                })->toArray();
-                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-                $data['questions'][] = [
-                    'title' => $question->title,
-                    'answers' => $answersOption,
-                    'is_correct' => $correctAnswer,
-                    'question_id' => $question->id,
-                ];
+                }
             }
         }
         $this->form->fill($data);
