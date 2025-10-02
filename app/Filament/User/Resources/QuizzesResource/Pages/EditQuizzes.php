@@ -382,10 +382,10 @@ class EditQuizzes extends EditRecord
                 ->action('regenerateQuestions'),
 
             Action::make('addMoreQuestions')
-                ->label('Add More Questions')
+                ->label('Add More Questions With AI')
                 ->color('success')
                 ->action(function() { 
-                    $this->addMoreQuestions(['count' => 5]); // Default 5 questions
+                    $this->addMoreQuestions(['count' => 15]); // Default 15 questions
                 })
                 ->visible(fn() => !Session::has('generating_questions')),
 
@@ -482,7 +482,7 @@ class EditQuizzes extends EditRecord
         }
 
         // Use requested number of additional questions (respect user input)
-        $additionalQuestions = max(1, (int)($actionData['count'] ?? 5));
+        $additionalQuestions = max(1, (int)($actionData['count'] ?? 15));
         $subscription = getActiveSubscription();
         if ($subscription && $subscription->plan) {
             // Safe conversion for max_questions_per_exam
