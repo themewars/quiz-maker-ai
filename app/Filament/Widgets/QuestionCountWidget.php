@@ -13,8 +13,14 @@ class QuestionCountWidget extends Widget
 
     public ?int $quizId = null;
 
-    public function mount(): void
+    public function mount($record = null): void
     {
+        // Get quiz ID from the mount parameter first
+        if ($record && isset($record->id)) {
+            $this->quizId = $record->id;
+            return;
+        }
+        
         // Get quiz ID from the current page - try multiple ways
         $this->quizId = request()->route('record') ?? request()->route('id') ?? request()->get('id');
         
@@ -25,18 +31,6 @@ class QuestionCountWidget extends Widget
                 if (is_numeric($segment)) {
                     $this->quizId = (int)$segment;
                     break;
-                }
-            }
-        }
-        
-        // If still null, try to get from the parent page context
-        if (!$this->quizId) {
-            // Try to get from the parent Livewire component
-            $parent = $this->getParent();
-            if ($parent && method_exists($parent, 'getRecord')) {
-                $record = $parent->getRecord();
-                if ($record && isset($record->id)) {
-                    $this->quizId = $record->id;
                 }
             }
         }
