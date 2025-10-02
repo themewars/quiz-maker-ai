@@ -704,6 +704,9 @@ class EditQuizzes extends EditRecord
             // Set session flag to show generating state
             Session::put('generating_questions', true);
             Session::put('generating_count', $additionalQuestions);
+            
+            // Force page refresh to show progress card
+            $this->redirect($this->getResource()::getUrl('edit', ['record' => $this->record->id]));
 
             $geminiResponse = Http::withHeaders([
                 'Content-Type' => 'application/json',
@@ -744,6 +747,9 @@ class EditQuizzes extends EditRecord
             // Set session flag to show generating state
             Session::put('generating_questions', true);
             Session::put('generating_count', $additionalQuestions);
+            
+            // Force page refresh to show progress card
+            $this->redirect($this->getResource()::getUrl('edit', ['record' => $this->record->id]));
 
             // Dispatch background job instead of doing long-running HTTP work in request
             GenerateAdditionalQuestions::dispatch(
