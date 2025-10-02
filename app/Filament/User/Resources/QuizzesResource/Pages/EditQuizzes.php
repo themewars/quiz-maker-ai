@@ -96,29 +96,32 @@ class EditQuizzes extends EditRecord
         }
 
         // Always prioritize DB questions over session data for reliability
+        $loadedFromDb = false;
         if (isset($data['id'])) {
             $dbQuestions = Question::where('quiz_id', $data['id'])->with('answers')->orderBy('id')->get();
             if ($dbQuestions->count() > 0) {
+                $loadedFromDb = true;
                 $data['questions'] = [];
                 foreach ($dbQuestions as $question) {
-                $answersOption = $question->answers->map(function ($answer) {
-                    return [
-                        'title' => $answer->title,
-                        'is_correct' => $answer->is_correct,
+                    $answersOption = $question->answers->map(function ($answer) {
+                        return [
+                            'title' => $answer->title,
+                            'is_correct' => $answer->is_correct,
+                        ];
+                    })->toArray();
+                    $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+                    $data['questions'][] = [
+                        'title' => $question->title,
+                        'answers' => $answersOption,
+                        'is_correct' => $correctAnswer,
+                        'question_id' => $question->id,
                     ];
-                })->toArray();
-                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-                $data['questions'][] = [
-                    'title' => $question->title,
-                    'answers' => $answersOption,
-                    'is_correct' => $correctAnswer,
-                    'question_id' => $question->id,
-                ];
                 }
             }
         }
 
-        if (is_array($questionData) && !empty($questionData)) {
+        // Only merge session/AI questions if we didn't already load from DB
+        if (!$loadedFromDb && is_array($questionData) && !empty($questionData)) {
             $questionsArray = isset($questionData['questions']) && is_array($questionData['questions'])
                 ? $questionData['questions']
                 : $questionData;
@@ -156,28 +159,7 @@ class EditQuizzes extends EditRecord
             }
         }
 
-        // Always prioritize DB questions over session data for reliability
-        if (isset($data['id'])) {
-            $dbQuestions = Question::where('quiz_id', $data['id'])->with('answers')->orderBy('id')->get();
-            if ($dbQuestions->count() > 0) {
-                $data['questions'] = [];
-                foreach ($dbQuestions as $question) {
-                $answersOption = $question->answers->map(function ($answer) {
-                    return [
-                        'title' => $answer->title,
-                        'is_correct' => $answer->is_correct,
-                    ];
-                })->toArray();
-                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-                $data['questions'][] = [
-                    'title' => $question->title,
-                    'answers' => $answersOption,
-                    'is_correct' => $correctAnswer,
-                    'question_id' => $question->id,
-                ];
-                }
-            }
-        }
+        // Note: We already loaded from DB above when present, so no second pass here.
         $this->form->fill($data);
     }
 
