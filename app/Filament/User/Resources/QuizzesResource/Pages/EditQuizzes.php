@@ -449,15 +449,15 @@ class EditQuizzes extends EditRecord
                         ];
                     }
 
-                    $currentQuestions = $state['questions'] ?? [];
-                    $currentQuestions[] = [
+                    // For manual entry, use custom_questions repeater which exposes answer title inputs
+                    $currentCustom = $state['custom_questions'] ?? [];
+                    $currentCustom[] = [
                         'title' => '',
                         'answers' => $answers,
-                        'is_correct' => [],
                     ];
 
                     // Refill preserving rest of the state
-                    $state['questions'] = $currentQuestions;
+                    $state['custom_questions'] = $currentCustom;
                     $this->data = $state;
                     $this->form->fill($this->data);
                 }),
