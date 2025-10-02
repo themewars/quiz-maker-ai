@@ -1,6 +1,8 @@
-@extends('filament-panels::page')
+@extends('filament::page')
 
 @section('content')
+    @parent
+    
     @php
         $quizId = $this->record->id ?? null;
         $isGenerating = session('generating_questions', false);
