@@ -427,17 +427,39 @@ class EditQuizzes extends EditRecord
                 ->label('Add Question Manual')
                 ->color('info')
                 ->action(function() { 
-                    // Add a new question to the form
-                    $currentQuestions = $this->form->getState()['questions'] ?? [];
+                    // Prepare default answers based on current quiz question type
+                    $state = is_array($this->data) ? $this->data : $this->form->getState();
+                    $questionType = $state['quiz_type'] ?? $this->record?->quiz_type;
+
+                    $answers = [];
+                    if ($questionType === \App\Models\Quiz::TRUE_FALSE) {
+                        $answers = [
+                            ['title' => 'True', 'is_correct' => false],
+                            ['title' => 'False', 'is_correct' => false],
+                        ];
+                    } elseif ($questionType === \App\Models\Quiz::OPEN_ENDED) {
+                        $answers = [];
+                    } else {
+                        // Default for Single Choice / Multiple Choice → 4 options
+                        $answers = [
+                            ['title' => '', 'is_correct' => false],
+                            ['title' => '', 'is_correct' => false],
+                            ['title' => '', 'is_correct' => false],
+                            ['title' => '', 'is_correct' => false],
+                        ];
+                    }
+
+                    $currentQuestions = $state['questions'] ?? [];
                     $currentQuestions[] = [
                         'title' => '',
-                        'answers' => [
-                            ['title' => '', 'is_correct' => false],
-                            ['title' => '', 'is_correct' => false],
-                        ],
-                        'is_correct' => []
+                        'answers' => $answers,
+                        'is_correct' => [],
                     ];
-                    $this->form->fill(['questions' => $currentQuestions]);
+
+                    // Refill preserving rest of the state
+                    $state['questions'] = $currentQuestions;
+                    $this->data = $state;
+                    $this->form->fill($this->data);
                 }),
 
             Action::make('cancel')
