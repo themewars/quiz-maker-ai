@@ -84,11 +84,16 @@
                                 clearInterval(this.timer); 
                                 // Scroll to bottom and show success message
                                 setTimeout(() => {
+                                    // Scroll to bottom of page
                                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                                     // Show success notification
                                     window.dispatchEvent(new CustomEvent('questions-added', { 
                                         detail: { count: this.total } 
                                     }));
+                                    // Refresh the page to show new questions
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 2000);
                                 }, 500);
                             } 
                         }
