@@ -538,56 +538,48 @@ class CreateQuizzes extends CreateRecord
                 foreach ($quizQuestions as $index => $question) {
                     Log::info("Processing question " . (intval($index) + 1) . ": " . json_encode($question));
                     
-                    // Check if this is a nested array of questions
+                    // Normalize question structure to avoid duplicates from nested arrays
+                    $questionsToProcess = [];
+                    
+                    // Check if this is a nested array of questions (AI sometimes returns nested structure)
                     if (is_array($question) && isset($question[0]) && is_array($question[0]) && isset($question[0]['question'])) {
-                        Log::info("Found nested questions array, processing " . count($question) . " questions");
-                        foreach ($question as $nestedIndex => $nestedQuestion) {
-                            if (isset($nestedQuestion['question'], $nestedQuestion['answers'])) {
-                                $questionModel = Question::create([
-                                    'quiz_id' => $quiz->id,
-                                    'title' => $nestedQuestion['question'],
-                                ]);
-
-                                // Check if answers array is not empty
-                                if (is_array($nestedQuestion['answers']) && !empty($nestedQuestion['answers'])) {
-                                    foreach ($nestedQuestion['answers'] as $answer) {
-                                        $isCorrect = false;
-                                        $correctKey = $nestedQuestion['correct_answer_key'] ?? '';
-
-                                        if (is_array($correctKey)) {
-                                            $isCorrect = in_array($answer['title'], $correctKey);
-                                        } else {
-                                            $isCorrect = $answer['title'] === $correctKey;
-                                        }
-
-                                        Answer::create([
-                                            'question_id' => $questionModel->id,
-                                            'title' => $answer['title'],
-                                            'is_correct' => $isCorrect,
-                                        ]);
-                                    }
-                                    Log::info("Nested question created successfully with " . count($nestedQuestion['answers']) . " answers");
-                                    $questionsCreated++;
-                                } else {
-                                    // For Open Ended questions or questions without answers
-                                    Log::info('Nested question created without answers (Open Ended): ' . $nestedQuestion['question']);
-                                    $questionsCreated++;
-                                }
-                            } else {
-                                Log::warning('Invalid nested question format in AI response: ' . json_encode($nestedQuestion));
+                        Log::info("Found nested questions array, flattening " . count($question) . " questions");
+                        foreach ($question as $nestedQuestion) {
+                            if (isset($nestedQuestion['question'])) {
+                                $questionsToProcess[] = $nestedQuestion;
                             }
                         }
-                    } elseif (isset($question['question'], $question['answers'])) {
+                    } elseif (isset($question['question'])) {
+                        // Single question
+                        $questionsToProcess[] = $question;
+                    } else {
+                        Log::warning('Invalid question format in AI response: ' . json_encode($question));
+                        
+                        // Check if this is a string (like "class 8 hindi exam") and skip it
+                        if (is_string($question)) {
+                            Log::info("Skipping string element: " . $question);
+                            continue;
+                        }
+                        
+                        // Only log keys if it's an array
+                        if (is_array($question)) {
+                            Log::warning('Question keys: ' . implode(', ', array_keys($question)));
+                        }
+                        continue;
+                    }
+                    
+                    // Process all normalized questions
+                    foreach ($questionsToProcess as $processedQuestion) {
                         $questionModel = Question::create([
                             'quiz_id' => $quiz->id,
-                            'title' => $question['question'],
+                            'title' => $processedQuestion['question'],
                         ]);
 
                         // Check if answers array is not empty
-                        if (is_array($question['answers']) && !empty($question['answers'])) {
-                            foreach ($question['answers'] as $answer) {
+                        if (is_array($processedQuestion['answers']) && !empty($processedQuestion['answers'])) {
+                            foreach ($processedQuestion['answers'] as $answer) {
                                 $isCorrect = false;
-                                $correctKey = $question['correct_answer_key'] ?? '';
+                                $correctKey = $processedQuestion['correct_answer_key'] ?? '';
 
                                 if (is_array($correctKey)) {
                                     $isCorrect = in_array($answer['title'], $correctKey);
@@ -601,25 +593,12 @@ class CreateQuizzes extends CreateRecord
                                     'is_correct' => $isCorrect,
                                 ]);
                             }
-                            Log::info("Question created successfully with " . count($question['answers']) . " answers");
+                            Log::info("Question created successfully with " . count($processedQuestion['answers']) . " answers");
                             $questionsCreated++;
                         } else {
                             // For Open Ended questions or questions without answers
-                            Log::info('Question created without answers (Open Ended): ' . $question['question']);
+                            Log::info('Question created without answers (Open Ended): ' . $processedQuestion['question']);
                             $questionsCreated++;
-                        }
-                    } else {
-                        Log::warning('Invalid question format in AI response: ' . json_encode($question));
-                        
-                        // Check if this is a string (like "class 8 hindi exam") and skip it
-                        if (is_string($question)) {
-                            Log::info("Skipping string element: " . $question);
-                            continue;
-                        }
-                        
-                        // Only log keys if it's an array
-                        if (is_array($question)) {
-                            Log::warning('Question keys: ' . implode(', ', array_keys($question)));
                         }
                     }
                 }
@@ -636,7 +615,11 @@ class CreateQuizzes extends CreateRecord
                }
 
                // If AI returned fewer than requested, try one backfill pass to generate remaining
-               $remaining = max(0, $targetCount - $totalQuestions);
+               // Get actual count from DB to ensure accuracy
+               $actualDbCount = Question::where('quiz_id', $quiz->id)->count();
+               $remaining = max(0, $targetCount - $actualDbCount);
+               Log::info("Backfill calculation: target={$targetCount}, actual={$actualDbCount}, remaining={$remaining}");
+               
                if ($remaining > 0) {
                    Log::warning("Backfill: attempting to generate remaining {$remaining} questions");
 
@@ -722,9 +705,10 @@ PROMPT;
                                            ]);
                                        }
                                    }
+                                   // Count actual questions created
+                                   $currentDbCount = Question::where('quiz_id', $quiz->id)->count();
+                                   if ($currentDbCount >= $targetCount) break;
                                }
-                               $totalQuestions++;
-                               if ($totalQuestions >= $targetCount) break;
                            }
                        }
                    }
