@@ -436,7 +436,7 @@ class Quiz extends Model implements HasMedia
                 ->label(__('messages.common.questions'))
                 ->columnSpanFull()
                 ->reorderableWithDragAndDrop(true)
-                ->addActionLabel('')
+                ->addable(false)
                 ->schema([
                     TextInput::make('title')
                         ->label(__('messages.common.question') . ':')
@@ -482,7 +482,7 @@ class Quiz extends Model implements HasMedia
                 ->columnSpanFull()
                 ->label('')
                 ->reorderableWithDragAndDrop(true)
-                ->addActionLabel('')
+                ->addable(false)
                 ->hidden(fn(string $operation): bool => $operation === 'create')
                 ->schema([
                     TextInput::make('title')
