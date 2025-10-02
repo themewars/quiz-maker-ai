@@ -416,10 +416,17 @@ class EditQuizzes extends EditRecord
                             if (!$userId) { return 'Please log in to view limits.'; }
                             $currentMonth = now()->format('Y-m');
                             $currentDay = now()->format('Y-m-d');
-                            $regenerationKey = "regenerations_{$userId}_{$currentMonth}";
-                            $dailyRegenerationKey = "daily_regenerations_{$userId}_{$currentDay}";
-                            $currentRegenerations = Cache::get($regenerationKey, 0);
-                            $currentDailyRegenerations = Cache::get($dailyRegenerationKey, 0);
+                    $regenerationKey = "regenerations_{$userId}_{$currentMonth}";
+                    $dailyRegenerationKey = "daily_regenerations_{$userId}_{$currentDay}";
+                    $currentRegenerations = Cache::get($regenerationKey, 0);
+                    $currentDailyRegenerations = Cache::get($dailyRegenerationKey, 0);
+                    Log::info('REG_MODAL_COUNTERS', [
+                        'user_id' => $userId,
+                        'daily_key' => $dailyRegenerationKey,
+                        'monthly_key' => $regenerationKey,
+                        'daily' => $currentDailyRegenerations,
+                        'monthly' => $currentRegenerations,
+                    ]);
                             return "Daily: {$currentDailyRegenerations}/3 | Monthly: {$currentRegenerations}/10";
                         })
                         ->columnSpanFull(),
@@ -429,7 +436,10 @@ class EditQuizzes extends EditRecord
                         ->columnSpanFull(),
                 ])
                 ->modalSubmitActionLabel('Re-Generate')
-                ->action('regenerateQuestions'),
+                ->action(function(){
+                    Log::info('REG_MODAL_CONFIRMED');
+                    $this->regenerateQuestions();
+                }),
 
             Action::make('addQuestionManual')
                 ->label('Add Question Manual')
