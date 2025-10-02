@@ -1,9 +1,11 @@
 @extends('filament-panels::page')
 
 @section('content')
-    @php($quizId = $this->record->id ?? null)
-    @php($isGenerating = session('generating_questions', false))
-    @php($generatingCount = session('generating_count', 0))
+    @php
+        $quizId = $this->record->id ?? null;
+        $isGenerating = session('generating_questions', false);
+        $generatingCount = session('generating_count', 0);
+    @endphp
     
     {{-- Question Count Notice --}}
     @php
