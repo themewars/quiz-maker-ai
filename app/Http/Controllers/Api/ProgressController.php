@@ -21,6 +21,10 @@ class ProgressController extends Controller
         }
         $key = "quiz:{$quizId}:gen_progress";
         $data = Cache::get($key);
+        
+        // Debug logging
+        \Log::info("Progress API called for quiz {$quizId}: " . json_encode($data));
+        
         return response()->json($data ?? [
             'total' => 0,
             'done' => 0,
