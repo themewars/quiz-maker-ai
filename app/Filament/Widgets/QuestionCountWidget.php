@@ -38,15 +38,7 @@ class QuestionCountWidget extends Widget
 
     public function getViewData(): array
     {
-        // Debug: Log the quiz ID we're using
-        \Log::info("QuestionCountWidget - Quiz ID: " . ($this->quizId ?? 'null'));
-        \Log::info("QuestionCountWidget - URL: " . request()->url());
-        \Log::info("QuestionCountWidget - Route parameters: " . json_encode(request()->route()->parameters()));
-        
         $currentQuestionCount = Question::where('quiz_id', $this->quizId ?? 0)->count();
-        
-        // Debug: Log the question count
-        \Log::info("QuestionCountWidget - Question count: " . $currentQuestionCount);
         
         $subscription = getActiveSubscription();
         $maxQuestions = 0;
@@ -62,9 +54,6 @@ class QuestionCountWidget extends Widget
         return [
             'currentQuestionCount' => $currentQuestionCount,
             'maxQuestions' => $maxQuestions,
-            'debugQuizId' => $this->quizId,
-            'debugUrl' => request()->url(),
-            'debugRouteParams' => request()->route()->parameters(),
         ];
     }
 }

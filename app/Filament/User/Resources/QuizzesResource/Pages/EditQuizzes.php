@@ -28,7 +28,7 @@ class EditQuizzes extends EditRecord
 
     public static $tab = Quiz::TEXT_TYPE;
 
-    protected function getHeaderWidgets(): array
+    protected function getFooterWidgets(): array
     {
         return [
             \App\Filament\Widgets\QuestionCountWidget::class,
