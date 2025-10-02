@@ -1,7 +1,4 @@
-@extends('filament::page')
-
-@section('content')
-    @parent
+<x-filament-panels::page>
     
     @php
         $quizId = $this->record->id ?? null;
@@ -170,4 +167,4 @@
             </div>
         </div>
     </div>
-@endsection
+</x-filament-panels::page>
