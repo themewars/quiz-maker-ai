@@ -1105,7 +1105,8 @@ class EditQuizzes extends EditRecord
             Cache::put($dailyRegenerationKey, $currentDailyRegenerations + 1, now()->endOfDay());
         }
 
-        $currentFormState = $this->form->getState();
+        // Work on the current data bag to avoid losing user-entered values
+        $currentFormState = is_array($this->data) ? $this->data : $this->form->getState();
         $currentFormState['type'] = getTabType();
         if ($currentFormState['type'] == Quiz::TEXT_TYPE) {
             $currentFormState['quiz_description'] = $currentFormState['quiz_description_text'];
@@ -1443,9 +1444,12 @@ class EditQuizzes extends EditRecord
                 }
 
                 // Merge into current form state without touching other fields
-                $state = $this->form->getState();
+                // Prefer using the existing Livewire form data bag, to avoid wiping inputs
+                $state = is_array($this->data) ? $this->data : $this->form->getState();
                 $state['questions'] = $newQuestions;
-                $this->form->fill($state);
+                $this->data = $state;
+                // Refill once with the full state we already have
+                $this->form->fill($this->data);
             } else {
                 Notification::make()
                     ->danger()
