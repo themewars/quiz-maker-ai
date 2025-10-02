@@ -401,21 +401,11 @@ class EditQuizzes extends EditRecord
 
     public function addMoreQuestions(array $actionData = []): void
     {
-        $currentFormState = $this->form->getState();
-        $currentFormState['type'] = getTabType();
-        if ($currentFormState['type'] == Quiz::TEXT_TYPE) {
-            $currentFormState['quiz_description'] = $currentFormState['quiz_description_text'];
-        } elseif ($currentFormState['type'] == Quiz::SUBJECT_TYPE) {
-            $currentFormState['quiz_description'] = $currentFormState['quiz_description_sub'];
-        } elseif ($currentFormState['type'] == Quiz::URL_TYPE) {
-            $currentFormState['quiz_description'] = $currentFormState['quiz_description_url'];
-        }
-        // Ensure we refresh from DB after adding more – avoid keeping stale repeater state
-        unset($currentFormState['questions'], $currentFormState['custom_questions']);
-        Session::put('editedQuizDataForRegeneration', $currentFormState);
-
-        $data = $this->data;
-        $description = null;
+        $additionalQuestions = $actionData['count'] ?? 5;
+        
+        // Get current quiz data
+        $data = $this->record->toArray();
+        $description = $this->record->quiz_description;
 
         // Set description based on the active tab type
         if ($data['type'] == Quiz::TEXT_TYPE) {
