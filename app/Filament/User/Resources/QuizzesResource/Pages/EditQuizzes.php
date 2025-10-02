@@ -407,24 +407,26 @@ class EditQuizzes extends EditRecord
             Action::make('regenerate')
                 ->label(__('messages.common.re_generate'))
                 ->color('warning')
-                ->requiresConfirmation()
                 ->modalHeading('Re-Generate Questions')
-                ->modalDescription(function(){
-                    $userId = auth()->id();
-                    if (!$userId) { return 'Please log in to view limits.'; }
-                    $currentMonth = now()->format('Y-m');
-                    $currentDay = now()->format('Y-m-d');
-                    $regenerationKey = "regenerations_{$userId}_{$currentMonth}";
-                    $dailyRegenerationKey = "daily_regenerations_{$userId}_{$currentDay}";
-                    $currentRegenerations = Cache::get($regenerationKey, 0);
-                    $currentDailyRegenerations = Cache::get($dailyRegenerationKey, 0);
-                    return "Daily: {$currentDailyRegenerations}/3 | Monthly: {$currentRegenerations}/10";
-                })
                 ->form([
-                    \Filament\Forms\Components\Placeholder::make('limits_description')
-                        ->label('Regeneration Limits')
+                    \Filament\Forms\Components\Placeholder::make('limits_dynamic')
+                        ->label('Current Usage')
+                        ->content(function(){
+                            $userId = auth()->id();
+                            if (!$userId) { return 'Please log in to view limits.'; }
+                            $currentMonth = now()->format('Y-m');
+                            $currentDay = now()->format('Y-m-d');
+                            $regenerationKey = "regenerations_{$userId}_{$currentMonth}";
+                            $dailyRegenerationKey = "daily_regenerations_{$userId}_{$currentDay}";
+                            $currentRegenerations = Cache::get($regenerationKey, 0);
+                            $currentDailyRegenerations = Cache::get($dailyRegenerationKey, 0);
+                            return "Daily: {$currentDailyRegenerations}/3 | Monthly: {$currentRegenerations}/10";
+                        })
+                        ->columnSpanFull(),
+                    \Filament\Forms\Components\Placeholder::make('limits_hint')
+                        ->label('')
                         ->content('You can re-generate up to 3 times per day and 10 times per month.')
-                        ->columnSpanFull()
+                        ->columnSpanFull(),
                 ])
                 ->modalSubmitActionLabel('Re-Generate')
                 ->action('regenerateQuestions'),
