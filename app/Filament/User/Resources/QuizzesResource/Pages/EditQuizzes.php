@@ -696,10 +696,6 @@ class EditQuizzes extends EditRecord
 
         $aiType = getSetting()->ai_type;
 
-        // Set session flag to show generating state
-        Session::put('generating_questions', true);
-        Session::put('generating_count', $additionalQuestions);
-
         if ($aiType == Quiz::GEMINI_AI) {
             $geminiApiKey = getSetting()->gemini_api_key;
             $model = getSetting()->gemini_ai_model;
@@ -711,6 +707,10 @@ class EditQuizzes extends EditRecord
                     ->send();
                 return;
             }
+
+            // Set session flag to show generating state
+            Session::put('generating_questions', true);
+            Session::put('generating_count', $additionalQuestions);
 
             $geminiResponse = Http::withHeaders([
                 'Content-Type' => 'application/json',
@@ -747,6 +747,10 @@ class EditQuizzes extends EditRecord
                     ->send();
                 return;
             }
+
+            // Set session flag to show generating state
+            Session::put('generating_questions', true);
+            Session::put('generating_count', $additionalQuestions);
 
             // Dispatch background job instead of doing long-running HTTP work in request
             GenerateAdditionalQuestions::dispatch(
@@ -946,15 +950,10 @@ class EditQuizzes extends EditRecord
                     }
                 }
                 
+                // Clear session flags
+                Session::forget(['generating_questions', 'generating_count']);
+                
                 if ($addedCount > 0) {
-                    Notification::make()
-                        ->success()
-                        ->title('Questions Added Successfully')
-                        ->body("Successfully added {$addedCount} additional questions to your exam.")
-                        ->persistent()
-                        ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
-                        ->send();
-                    Session::put('just_added_questions', true);
                     // Hard refresh to ensure Livewire state fully reloads with DB
                     $this->record->refresh();
                     $this->redirect($this->getResource()::getUrl('edit', ['record' => $this->record->id]));
@@ -970,6 +969,8 @@ class EditQuizzes extends EditRecord
             } else {
                 Log::error('AI response is not a valid array: ' . $quizData);
                 Log::error('JSON decode error: ' . json_last_error_msg());
+                // Clear session flags on error
+                Session::forget(['generating_questions', 'generating_count']);
                 Notification::make()
                     ->danger()
                     ->title('Error Adding Questions')
@@ -980,6 +981,8 @@ class EditQuizzes extends EditRecord
             }
         } else {
             Log::error('No AI response received for additional questions - quizText is empty or null');
+            // Clear session flags on error
+            Session::forget(['generating_questions', 'generating_count']);
             Notification::make()
                 ->danger()
                 ->title('Error Adding Questions')
