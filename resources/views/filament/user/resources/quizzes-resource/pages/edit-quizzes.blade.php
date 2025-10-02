@@ -24,8 +24,14 @@
                             this.status = data?.status ?? 'running'; 
                             if(this.status === 'completed'){ 
                                 clearInterval(this.timer); 
-                                // Refresh page to show all questions
-                                window.location.reload();
+                                // Scroll to bottom and show success message
+                                setTimeout(() => {
+                                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                                    // Show success notification
+                                    window.dispatchEvent(new CustomEvent('questions-added', { 
+                                        detail: { count: this.total } 
+                                    }));
+                                }, 500);
                             } 
                         }
                     } catch(e) {
@@ -64,4 +70,97 @@
             </div>
         </div>
     @endif
+
+    {{-- Question Count Notice --}}
+    @php
+        $currentQuestionCount = \App\Models\Question::where('quiz_id', $this->record->id ?? 0)->count();
+        $subscription = getActiveSubscription();
+        $maxQuestions = 0;
+        if ($subscription && $subscription->plan) {
+            if (is_numeric($subscription->plan->max_questions_per_exam)) {
+                $maxQuestions = (int)$subscription->plan->max_questions_per_exam;
+            } elseif (is_array($subscription->plan->max_questions_per_exam) && isset($subscription->plan->max_questions_per_exam[0]) && is_numeric($subscription->plan->max_questions_per_exam[0])) {
+                $maxQuestions = (int)$subscription->plan->max_questions_per_exam[0];
+            }
+        }
+    @endphp
+
+    @if($currentQuestionCount > 0)
+        <div class="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg shadow-sm">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-green-900">Questions in this Exam</h3>
+                        <p class="text-sm text-green-700">
+                            Total Questions: <span class="font-semibold">{{ $currentQuestionCount }}</span>
+                            @if($maxQuestions > 0)
+                                | Your Plan Limit: <span class="font-semibold">{{ $maxQuestions }} questions</span>
+                            @endif
+                        </p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    @if($maxQuestions > 0)
+                        @php
+                            $remaining = $maxQuestions - $currentQuestionCount;
+                            $percentage = ($currentQuestionCount / $maxQuestions) * 100;
+                        @endphp
+                        <div class="text-2xl font-bold text-green-600">{{ $currentQuestionCount }}</div>
+                        <div class="text-xs text-green-500">of {{ $maxQuestions }}</div>
+                        <div class="w-16 bg-green-200 rounded-full h-2 mt-1">
+                            <div class="bg-green-500 h-2 rounded-full transition-all duration-300" 
+                                 style="width: {{ min($percentage, 100) }}%"></div>
+                        </div>
+                        @if($remaining > 0)
+                            <div class="text-xs text-green-600 mt-1">{{ $remaining }} remaining</div>
+                        @else
+                            <div class="text-xs text-orange-600 mt-1">Limit reached</div>
+                        @endif
+                    @else
+                        <div class="text-2xl font-bold text-green-600">{{ $currentQuestionCount }}</div>
+                        <div class="text-xs text-green-500">questions</div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Success Message for Added Questions --}}
+    <div x-data="{ showSuccess: false, addedCount: 0 }" 
+         x-init="
+            window.addEventListener('questions-added', (e) => {
+                this.addedCount = e.detail.count;
+                this.showSuccess = true;
+                setTimeout(() => this.showSuccess = false, 5000);
+            });
+         "
+         x-show="showSuccess" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform scale-95"
+         x-transition:enter-end="opacity-100 transform scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 transform scale-100"
+         x-transition:leave-end="opacity-0 transform scale-95"
+         class="fixed bottom-4 right-4 z-50">
+        <div class="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg max-w-sm">
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="font-semibold">Questions Added Successfully!</h4>
+                    <p class="text-sm opacity-90" x-text="`${addedCount} new questions added to your exam`"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
