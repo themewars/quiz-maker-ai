@@ -1009,6 +1009,50 @@ class EditQuizzes extends EditRecord
 
     public function regenerateQuestions(): void
     {
+        // Check regeneration limits to prevent API abuse
+        $userId = auth()->id();
+        $subscription = getActiveSubscription();
+        
+        if ($subscription && $subscription->plan) {
+            // Check monthly regeneration limit (max 10 regenerations per month)
+            $maxRegenerationsPerMonth = 10;
+            $currentMonth = now()->format('Y-m');
+            $regenerationKey = "regenerations_{$userId}_{$currentMonth}";
+            $currentRegenerations = Cache::get($regenerationKey, 0);
+            
+            if ($currentRegenerations >= $maxRegenerationsPerMonth) {
+                Notification::make()
+                    ->danger()
+                    ->title('Regeneration Limit Reached')
+                    ->body("You have reached the maximum limit of {$maxRegenerationsPerMonth} regenerations per month. Please wait until next month or upgrade your plan.")
+                    ->persistent()
+                    ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
+                    ->send();
+                return;
+            }
+            
+            // Check daily regeneration limit (max 3 regenerations per day)
+            $maxRegenerationsPerDay = 3;
+            $currentDay = now()->format('Y-m-d');
+            $dailyRegenerationKey = "daily_regenerations_{$userId}_{$currentDay}";
+            $currentDailyRegenerations = Cache::get($dailyRegenerationKey, 0);
+            
+            if ($currentDailyRegenerations >= $maxRegenerationsPerDay) {
+                Notification::make()
+                    ->danger()
+                    ->title('Daily Regeneration Limit Reached')
+                    ->body("You have reached the maximum limit of {$maxRegenerationsPerDay} regenerations per day. Please try again tomorrow.")
+                    ->persistent()
+                    ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
+                    ->send();
+                return;
+            }
+            
+            // Increment regeneration counters
+            Cache::put($regenerationKey, $currentRegenerations + 1, now()->endOfMonth());
+            Cache::put($dailyRegenerationKey, $currentDailyRegenerations + 1, now()->endOfDay());
+        }
+
         $currentFormState = $this->form->getState();
         $currentFormState['type'] = getTabType();
         if ($currentFormState['type'] == Quiz::TEXT_TYPE) {
