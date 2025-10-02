@@ -376,6 +376,23 @@ class EditQuizzes extends EditRecord
     {
         return [
             parent::getFormActions()[0],
+            Action::make('addQuestionManual')
+                ->label('Add Question Manual')
+                ->color('info')
+                ->action(function() { 
+                    // Add a new question to the form
+                    $currentQuestions = $this->form->getState()['questions'] ?? [];
+                    $currentQuestions[] = [
+                        'title' => '',
+                        'answers' => [
+                            ['title' => '', 'is_correct' => false],
+                            ['title' => '', 'is_correct' => false],
+                        ],
+                        'is_correct' => []
+                    ];
+                    $this->form->fill(['questions' => $currentQuestions]);
+                }),
+
             Action::make('regenerate')
                 ->label(__('messages.common.re_generate'))
                 ->color('gray')
