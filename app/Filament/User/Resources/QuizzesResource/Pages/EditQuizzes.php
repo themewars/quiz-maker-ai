@@ -89,26 +89,26 @@ class EditQuizzes extends EditRecord
             $data = $this->mutateFormDataBeforeFill($data);
         }
 
-        // Start with existing questions from DB so that old ones remain visible
-        $data['questions'] = [];
+        // Always prioritize DB questions over session data for reliability
         if (isset($data['id'])) {
-            $existingQuestions = Question::where('quiz_id', $data['id'])->with('answers')->orderBy('id')->get();
-            foreach ($existingQuestions as $question) {
-                $answersOption = $question->answers->map(function ($answer) {
-                    return [
-                        'title' => $answer->title,
-                        'is_correct' => $answer->is_correct,
+            $dbQuestions = Question::where('quiz_id', $data['id'])->with('answers')->orderBy('id')->get();
+            if ($dbQuestions->count() > 0) {
+                $data['questions'] = [];
+                foreach ($dbQuestions as $question) {
+                    $answersOption = $question->answers->map(function ($answer) {
+                        return [
+                            'title' => $answer->title,
+                            'is_correct' => $answer->is_correct,
+                        ];
+                    })->toArray();
+                    $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+                    $data['questions'][] = [
+                        'title' => $question->title,
+                        'answers' => $answersOption,
+                        'is_correct' => $correctAnswer,
+                        'question_id' => $question->id,
                     ];
-                })->toArray();
-
-                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-
-                $data['questions'][] = [
-                    'title' => $question->title,
-                    'answers' => $answersOption,
-                    'is_correct' => $correctAnswer,
-                    'question_id' => $question->id,
-                ];
+                }
             }
         }
 
