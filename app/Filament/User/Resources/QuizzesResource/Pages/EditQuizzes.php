@@ -374,20 +374,21 @@ class EditQuizzes extends EditRecord
                 ->action('regenerateQuestions'),
 
             Action::make('addMoreQuestions')
-                ->label('Add More Questions')
-                ->color('success')
-                ->action(function(array $data) { $this->addMoreQuestions($data); })
-                ->modalHeading('Add More Questions')
-                ->form([
-                    Forms\Components\TextInput::make('count')
-                        ->label('Count')
-                        ->numeric()
-                        ->minValue(1)
-                        ->maxValue(50)
-                        ->default(5)
-                        ->required(),
-                ])
-                ->visible(fn() => !Session::has('generating_questions')),
+                ->label(function() {
+                    if (Session::has('generating_questions')) {
+                        $done = Cache::get("quiz:".$this->record->id.":gen_progress")['done'] ?? 0;
+                        $total = Session::get('generating_count', 0);
+                        return "Generating [{$done}/{$total}]";
+                    }
+                    return 'Add More Questions';
+                })
+                ->color(function() {
+                    return Session::has('generating_questions') ? 'warning' : 'success';
+                })
+                ->action(function() { 
+                    $this->addMoreQuestions(['count' => 5]); // Default 5 questions
+                })
+                ->visible(fn() => true),
 
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
