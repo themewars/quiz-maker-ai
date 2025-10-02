@@ -28,12 +28,26 @@ class QuestionCountWidget extends Widget
                 }
             }
         }
+        
+        // If still null, try to get from the parent page context
+        if (!$this->quizId) {
+            // Try to get from the parent Livewire component
+            $parent = $this->getParent();
+            if ($parent && method_exists($parent, 'getRecord')) {
+                $record = $parent->getRecord();
+                if ($record && isset($record->id)) {
+                    $this->quizId = $record->id;
+                }
+            }
+        }
     }
 
     public function getViewData(): array
     {
         // Debug: Log the quiz ID we're using
         \Log::info("QuestionCountWidget - Quiz ID: " . ($this->quizId ?? 'null'));
+        \Log::info("QuestionCountWidget - URL: " . request()->url());
+        \Log::info("QuestionCountWidget - Route parameters: " . json_encode(request()->route()->parameters()));
         
         $currentQuestionCount = Question::where('quiz_id', $this->quizId ?? 0)->count();
         
@@ -55,6 +69,8 @@ class QuestionCountWidget extends Widget
             'currentQuestionCount' => $currentQuestionCount,
             'maxQuestions' => $maxQuestions,
             'debugQuizId' => $this->quizId,
+            'debugUrl' => request()->url(),
+            'debugRouteParams' => request()->route()->parameters(),
         ];
     }
 }
