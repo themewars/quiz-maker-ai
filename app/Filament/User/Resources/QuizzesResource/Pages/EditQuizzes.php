@@ -395,7 +395,7 @@ class EditQuizzes extends EditRecord
 
             Action::make('regenerate')
                 ->label(__('messages.common.re_generate'))
-                ->color('gray')
+                ->color('warning')
                 ->action('regenerateQuestions'),
 
             Action::make('addMoreQuestions')
