@@ -66,9 +66,20 @@ class EditQuizzes extends EditRecord
 
     public function fillForm(): void
     {
-        // Always refresh and eager-load questions+answers so first visit after create shows data
+        // Force refresh questions+answers on first edit after creation
+        $isFirstEdit = request()->has('first') || request()->has('fresh');
+        
         if ($this->record) {
             $this->record->refresh()->load(['questions.answers']);
+            
+            if ($isFirstEdit) {
+                // Force clear any cached form data to ensure fresh load
+                $this->data = [];
+                Log::info('First edit after creation - forcing fresh question load', [
+                    'quiz_id' => $this->record->id,
+                    'question_count' => $this->record->questions()->count()
+                ]);
+            }
         }
         
         $quizQuestions = Session::get('quizQuestions');

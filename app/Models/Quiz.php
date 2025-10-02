@@ -474,8 +474,13 @@ class Quiz extends Model implements HasMedia
                         })
                         ->visible(fn(Get $get) => !empty($get('answers'))),
                 ])
-                // Always show questions on edit page
-                ->visible(fn(string $operation): bool => $operation === 'edit')
+                // Always show questions on edit page and ensure visibility after creation
+                ->visible(function(string $operation): bool {
+                    if ($operation === 'edit') {
+                        return true; // Always show on edit page
+                    }
+                    return false;
+                })
                 ->addable(false)
                 ->collapsible()
                 ->itemLabel(fn (array $state): ?string => $state['title'] ?? null),

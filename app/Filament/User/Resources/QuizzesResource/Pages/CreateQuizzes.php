@@ -750,7 +750,7 @@ PROMPT;
         $recordId = $this->record->id ?? null;
         // Append cache-buster and a hint to force full load of questions on first edit
         return $recordId
-            ? $this->getResource()::getUrl('edit', ['record' => $recordId, 't' => time(), 'first' => 1])
+            ? $this->getResource()::getUrl('edit', ['record' => $recordId, 't' => time(), 'first' => 1, 'fresh' => 1])
             : $this->getResource()::getUrl('index');
     }
 
