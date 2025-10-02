@@ -23,6 +23,9 @@
                                 | Your Plan Limit: <span class="font-semibold">{{ $maxQuestions }} questions</span>
                             @endif
                         </p>
+                        @if(isset($debugQuizId))
+                            <p class="text-xs text-gray-500">Debug Quiz ID: {{ $debugQuizId ?? 'null' }}</p>
+                        @endif
                     </div>
                 </div>
                 <div class="text-right">

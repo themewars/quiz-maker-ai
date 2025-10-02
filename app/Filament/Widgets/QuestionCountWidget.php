@@ -15,13 +15,31 @@ class QuestionCountWidget extends Widget
 
     public function mount(): void
     {
-        // Get quiz ID from the current page
-        $this->quizId = request()->route('record');
+        // Get quiz ID from the current page - try multiple ways
+        $this->quizId = request()->route('record') ?? request()->route('id') ?? request()->get('id');
+        
+        // If still null, try to get from the current page context
+        if (!$this->quizId) {
+            $segments = request()->segments();
+            foreach ($segments as $segment) {
+                if (is_numeric($segment)) {
+                    $this->quizId = (int)$segment;
+                    break;
+                }
+            }
+        }
     }
 
     public function getViewData(): array
     {
+        // Debug: Log the quiz ID we're using
+        \Log::info("QuestionCountWidget - Quiz ID: " . ($this->quizId ?? 'null'));
+        
         $currentQuestionCount = Question::where('quiz_id', $this->quizId ?? 0)->count();
+        
+        // Debug: Log the question count
+        \Log::info("QuestionCountWidget - Question count: " . $currentQuestionCount);
+        
         $subscription = getActiveSubscription();
         $maxQuestions = 0;
         
@@ -36,6 +54,7 @@ class QuestionCountWidget extends Widget
         return [
             'currentQuestionCount' => $currentQuestionCount,
             'maxQuestions' => $maxQuestions,
+            'debugQuizId' => $this->quizId,
         ];
     }
 }
