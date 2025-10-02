@@ -5,7 +5,23 @@
             $maxQuestions = $maxQuestions ?? 0;
         @endphp
 
-        <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg shadow-sm">
+        <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg shadow-sm" 
+             x-data="{ 
+                 currentCount: {{ $currentQuestionCount }}, 
+                 maxQuestions: {{ $maxQuestions }},
+                 isLoading: false 
+             }"
+             x-init="
+                 // Auto-refresh every 2 seconds to keep data fresh
+                 setInterval(() => {
+                     if (!isLoading) {
+                         isLoading = true;
+                         $wire.call('getViewData').then(() => {
+                             isLoading = false;
+                         });
+                     }
+                 }, 2000);
+             ">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="flex-shrink-0">
@@ -18,7 +34,7 @@
                     <div>
                         <h3 class="text-lg font-semibold text-green-900">Questions in this Exam</h3>
                         <p class="text-sm text-green-700">
-                            Total Questions: <span class="font-semibold">{{ $currentQuestionCount }}</span>
+                            Total Questions: <span class="font-semibold" x-text="currentCount">{{ $currentQuestionCount }}</span>
                             @if($maxQuestions > 0)
                                 | Your Plan Limit: <span class="font-semibold">{{ $maxQuestions }} questions</span>
                             @endif
@@ -31,19 +47,15 @@
                             $remaining = $maxQuestions - $currentQuestionCount;
                             $percentage = ($maxQuestions > 0) ? ($currentQuestionCount / $maxQuestions) * 100 : 0;
                         @endphp
-                        <div class="text-2xl font-bold text-green-600">{{ $currentQuestionCount }}</div>
+                        <div class="text-2xl font-bold text-green-600" x-text="currentCount">{{ $currentQuestionCount }}</div>
                         <div class="text-xs text-green-500">of {{ $maxQuestions }}</div>
                         <div class="w-16 bg-green-200 rounded-full h-2 mt-1">
                             <div class="bg-green-500 h-2 rounded-full transition-all duration-300" 
-                                 style="width: {{ min($percentage, 100) }}%"></div>
+                                 :style="'width: ' + Math.min((currentCount / {{ $maxQuestions }}) * 100, 100) + '%'"></div>
                         </div>
-                        @if($remaining > 0)
-                            <div class="text-xs text-green-600 mt-1">{{ $remaining }} remaining</div>
-                        @else
-                            <div class="text-xs text-orange-600 mt-1">Limit reached</div>
-                        @endif
+                        <div class="text-xs text-green-600 mt-1" x-text="({{ $maxQuestions }} - currentCount) + ' remaining'">{{ $remaining }} remaining</div>
                     @else
-                        <div class="text-2xl font-bold text-green-600">{{ $currentQuestionCount }}</div>
+                        <div class="text-2xl font-bold text-green-600" x-text="currentCount">{{ $currentQuestionCount }}</div>
                         <div class="text-xs text-green-500">questions</div>
                     @endif
                 </div>

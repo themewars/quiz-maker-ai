@@ -38,6 +38,21 @@ class QuestionCountWidget extends Widget
 
     public function getViewData(): array
     {
+        // If quizId is still null, try to get it from the current request
+        if (!$this->quizId) {
+            $this->quizId = request()->route('record') ?? request()->route('id') ?? request()->get('id');
+            
+            if (!$this->quizId) {
+                $segments = request()->segments();
+                foreach ($segments as $segment) {
+                    if (is_numeric($segment)) {
+                        $this->quizId = (int)$segment;
+                        break;
+                    }
+                }
+            }
+        }
+
         $currentQuestionCount = Question::where('quiz_id', $this->quizId ?? 0)->count();
         
         $subscription = getActiveSubscription();
