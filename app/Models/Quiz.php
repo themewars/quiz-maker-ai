@@ -245,7 +245,8 @@ class Quiz extends Model implements HasMedia
                                                 ->minValue(1)
                                                 ->default(25)
                                                 ->label(__('messages.quiz.num_of_questions') . ':')
-                                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: function(){
+                                                ->hintIcon('heroicon-o-information-circle')
+                                                ->hintIconTooltip(function(){
                                                     $sub = getActiveSubscription();
                                                     $limit = $sub && $sub->plan ? $sub->plan->max_questions_per_exam : null;
                                                     return $limit !== null && (int)$limit >= 0
@@ -287,9 +288,9 @@ class Quiz extends Model implements HasMedia
                                                 ->schema([
                                                     Textarea::make('quiz_description_text')
                                                         ->label(__('messages.quiz.description') . ':')
-                                                        ->hintIcon('heroicon-m-question-mark-circle')
-                                                        ->hint(__('messages.quiz.text_tab_help'))
-                                                        ->hintColor('danger')
+                                                        ->hintIcon('heroicon-o-document-text')
+                                                        ->hintIconTooltip(__('messages.quiz.text_tab_help'))
+                                                        ->hintColor('primary')
                                                         ->placeholder(__('messages.quiz.quiz_description'))
                                                         ->formatStateUsing(function ($get, $operation) {
                                                             if ($operation == 'edit' && $get('type') == 1) {
@@ -309,9 +310,9 @@ class Quiz extends Model implements HasMedia
                                                 ->schema([
                                                     TextInput::make('quiz_description_sub')
                                                         ->label(__('messages.quiz.subject') . ':')
-                                                        ->hintIcon('heroicon-m-question-mark-circle')
-                                                        ->hint(__('messages.quiz.subject_tab_help'))
-                                                        ->hintColor('danger')
+                                                        ->hintIcon('heroicon-o-light-bulb')
+                                                        ->hintIconTooltip(__('messages.quiz.subject_tab_help'))
+                                                        ->hintColor('primary')
                                                         ->placeholder(__('messages.quiz.e_g_biology'))
                                                         ->formatStateUsing(function ($get, $operation) {
                                                             if ($operation == 'edit' && $get('type') == 2) {
@@ -332,9 +333,9 @@ class Quiz extends Model implements HasMedia
                                                 ->schema([
                                                     TextInput::make('quiz_description_url')
                                                         ->label(__('messages.quiz.url') . ':')
-                                                        ->hintIcon('heroicon-m-question-mark-circle')
-                                                        ->hint(__('messages.quiz.url_tab_help'))
-                                                        ->hintColor('danger')
+                                                        ->hintIcon('heroicon-o-link')
+                                                        ->hintIconTooltip(__('messages.quiz.url_tab_help'))
+                                                        ->hintColor('primary')
                                                         ->formatStateUsing(function ($get, $operation) {
                                                             if ($operation == 'edit' && $get('type') == 3) {
                                                                 return $get('quiz_description');
@@ -353,7 +354,8 @@ class Quiz extends Model implements HasMedia
                                                 ->schema([
                                                     SpatieMediaLibraryFileUpload::make('file_upload')
                                                         ->label(__('messages.quiz.document') . ':')
-                                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('messages.quiz.file_upload_hint'))
+                                                        ->hintIcon('heroicon-o-document-arrow-up')
+                                                        ->hintIconTooltip(__('messages.quiz.file_upload_hint'))
                                                         ->validationAttribute(__('messages.quiz.document'))
                                                         ->disk(config('app.media_disk'))
                                                         ->required(function ($get) {
