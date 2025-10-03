@@ -979,16 +979,16 @@ section {
     border-radius: var(--radius-lg);
 }
 
-.quiz-info {
+.quiz-info, .exam-info {
     padding: 1.5rem;
 }
 
-.quiz-info p {
+.quiz-info p, .exam-info p {
     font-size: 15px;
     color: var(--light-gray);
 }
 
-.quiz-header {
+.quiz-header, .exam-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1033,7 +1033,7 @@ section {
     border-radius: var(--radius-full);
 }
 
-.quiz-footer {
+.quiz-footer, .exam-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1041,7 +1041,7 @@ section {
     gap: 15px;
 }
 
-.quiz-author {
+.quiz-author, .exam-author {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -1149,13 +1149,13 @@ section {
     color: white;
 }
 
-.quizzes-grid {
+.quizzes-grid, .exams-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
 }
 
-.quiz-card {
+.quiz-card, .exam-card {
     background-color: white;
     border-radius: var(--radius-lg);
     overflow: hidden;
@@ -1163,30 +1163,30 @@ section {
     transition: all 0.3s ease;
 }
 
-.quiz-card:hover {
+.quiz-card:hover, .exam-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.quiz-card-header {
+.quiz-card-header, .exam-card-header {
     height: 0.75rem;
 }
 
-.quiz-card-content {
+.quiz-card-content, .exam-card-content {
     padding: 1.5rem;
 }
 
-.quiz-card-content p {
+.quiz-card-content p, .exam-card-content p {
     font-size: 13px;
     color: var(--light-gray);
 }
 
-.quiz-card-content h3 {
+.quiz-card-content h3, .exam-card-content h3 {
     font-size: 18px;
     font-weight: 500;
 }
 
-.quiz-card-top {
+.quiz-card-top, .exam-card-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1201,7 +1201,7 @@ section {
     color: var(--slate-500);
 }
 
-.quiz-card-footer {
+.quiz-card-footer, .exam-card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1914,7 +1914,7 @@ section {
         grid-template-columns: repeat(6, 1fr);
     }
 
-    .quizzes-grid {
+    .quizzes-grid, .exams-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
