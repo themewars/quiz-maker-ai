@@ -10,6 +10,7 @@ use Filament\Events\Auth\Registered;
 use Filament\Notifications\Notification;
 use App\Actions\Subscription\CreateSubscription;
 use Filament\Http\Responses\Auth\RegistrationResponse;
+use App\Http\Responses\LoginResponse;
 use AbanoubNassem\FilamentGRecaptchaField\Forms\Components\GRecaptcha;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 
@@ -117,6 +118,9 @@ class CustomRegister extends Register
                 ->send();
         }
 
-        return app(RegistrationResponse::class);
+        // Auto-login and redirect to appropriate dashboard
+        auth()->login($user);
+
+        return app(LoginResponse::class);
     }
 }
