@@ -729,14 +729,14 @@
                         <div class="exams-grid">
                             @php
                                 $allQuizzes = collect($quizzes)->skip(1);
+                                $gradients = ['indigo-gradient', 'green-gradient', 'orange-gradient'];
                             @endphp
 
                             <!-- Exam 1 -->
                             @foreach ($allQuizzes as $quiz)
                                 <div class="exam-card animate-fade-in" data-delay="0.{{ $loop->index }}">
-                                    <div
-                                        class="exam-card-header {{ $loop->index == 1 ? 'green-gradient' : ($loop->index == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
-                                    </div>
+                                    @php $hdr = $gradients[$loop->index % count($gradients)]; @endphp
+                                    <div class="exam-card-header {{ $hdr }}"></div>
                                     <div class="exam-card-content">
                                         <div class="exam-card-top">
                                             <div
@@ -790,9 +790,8 @@
                             <div class="exams-grid">
                                 @foreach ($categoryQuizzes as $quiz)
                                     <div class="exam-card animate-fade-in" data-delay="0.{{ $loop->index }}">
-                                        <div
-                                            class="exam-card-header {{ $loop->index % 3 == 1 ? 'green-gradient' : ($loop->index % 3 == 2 ? 'orange-gradient' : 'indigo-gradient') }}">
-                                                                    </div>
+                                        @php $hdr = $gradients[$loop->index % count($gradients)]; @endphp
+                                        <div class="exam-card-header {{ $hdr }}"></div>
                                         <div class="exam-card-content">
                                             <div class="exam-card-top">
                                                 <div
