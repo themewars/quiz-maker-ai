@@ -118,9 +118,9 @@ class CustomRegister extends Register
                 ->send();
         }
 
-        // Auto-login and redirect to appropriate dashboard
+        // Auto-login and let the Filament RegistrationResponse handle redirect
         auth()->login($user);
 
-        return app(LoginResponse::class);
+        return app(RegistrationResponse::class);
     }
 }
