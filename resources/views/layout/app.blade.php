@@ -342,7 +342,7 @@
 
         // Exam Category Tabs
         const categoryPills = document.querySelectorAll('.category-pills .pill');
-        const quizContents = document.querySelectorAll('.quiz-category-content');
+        const examContents = document.querySelectorAll('.exam-category-content');
 
         categoryPills.forEach(pill => {
             pill.addEventListener('click', () => {
@@ -355,10 +355,12 @@
                 // Get the category from data attribute
                 const category = pill.dataset.category;
 
-                // Hide all quiz content
-                quizContents.forEach(content => content.classList.remove('active'));
+                // Hide all exam content
+                examContents.forEach(content => content.classList.remove('active'));
 
-                const matchedContent = document.getElementById(`${category}-quizzes`);
+                // Determine target container id
+                const targetId = category === 'all' ? 'all-exams' : `${category}-exams`;
+                const matchedContent = document.getElementById(targetId);
                 if (matchedContent) {
                     matchedContent.classList.add('active');
                 }
