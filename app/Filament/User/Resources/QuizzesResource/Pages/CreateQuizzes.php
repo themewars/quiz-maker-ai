@@ -615,12 +615,12 @@ class CreateQuizzes extends CreateRecord
                    Log::error("No questions were created despite AI response being processed");
                }
 
-               // If AI returned fewer than requested, try one backfill pass to generate remaining
-               // Get actual count from DB to ensure accuracy
+               // Ensure exact target by attempting backfill loops until satisfied (max 3 attempts)
+               $attempt = 0;
+               do {
                $actualDbCount = Question::where('quiz_id', $quiz->id)->count();
                $remaining = max(0, $targetCount - $actualDbCount);
-               Log::info("Backfill calculation: target={$targetCount}, actual={$actualDbCount}, remaining={$remaining}");
-               
+               Log::info("Backfill calculation (attempt {$attempt}): target={$targetCount}, actual={$actualDbCount}, remaining={$remaining}");
                if ($remaining > 0) {
                    Log::warning("Backfill: attempting to generate remaining {$remaining} questions");
 
@@ -714,6 +714,8 @@ PROMPT;
                        }
                    }
                }
+               $attempt++;
+               } while ($remaining > 0 && $attempt < 3);
             } else {
                 Log::error('AI response is not a valid array: ' . $quizData);
                 Log::error('JSON decode error: ' . json_last_error_msg());
