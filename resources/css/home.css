@@ -1041,6 +1041,13 @@ section {
     gap: 15px;
 }
 
+/* Ensure preview button is not full width and looks like org */
+.quiz-footer .btn, .exam-footer .btn {
+    width: auto;
+    min-width: 180px;
+    padding: 10px 16px;
+}
+
 .quiz-author, .exam-author {
     display: flex;
     align-items: center;
