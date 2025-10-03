@@ -114,19 +114,19 @@ class EditQuizzes extends EditRecord
                 $loadedFromDb = true;
                 $data['questions'] = [];
                 foreach ($dbQuestions as $question) {
-                    $answersOption = $question->answers->map(function ($answer) {
-                        return [
-                            'title' => $answer->title,
-                            'is_correct' => $answer->is_correct,
-                        ];
-                    })->toArray();
-                    $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
-                    $data['questions'][] = [
-                        'title' => $question->title,
-                        'answers' => $answersOption,
-                        'is_correct' => $correctAnswer,
-                        'question_id' => $question->id,
+                $answersOption = $question->answers->map(function ($answer) {
+                    return [
+                        'title' => $answer->title,
+                        'is_correct' => $answer->is_correct,
                     ];
+                })->toArray();
+                $correctAnswer = array_keys(array_filter(array_column($answersOption, 'is_correct')));
+                $data['questions'][] = [
+                    'title' => $question->title,
+                    'answers' => $answersOption,
+                    'is_correct' => $correctAnswer,
+                    'question_id' => $question->id,
+                ];
                 }
             }
         }
@@ -212,7 +212,7 @@ class EditQuizzes extends EditRecord
             }
             
             // Force form refresh with new data
-            $this->form->fill($data);
+        $this->form->fill($data);
             
             // Trigger Livewire re-render
             $this->dispatch('$refresh');
@@ -267,6 +267,10 @@ class EditQuizzes extends EditRecord
             $data['quiz_description'] = $data['quiz_description_sub'];
         } elseif ($data['type'] == Quiz::URL_TYPE) {
             $data['quiz_description'] = $data['quiz_description_url'];
+        }
+        // Auto-show on home when quiz is made public
+        if (!empty($data['is_public'])) {
+            $data['is_show_home'] = true;
         }
         $questions = array_merge(
             $data['questions'] ?? [],

@@ -162,7 +162,8 @@ class CreateQuizzes extends CreateRecord
             'time_type' => $data['time_type'] ?? null,
             'quiz_expiry_date' => $data['quiz_expiry_date'] ?? null,
             'is_public' => $data['is_public'] ?? ((int)(getUserSettings('public_default') ?? 0) === 1),
-            'is_show_home' => $data['is_show_home'] ?? ((int)(getUserSettings('show_on_home_default') ?? 0) === 1),
+            // If public, auto show on home
+            'is_show_home' => ($data['is_public'] ?? ((int)(getUserSettings('public_default') ?? 0) === 1)) ? true : ((int)(getUserSettings('show_on_home_default') ?? 0) === 1),
         ];
 
         if ($activeTab == Quiz::URL_TYPE && $data['quiz_description_url'] != null) {
