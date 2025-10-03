@@ -417,8 +417,8 @@
                                         stroke-linejoin="round" />
                                 </svg>
                             </div>
-                            <h3>{{ __('messages.home.export_results') }}</h3>
-                            <p>{{ __('messages.home.export_results_description') }}</p>
+                            <h3>Export Results</h3>
+                            <p>Download exam data in multiple formats with performance analytics and reports.</p>
                         </div>
 
                         <!-- Feature 4 -->
@@ -548,9 +548,9 @@
                                     <div class="step-content">
                                         <div class="step-number">4</div>
                                         <div class="step-text">
-                                            <h4>{{ __('messages.home.customize_share') }}</h4>
+                                            <h4>Customize & Share</h4>
                                             <p class="text-light-gray">
-                                                {{ __('messages.home.customize_share_description') }}</p>
+                                                Edit questions, customize the exam settings, and share with your audience.</p>
                                         </div>
                                     </div>
                                 </div>

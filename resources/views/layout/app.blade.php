@@ -44,7 +44,7 @@
                         </li>
                         @if (getHeaderQuiz())
                             <li><a class="nav-link scrollspy-link"
-                                    href="{{ Route::currentRouteName() == 'home' ? '#examples' : route('home') . '#examples' }}">{{ __('messages.dashboard.quizzes') }}</a>
+                                    href="{{ Route::currentRouteName() == 'home' ? '#examples' : route('home') . '#examples' }}">Exams</a>
                             </li>
                         @endif
                         <li><a class="nav-link scrollspy-link"
