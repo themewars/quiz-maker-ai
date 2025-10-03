@@ -342,7 +342,7 @@
 
         // Exam Category Tabs
         const categoryPills = document.querySelectorAll('.category-pills .pill');
-        const examContents = document.querySelectorAll('.exam-category-content');
+        const allCategoryContainers = document.querySelectorAll('.exam-category-content, .quiz-category-content');
 
         categoryPills.forEach(pill => {
             pill.addEventListener('click', () => {
@@ -355,14 +355,22 @@
                 // Get the category from data attribute
                 const category = pill.dataset.category;
 
-                // Hide all exam content
-                examContents.forEach(content => content.classList.remove('active'));
+                // Hide all exam/quiz content
+                allCategoryContainers.forEach(content => content.classList.remove('active'));
 
-                // Determine target container id
-                const targetId = category === 'all' ? 'all-exams' : `${category}-exams`;
-                const matchedContent = document.getElementById(targetId);
-                if (matchedContent) {
-                    matchedContent.classList.add('active');
+                // Determine target container id (support both legacy "quizzes" and new "exams" ids)
+                const candidateIds = category === 'all'
+                    ? ['all-exams', 'all-quizzes']
+                    : [`${category}-exams`, `${category}-quizzes`];
+
+                let targetEl = null;
+                for (const cid of candidateIds) {
+                    const el = document.getElementById(cid);
+                    if (el) { targetEl = el; break; }
+                }
+
+                if (targetEl) {
+                    targetEl.classList.add('active');
                 }
             });
         });
