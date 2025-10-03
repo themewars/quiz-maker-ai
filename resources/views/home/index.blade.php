@@ -609,7 +609,7 @@
                     </div>
 
                     <!-- Exam content containers -->
-                    <div id="all-exams" class="exam-category-content active">
+                    <div id="all-exams" class="exam-category-content quiz-category-content active">
                         <!-- Featured exam with larger card -->
                         @php
                             $allFirstQuiz = collect($quizzes)->first();
@@ -782,7 +782,7 @@
                     </div>
 
                     @foreach ($categories as $id => $category)
-                        <div id="{{ $id }}-exams" class="exam-category-content">
+                        <div id="{{ $id }}-exams" class="exam-category-content quiz-category-content">
                             @php
                                 $categoryQuizzes = $quizzes->where('category_id', $id);
                             @endphp
