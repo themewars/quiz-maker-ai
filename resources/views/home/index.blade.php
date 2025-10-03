@@ -17,10 +17,10 @@
                         <h1 class="hero-title">
                             @if (!empty(getSetting()->hero_title))
                                 <span
-                                    class="gradient-text">{{ getSetting()->hero_title ?? __('messages.home.instantly_turn_documents_web') . ' ' . __('messages.home.content_into_interactive_quizzes') }}</span>
+                                    class="gradient-text">{{ getSetting()->hero_title ?? __('messages.home.instantly_turn_documents_web') . ' ' . __('messages.home.content_into_interactive_exams') }}</span>
                             @else
                                 <span>{{ __('messages.home.instantly_turn_documents_web') }}</span>
-                                <span class="gradient-text">{{ __('messages.home.content_into_interactive_quizzes') }}</span>
+                                <span class="gradient-text">{{ __('messages.home.content_into_interactive_exams') }}</span>
                             @endif
                         </h1>
                         <p>{{ getSetting()->hero_description ?? __('messages.home.upload_pdfs_or_urls') }}</p>

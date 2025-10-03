@@ -8,9 +8,9 @@
         @hasSection('title')
             @yield('title') |
         @endif
-        {{ !empty(getSetting()->seo_title) ? getSetting()->seo_title : getAppName() }}
+        {{ !empty(getSetting()->seo_title) ? str_replace('QuizWhiz', 'ExamGenerator', getSetting()->seo_title) : str_replace('QuizWhiz', 'ExamGenerator', getAppName()) }}
     </title>
-    <meta name="keywords" content="{{ !empty(getSetting()->seo_keywords) ? getSetting()->seo_keywords : getAppName() }}">
+    <meta name="keywords" content="{{ !empty(getSetting()->seo_keywords) ? str_replace('QuizWhiz', 'ExamGenerator', getSetting()->seo_keywords) : str_replace('QuizWhiz', 'ExamGenerator', getAppName()) }}">
     <meta name="description"
         content="{{ !empty(getSetting()->seo_description) ? getSetting()->seo_description : 'ExamGenerator AI is an intelligent platform that instantly converts PDFs and web content into engaging exams, multiple choice questions, and interactive polls for education and training.' }}">
 
