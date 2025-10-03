@@ -7,6 +7,13 @@
 @section('content')
 
     <main>
+        @php
+            $uiReplace = function ($text) {
+                $search = ['QuizWhiz AI', 'QuizWhiz', 'quizzes', 'Quizzes', 'quiz', 'Quiz', 'AI quiz'];
+                $replace = ['ExamGenerator AI', 'ExamGenerator', 'exams', 'Exams', 'exam', 'Exam', 'AI exam'];
+                return str_replace($search, $replace, $text);
+            };
+        @endphp
         <!-- Hero Section -->
         <section class="hero">
             <div class="container">
@@ -23,7 +30,7 @@
                                 <span class="gradient-text">{{ __('messages.home.content_into_interactive_exams') }}</span>
                             @endif
                         </h1>
-                        <p>{{ getSetting()->hero_description ?? __('messages.home.upload_pdfs_or_urls') }}</p>
+                        <p>{{ $uiReplace(getSetting()->hero_description ?? __('messages.home.upload_pdfs_or_urls')) }}</p>
                         <div class="hero-buttons">
                             <a href="@auth {{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }} @else {{ route('filament.auth.auth.register') }} @endauth"
                                 class="btn btn-primary btn-lg">{{ __('messages.home.get_started_free') }}</a>
@@ -128,7 +135,7 @@
                                         </svg>
                                     </div>
                                     <h3>{{ __('messages.home.pdf_to_exam') }}</h3>
-                                    <p class="feature-description">{{ __('messages.home.pdf_to_exam_description') }}</p>
+                                    <p class="feature-description">{{ $uiReplace(__('messages.home.pdf_to_exam_description')) }}</p>
                                     <div class="feature-benefits">
                                         <div class="feature-benefit">
                                             <div class="benefit-icon">
@@ -192,7 +199,7 @@
                                         </svg>
                                     </div>
                                     <h3>{{ __('messages.home.url_content') }}</h3>
-                                    <p class="feature-description">{{ __('messages.home.url_content_description') }}</p>
+                                    <p class="feature-description">{{ $uiReplace(__('messages.home.url_content_description')) }}</p>
                                     <div class="feature-benefits">
                                         <div class="feature-benefit">
                                             <div class="benefit-icon">
@@ -260,7 +267,7 @@
                                         </svg>
                                     </div>
                                     <h3>{{ __('messages.home.text_to_exam') }}</h3>
-                                    <p class="feature-description">{{ __('messages.home.text_to_exam_description') }}</p>
+                                    <p class="feature-description">{{ $uiReplace(__('messages.home.text_to_exam_description')) }}</p>
                                     <div class="feature-benefits">
                                         <div class="feature-benefit">
                                             <div class="benefit-icon">
@@ -320,7 +327,7 @@
                                         </svg>
                                     </div>
                                     <h3>{{ __('messages.home.subject_to_exam') }}</h3>
-                                    <p class="feature-description">{{ __('messages.home.subject_to_exam_description') }}</p>
+                                    <p class="feature-description">{{ $uiReplace(__('messages.home.subject_to_exam_description')) }}</p>
                                     <div class="feature-benefits">
                                         <div class="feature-benefit">
                                             <div class="benefit-icon">
@@ -590,7 +597,7 @@
                     <div class="section-header">
                         <div class="badge badge-primary-light">{{ __('messages.dashboard.exams') }}</div>
                         <h2>{{ __('messages.home.latest_generated_exams') }}</h2>
-                        <p class="text-light-gray">{{ __('messages.home.latest_generated_exams_description') }}</p>
+                        <p class="text-light-gray">{{ $uiReplace(__('messages.home.latest_generated_exams_description')) }}</p>
                     </div>
 
                     <!-- Category selection -->
@@ -854,7 +861,7 @@
                     <div class="section-header">
                         <div class="badge badge-primary-light">{{ __('messages.home.testimonials') }}</div>
                         <h2>{{ __('messages.home.testimonials_title') }}</h2>
-                        <p class="text-light-gray">{{ __('messages.home.testimonials_description') }}</p>
+                        <p class="text-light-gray">{{ $uiReplace(__('messages.home.testimonials_description')) }}</p>
                     </div>
 
                     <div class="testimonial-slider-container">
@@ -922,7 +929,7 @@
                     <div class="section-header pricing">
                         <div class="badge badge-purple-light">{{ __('messages.home.pricing') }}</div>
                         <h2>{{ __('messages.home.pricing_title') }}</h2>
-                        <p>{{ __('messages.home.pricing_description') }}</p>
+                        <p>{{ $uiReplace(__('messages.home.pricing_description')) }}</p>
                     </div>
 
                     <div class="pricing-grid">
@@ -1130,7 +1137,7 @@
                     <div class="section-header">
                         <div class="badge badge-primary-light">{{ __('messages.home.faq') }}</div>
                         <h2>{{ __('messages.home.faq_title') }}</h2>
-                        <p class="text-light-gray">{{ __('messages.home.faq_description') }}</p>
+                        <p class="text-light-gray">{{ $uiReplace(__('messages.home.faq_description')) }}</p>
                     </div>
 
                     <div class="faq-container">
