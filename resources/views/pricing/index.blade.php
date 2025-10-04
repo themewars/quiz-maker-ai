@@ -193,53 +193,19 @@
             </div>
 
             <div class="faq-container">
-                <div class="faq-item">
-                    <div class="faq-question" data-accordion="faq-1">
-                        <h3>What is QuizWhiz AI?</h3>
-                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
+                @foreach($faqs as $faq)
+                    <div class="faq-item">
+                        <div class="faq-question" data-accordion="faq-{{ $loop->index }}">
+                            <h3>{{ $faq->question }}</h3>
+                            <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="faq-answer" id="faq-{{ $loop->index }}">
+                            <p>{{ $faq->answer }}</p>
+                        </div>
                     </div>
-                    <div class="faq-answer" id="faq-1">
-                        <p>QuizWhiz AI is an online tool that allows you to create exams, quizzes, and assessments instantly using artificial intelligence. You can generate tests from PDF, text, PowerPoint, or even YouTube videos.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" data-accordion="faq-2">
-                        <h3>Is QuizWhiz AI free to use?</h3>
-                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <div class="faq-answer" id="faq-2">
-                        <p>Yes! QuizWhiz AI offers a free plan with basic features. For advanced options like unlimited exams, question banks, and PDF downloads, you can upgrade to a premium plan.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" data-accordion="faq-3">
-                        <h3>Can I generate exams from a PDF or document?</h3>
-                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <div class="faq-answer" id="faq-3">
-                        <p>Absolutely. Simply upload your PDF, Word, or text file and QuizWhiz AI will automatically create a set of questions and answers based on the content.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" data-accordion="faq-4">
-                        <h3>How accurate are AI-generated questions?</h3>
-                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <div class="faq-answer" id="faq-4">
-                        <p>While AI generates high-quality and relevant questions, we recommend reviewing the questions before finalizing to ensure they match your teaching or learning goals.</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
