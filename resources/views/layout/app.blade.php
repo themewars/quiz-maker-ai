@@ -47,8 +47,8 @@
                                     href="{{ Route::currentRouteName() == 'home' ? '#examples' : route('home') . '#examples' }}">Exams</a>
                             </li>
                         @endif
-                        <li><a class="nav-link scrollspy-link"
-                                href="{{ Route::currentRouteName() == 'home' ? '#pricing' : route('home') . '#pricing' }}">{{ __('messages.home.pricing') }}</a>
+                        <li><a class="nav-link"
+                                href="{{ route('pricing') }}">{{ __('messages.home.pricing') }}</a>
                         </li>
                         <li class="language-dropdown">
                             <a href="javascript:void(0)">{{ __('messages.home.language') }}</a>

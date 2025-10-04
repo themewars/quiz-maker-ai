@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PollResultController;
+use App\Http\Controllers\PricingController;
 use App\Http\Controllers\QuizExportController;
 use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\SocialiteController;
@@ -68,6 +69,7 @@ Route::middleware('SetLanguage')->group(function () {
 
     // Route for the landing home page
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
     Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
     Route::get('/privacy', [HomeController::class, 'policy'])->name('policy');
     Route::get('/cookie', [HomeController::class, 'cookie'])->name('cookie');
