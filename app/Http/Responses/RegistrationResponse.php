@@ -19,6 +19,8 @@ class RegistrationResponse implements RegistrationResponseContract
         $user = auth()->user();
 
         if ($user) {
+            // Refresh user to get latest role data
+            $user->refresh();
             $role = $user->roles()->first();
 
             if ($role && $role->name === User::ADMIN_ROLE) {
