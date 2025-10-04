@@ -126,6 +126,15 @@ class CustomRegister extends Register
         // Auto-login and redirect to dashboard based on user role
         auth()->login($user);
 
-        return app(RegistrationResponse::class);
+        // Direct redirect instead of using RegistrationResponse
+        if ($user->hasRole(User::ADMIN_ROLE)) {
+            return redirect()->route('filament.admin.pages.dashboard');
+        }
+        
+        if ($user->hasRole(User::USER_ROLE)) {
+            return redirect()->route('filament.user.pages.dashboard');
+        }
+
+        return redirect()->route('home');
     }
 }
