@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Http\Responses\Auth\Contracts\LogoutResponse;
+use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             LogoutResponse::class,
             \App\Http\Responses\LogoutResponse::class
+        );
+
+        $this->app->singleton(
+            RegistrationResponse::class,
+            \App\Http\Responses\RegistrationResponse::class
         );
     }
 

@@ -126,6 +126,6 @@ class CustomRegister extends Register
         // Auto-login and redirect to dashboard based on user role
         auth()->login($user);
 
-        return app(CustomRegistrationResponse::class);
+        return app(RegistrationResponse::class);
     }
 }
