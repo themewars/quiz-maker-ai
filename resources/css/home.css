@@ -1,3 +1,59 @@
+/* Sponsored by section */
+.sponsored-section {
+  padding: 64px 0;
+  background: #0b1020; /* matches dark sections */
+}
+
+.sponsored-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.02) 100%);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.sponsored-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sponsored-card-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #e5e7eb;
+}
+
+.sponsored-card-header p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.sponsored-logos {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.sponsor-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.sponsor-badge:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
 /* Base Styles */
 :root {
     --primary: #8595ff;

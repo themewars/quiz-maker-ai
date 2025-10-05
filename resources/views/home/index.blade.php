@@ -1178,6 +1178,37 @@
             </section>
         @endif
 
+        <!-- Sponsored by Section -->
+        <section class="sponsored-section">
+            <div class="container">
+                @php
+                    $sponsors = [
+                        [
+                            'url' => 'https://dang.ai/',
+                            'img' => 'https://cdn.prod.website-files.com/63d8afd87da01fb58ea3fbcb/6487e2868c6c8f93b4828827_dang-badge.png',
+                            'alt' => 'Dang.ai',
+                            'width' => 150,
+                            'height' => 54,
+                        ],
+                    ];
+                @endphp
+
+                <div class="sponsored-card">
+                    <div class="sponsored-card-header">
+                        <h3>Sponsored by</h3>
+                        <p>We appreciate our partners and directories supporting ExamGenerator.</p>
+                    </div>
+                    <div class="sponsored-logos">
+                        @foreach ($sponsors as $sp)
+                            <a href="{{ $sp['url'] }}" target="_blank" rel="noopener sponsored" class="sponsor-badge">
+                                <img src="{{ $sp['img'] }}" alt="{{ $sp['alt'] }}" width="{{ $sp['width'] }}" height="{{ $sp['height'] }}">
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Call to Action -->
         <section class="cta">
             <div class="container">
