@@ -167,9 +167,63 @@ class Quiz extends Model implements HasMedia
         return $this->belongsToMany(User::class, 'quiz_teachers', 'quiz_id', 'user_id')->withTimestamps();
     }
 
-    public function category()
+    public function getTopicsAttribute()
     {
-        return $this->belongsTo(Category::class);
+        $topics = [];
+        
+        // Add category as first topic
+        if ($this->category) {
+            $topics[] = $this->category->name;
+        }
+        
+        // Generate topics based on quiz title and description
+        $content = strtolower($this->title . ' ' . $this->quiz_description);
+        
+        // Math topics
+        if (strpos($content, 'math') !== false || strpos($content, 'mathematics') !== false || strpos($content, 'algebra') !== false) {
+            $topics = array_merge($topics, ['Algebra', 'Geometry', 'Calculus', 'Statistics']);
+        }
+        // Science topics
+        elseif (strpos($content, 'science') !== false || strpos($content, 'physics') !== false || strpos($content, 'chemistry') !== false || strpos($content, 'biology') !== false) {
+            $topics = array_merge($topics, ['Physics', 'Chemistry', 'Biology', 'Earth Science']);
+        }
+        // Biology topics
+        elseif (strpos($content, 'biology') !== false || strpos($content, 'cell') !== false || strpos($content, 'genetics') !== false) {
+            $topics = array_merge($topics, ['Cell Biology', 'Genetics', 'Evolution', 'Ecology']);
+        }
+        // History topics
+        elseif (strpos($content, 'history') !== false || strpos($content, 'ancient') !== false || strpos($content, 'world') !== false) {
+            $topics = array_merge($topics, ['Ancient History', 'World Wars', 'Modern History', 'Geography']);
+        }
+        // English topics
+        elseif (strpos($content, 'english') !== false || strpos($content, 'literature') !== false || strpos($content, 'grammar') !== false) {
+            $topics = array_merge($topics, ['Grammar', 'Literature', 'Comprehension', 'Writing']);
+        }
+        // Computer Science topics
+        elseif (strpos($content, 'computer') !== false || strpos($content, 'programming') !== false || strpos($content, 'coding') !== false) {
+            $topics = array_merge($topics, ['Programming', 'Data Structures', 'Algorithms', 'Web Development']);
+        }
+        // Default topics based on category
+        else {
+            if ($this->category) {
+                $categoryName = strtolower($this->category->name);
+                if (strpos($categoryName, 'math') !== false) {
+                    $topics = array_merge($topics, ['Algebra', 'Geometry', 'Calculus', 'Statistics']);
+                } elseif (strpos($categoryName, 'science') !== false) {
+                    $topics = array_merge($topics, ['Physics', 'Chemistry', 'Biology', 'Earth Science']);
+                } elseif (strpos($categoryName, 'english') !== false) {
+                    $topics = array_merge($topics, ['Grammar', 'Literature', 'Comprehension', 'Writing']);
+                } else {
+                    $topics = array_merge($topics, ['Fundamentals', 'Advanced Concepts', 'Practice Questions', 'Review']);
+                }
+            } else {
+                $topics = array_merge($topics, ['General Knowledge', 'Practice Questions', 'Review', 'Assessment']);
+            }
+        }
+        
+        // Remove duplicates and limit to 4 topics
+        $topics = array_unique($topics);
+        return array_slice($topics, 0, 4);
     }
 
     public static function  getForm(): array

@@ -645,10 +645,9 @@
                                         <div class="topics">
                                             <div class="topics-title">{{ __('messages.home.topics_covered') }}</div>
                                             <div class="topic-tags">
-                                                <span class="topic-tag">{{ __('messages.home.cell_biology') }}</span>
-                                                <span class="topic-tag">{{ __('messages.home.genetics') }}</span>
-                                                <span class="topic-tag">{{ __('messages.home.evolution') }}</span>
-                                                <span class="topic-tag">{{ __('messages.home.ecology') }}</span>
+                                                @foreach($allFirstQuiz->topics as $topic)
+                                                    <span class="topic-tag">{{ $topic }}</span>
+                                                @endforeach
                                             </div>
                                         </div>
 
