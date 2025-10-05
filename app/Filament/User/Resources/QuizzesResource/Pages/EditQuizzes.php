@@ -898,7 +898,17 @@ class EditQuizzes extends EditRecord
                                         if (is_array($correctKey)) {
                                             $isCorrect = in_array($answer['title'], $correctKey);
                                         } else {
+                                            // For single choice, prefer AI's is_correct field over correct_answer_key matching
+                                            if (is_array($answer) && array_key_exists('is_correct', $answer)) {
+                                                $provided = filter_var($answer['is_correct'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                                                if (!is_null($provided)) {
+                                                    $isCorrect = (bool)$provided;
+                                        } else {
                                             $isCorrect = $answer['title'] === $correctKey;
+                                                }
+                                            } else {
+                                                $isCorrect = $answer['title'] === $correctKey;
+                                            }
                                         }
 
                                         Answer::create([
@@ -933,7 +943,17 @@ class EditQuizzes extends EditRecord
                                 if (is_array($correctKey)) {
                                     $isCorrect = in_array($answer['title'], $correctKey);
                                 } else {
+                                    // For single choice, prefer AI's is_correct field over correct_answer_key matching
+                                    if (is_array($answer) && array_key_exists('is_correct', $answer)) {
+                                        $provided = filter_var($answer['is_correct'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                                        if (!is_null($provided)) {
+                                            $isCorrect = (bool)$provided;
+                                } else {
                                     $isCorrect = $answer['title'] === $correctKey;
+                                        }
+                                    } else {
+                                        $isCorrect = $answer['title'] === $correctKey;
+                                    }
                                 }
 
                                 Answer::create([
@@ -1017,7 +1037,22 @@ class EditQuizzes extends EditRecord
                                         if (is_array($q['answers']) && !empty($q['answers'])) {
                                             $correctKey = $q['correct_answer_key'] ?? '';
                                             foreach ($q['answers'] as $ans) {
-                                                $isCorrect = is_array($correctKey) ? in_array($ans['title'], $correctKey) : ($ans['title'] === $correctKey);
+                                                $isCorrect = false;
+                                                if (is_array($correctKey)) {
+                                                    $isCorrect = in_array($ans['title'], $correctKey);
+                                                } else {
+                                                    // For single choice, prefer AI's is_correct field over correct_answer_key matching
+                                                    if (is_array($ans) && array_key_exists('is_correct', $ans)) {
+                                                        $provided = filter_var($ans['is_correct'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                                                        if (!is_null($provided)) {
+                                                            $isCorrect = (bool)$provided;
+                                                        } else {
+                                                            $isCorrect = $ans['title'] === $correctKey;
+                                                        }
+                                                    } else {
+                                                        $isCorrect = $ans['title'] === $correctKey;
+                                                    }
+                                                }
                                                 Answer::create([
                                                     'question_id' => $questionModel->id,
                                                     'title' => $ans['title'],

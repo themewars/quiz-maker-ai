@@ -697,7 +697,17 @@ PROMPT;
                                            if (is_array($correctKey)) {
                                                $isCorrect = in_array($ans['title'], $correctKey);
                                            } else {
-                                               $isCorrect = $ans['title'] === $correctKey || ($ans['is_correct'] ?? false);
+                                               // For single choice, prefer AI's is_correct field over correct_answer_key matching
+                                               if (is_array($ans) && array_key_exists('is_correct', $ans)) {
+                                                   $provided = filter_var($ans['is_correct'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                                                   if (!is_null($provided)) {
+                                                       $isCorrect = (bool)$provided;
+                                                   } else {
+                                                       $isCorrect = $ans['title'] === $correctKey;
+                                                   }
+                                               } else {
+                                                   $isCorrect = $ans['title'] === $correctKey;
+                                               }
                                            }
                                            Answer::create([
                                                'question_id' => $questionModel->id,
