@@ -146,6 +146,13 @@ STRICT OUTPUT REQUIREMENTS:
 - **Question Type**: {$qtype}
 - **Language**: {$language}
 
+**CRITICAL QUESTION TYPE ENFORCEMENT:**
+- You MUST generate ALL questions as **{$qtype}** type ONLY.
+- DO NOT mix question types. If the quiz type is "Single Choice", ALL questions must be Single Choice.
+- DO NOT create True/False questions in Single Choice quizzes.
+- DO NOT create Multiple Choice questions in Single Choice quizzes.
+- DO NOT create Open Ended questions unless specifically requested.
+
 [Return ONLY the JSON array as described.]
 PROMPT;
     }

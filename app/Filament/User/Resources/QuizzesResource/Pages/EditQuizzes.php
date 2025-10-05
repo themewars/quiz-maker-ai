@@ -759,6 +759,13 @@ class EditQuizzes extends EditRecord
                 }
             ]
 
+        **CRITICAL QUESTION TYPE ENFORCEMENT:**
+        - You MUST generate ALL questions as **{$quizMeta['question_type']}** type ONLY.
+        - DO NOT mix question types. If the quiz type is "Single Choice", ALL questions must be Single Choice.
+        - DO NOT create True/False questions in Single Choice quizzes.
+        - DO NOT create Multiple Choice questions in Single Choice quizzes.
+        - DO NOT create Open Ended questions unless specifically requested.
+
         **Guidelines:**
         - You must generate exactly **{$additionalQuestions}** additional questions.
         - For Multiple Choice questions, ensure that there are exactly four answer options, with two options marked as `is_correct: true`.
@@ -1376,6 +1383,13 @@ class EditQuizzes extends EditRecord
                     "correct_answer_key": "User will provide their own answer"
                 }
             ]
+
+        **CRITICAL QUESTION TYPE ENFORCEMENT:**
+        - You MUST generate ALL questions as **{$quizMeta['question_type']}** type ONLY.
+        - DO NOT mix question types. If the quiz type is "Single Choice", ALL questions must be Single Choice.
+        - DO NOT create True/False questions in Single Choice quizzes.
+        - DO NOT create Multiple Choice questions in Single Choice quizzes.
+        - DO NOT create Open Ended questions unless specifically requested.
 
         **Guidelines:**
         - You must generate exactly **{$data['max_questions']}** questions.

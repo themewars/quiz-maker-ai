@@ -414,15 +414,22 @@ class CreateQuizzes extends CreateRecord
             }
         ]
 
-    **Guidelines:**
-    - You must generate exactly **{$data['max_questions']}** questions.
-    - For Multiple Choice questions, ensure that there are exactly four answer options, with two options marked as `is_correct: true`.
-    - For Single Choice questions, ensure that there are exactly four answer options, with one option marked as `is_correct: true`.
-    - For True/False questions, ensure that there are exactly two answer options (True and False), with one option marked as `is_correct: true`.
-    - For Open Ended questions, provide no answer options (empty answers array).
-    - The correct_answer_key should match the correct answer's title value(s) for Multiple Choice, Single Choice, and True/False questions.
-    - Ensure that each question is diverse and well-crafted, covering various relevant concepts.
-    - **LANGUAGE COMPLIANCE**: Every single word in questions and answers MUST be in {$quizData['language']}. No exceptions.
+        **CRITICAL QUESTION TYPE ENFORCEMENT:**
+        - You MUST generate ALL questions as **{$quizData['question_type']}** type ONLY.
+        - DO NOT mix question types. If the quiz type is "Single Choice", ALL questions must be Single Choice.
+        - DO NOT create True/False questions in Single Choice quizzes.
+        - DO NOT create Multiple Choice questions in Single Choice quizzes.
+        - DO NOT create Open Ended questions unless specifically requested.
+
+        **Guidelines:**
+        - You must generate exactly **{$data['max_questions']}** questions.
+        - For Multiple Choice questions, ensure that there are exactly four answer options, with two options marked as `is_correct: true`.
+        - For Single Choice questions, ensure that there are exactly four answer options, with one option marked as `is_correct: true`.
+        - For True/False questions, ensure that there are exactly two answer options (True and False), with one option marked as `is_correct: true`.
+        - For Open Ended questions, provide no answer options (empty answers array).
+        - The correct_answer_key should match the correct answer's title value(s) for Multiple Choice, Single Choice, and True/False questions.
+        - Ensure that each question is diverse and well-crafted, covering various relevant concepts.
+        - **LANGUAGE COMPLIANCE**: Every single word in questions and answers MUST be in {$quizData['language']}. No exceptions.
 
     Your responses should be formatted impeccably in JSON, capturing the essence of the provided quiz details.
 
