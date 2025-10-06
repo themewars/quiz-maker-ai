@@ -70,6 +70,7 @@ Route::middleware('SetLanguage')->group(function () {
     // Route for the landing home page
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
+    Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
     Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
     Route::get('/privacy', [HomeController::class, 'policy'])->name('policy');
     Route::get('/cookie', [HomeController::class, 'cookie'])->name('cookie');
