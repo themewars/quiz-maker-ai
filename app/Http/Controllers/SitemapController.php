@@ -29,7 +29,17 @@ class SitemapController extends Controller
         $staticUrls = [
             route('home'),
             route('pricing'),
+            route('terms'),
+            route('policy'),
+            route('cookie'),
         ];
+
+        // Include custom legal pages if defined in settings
+        if (function_exists('getSetting') && getSetting() && !empty(getSetting()->custom_legal_pages)) {
+            foreach (getSetting()->custom_legal_pages as $page) {
+                $staticUrls[] = route('custom.legal', $page['slug']);
+            }
+        }
 
         // Recent public quiz results (leaderboards) by uuid, limited for size
         $results = UserQuiz::query()

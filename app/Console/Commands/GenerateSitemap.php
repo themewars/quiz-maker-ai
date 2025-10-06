@@ -20,7 +20,16 @@ class GenerateSitemap extends Command
         $static = [
             route('home') => ['priority' => '1.00'],
             route('pricing') => ['priority' => '0.80'],
+            route('terms') => ['priority' => '0.80'],
+            route('policy') => ['priority' => '0.80'],
+            route('cookie') => ['priority' => '0.80'],
         ];
+
+        if (function_exists('getSetting') && getSetting() && !empty(getSetting()->custom_legal_pages)) {
+            foreach (getSetting()->custom_legal_pages as $page) {
+                $static[route('custom.legal', $page['slug'])] = ['priority' => '0.80'];
+            }
+        }
 
         // Public, active, non-expired exams
         $quizzes = Quiz::query()
