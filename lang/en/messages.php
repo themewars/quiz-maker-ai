@@ -445,6 +445,9 @@ return [
 
     'home' => [
         'home' => 'Home',
+        'company' => 'Company',
+        'legal' => 'Legal',
+        'footer_description' => 'AI-powered exam generator to create engaging assessments from PDFs, URLs, and text in seconds.',
         'popular' => 'Popular',
         'sign_in' => 'Sign In',
         'or' => 'or',
