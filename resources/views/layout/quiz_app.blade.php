@@ -306,14 +306,10 @@
         document.querySelectorAll('.change-language').forEach(function(el) {
             el.addEventListener('click', function() {
                 const dataUrl = this.dataset.url;
-                fetch(dataUrl)
-                    .then(response => {
-                        if (response.ok) {
-                            window.location.reload();
-                        } else {
-                            alert('Failed to change language.');
-                        }
-                    });
+                // Use direct navigation for maximum compatibility on all browsers/pages
+                if (dataUrl) {
+                    window.location.href = dataUrl;
+                }
             });
         });
 
