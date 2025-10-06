@@ -26,6 +26,22 @@
             <priority>0.6</priority>
         </url>
     @endforeach
+
+    @isset($results)
+        @foreach ($results as $res)
+            <url>
+                <loc>{{ route('show.quizResult', ['uuid' => $res->uuid]) }}</loc>
+                @isset($languages)
+                    @foreach ($languages as $lang)
+                        <xhtml:link rel="alternate" hreflang="{{ $lang }}" href="{{ route('show.quizResult', ['uuid' => $res->uuid]) }}?lang={{ $lang }}" />
+                    @endforeach
+                @endisset
+                <lastmod>{{ optional($res->updated_at)->tz('UTC')->toAtomString() }}</lastmod>
+                <changefreq>weekly</changefreq>
+                <priority>0.5</priority>
+            </url>
+        @endforeach
+    @endisset
 </urlset>
 
 

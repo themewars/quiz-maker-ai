@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use App\Models\UserQuiz;
 use Carbon\Carbon;
 
 class SitemapController extends Controller
@@ -30,12 +31,21 @@ class SitemapController extends Controller
             route('pricing'),
         ];
 
+        // Recent public quiz results (leaderboards) by uuid, limited for size
+        $results = UserQuiz::query()
+            ->select(['uuid', 'updated_at'])
+            ->whereNotNull('uuid')
+            ->orderByDesc('updated_at')
+            ->limit(5000)
+            ->get();
+
         // Render XML via Blade for readability
         return response()
             ->view('sitemap', [
                 'baseUrl' => $baseUrl,
                 'staticUrls' => $staticUrls,
                 'quizzes' => $quizzes,
+                'results' => $results,
                 'languages' => $languages,
             ])
             ->header('Content-Type', 'application/xml');
