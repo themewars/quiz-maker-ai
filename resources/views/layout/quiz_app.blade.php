@@ -301,6 +301,36 @@
         </div>
     </footer>
 
+    <script>
+        // Language change (copy of main layout behavior)
+        document.querySelectorAll('.change-language').forEach(function(el) {
+            el.addEventListener('click', function() {
+                const dataUrl = this.dataset.url;
+                fetch(dataUrl)
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.reload();
+                        } else {
+                            alert('Failed to change language.');
+                        }
+                    });
+            });
+        });
+
+        // Language dropdown toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.querySelector('.language-dropdown');
+            if (!dropdown) return;
+            dropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+            document.addEventListener('click', function() {
+                dropdown.classList.remove('open');
+            });
+        });
+    </script>
+
 </body>
 
 </html>
