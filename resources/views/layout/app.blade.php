@@ -142,8 +142,7 @@
 
             <div class="footer-bottom">
                 <div class="copyright">
-                    &copy; <span>{{ date('Y') }}</span> {{ getAppName() }}.
-                    {{ __('messages.home.all_rights_reserved') }}
+                    © 2025 ExamGenerator.AI.  a YoMagic Startup ............
                 </div>
                 @if (getSetting() &&
                         (getSetting()->facebook_url ||
