@@ -121,21 +121,7 @@
                         <li><a class="nav-link"
                                 href="{{ route('pricing') }}">{{ __('messages.home.pricing') }}</a>
                         </li>
-                        <li class="language-dropdown">
-                            <a href="javascript:void(0)">{{ __('messages.home.language') }}</a>
-                            <ul class="dropdown-menu">
-                                @foreach (getAllLanguages() as $lang => $value)
-                                    <li>
-                                        <img src="{{ asset('images/language/' . $lang . '.png') }}"
-                                            alt="{{ $value }}" />
-                                        <a class="dropdown-item change-language" href="javascript:void(0)"
-                                            data-url="{{ route('change.language', ['code' => $lang]) }}">
-                                            {{ $value }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </li>
+                        {{-- Language dropdown intentionally removed on exam pages --}}
                     </ul>
                     <div class="sign-up-button">
                         @auth
