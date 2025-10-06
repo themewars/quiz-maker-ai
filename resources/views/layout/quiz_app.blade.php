@@ -9,7 +9,74 @@
 
     <link rel="icon" href="{{ getFaviconUrl() }}" type="image/png">
 
-    <title>{{ getAppName() }}</title>
+    @php
+        $seoQuiz = isset($quiz) ? $quiz : (isset($data['question']) ? $data['question']->quiz ?? null : null);
+        $seoTitle = null;
+        $seoDescription = null;
+        $seoCanonical = null;
+        if ($seoQuiz) {
+            $baseTitle = trim($seoQuiz->title ?? '');
+            $seoTitle = $baseTitle ? ($baseTitle . ' | ' . getAppName()) : getAppName();
+            $rawDesc = trim($seoQuiz->quiz_description ?? '');
+            if ($rawDesc === '' && property_exists($seoQuiz, 'description')) {
+                $rawDesc = trim($seoQuiz->description ?? '');
+            }
+            $seoDescription = $rawDesc !== '' ? Str::limit(strip_tags($rawDesc), 160, '') : __('messages.home.about_examgenerator_description');
+            $seoCanonical = route('quiz-player', ['code' => $seoQuiz->unique_code ?? ($seoQuiz->quiz->unique_code ?? null)]);
+        }
+    @endphp
+
+    <title>{{ $seoTitle ?? getAppName() }}</title>
+    @if (!empty($seoDescription))
+        <meta name="description" content="{{ $seoDescription }}">
+    @endif
+    @if (!empty($seoCanonical))
+        <link rel="canonical" href="{{ $seoCanonical }}">
+    @endif
+    <meta name="robots" content="index,follow">
+
+    {{-- Open Graph / Twitter for rich previews --}}
+    @if (!empty($seoTitle))
+        <meta property="og:title" content="{{ $seoTitle }}">
+        <meta property="og:type" content="website">
+        @if (!empty($seoCanonical))
+            <meta property="og:url" content="{{ $seoCanonical }}">
+        @endif
+        @if (!empty($seoDescription))
+            <meta property="og:description" content="{{ $seoDescription }}">
+        @endif
+        <meta property="og:image" content="{{ getAppLogo() }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $seoTitle }}">
+        @if (!empty($seoDescription))
+            <meta name="twitter:description" content="{{ $seoDescription }}">
+        @endif
+        <meta name="twitter:image" content="{{ getAppLogo() }}">
+    @endif
+
+    {{-- Minimal JSON-LD to help search engines understand the page --}}
+    @if ($seoQuiz)
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "QAPage",
+              "name": "{{ addslashes($seoQuiz->title ?? getAppName()) }}",
+              "mainEntity": {
+                "@type": "Question",
+                "name": "{{ addslashes(Str::limit(strip_tags($seoQuiz->quiz_description ?? ($seoQuiz->description ?? '')), 160, '')) }}",
+                "answerCount": {{ isset($seoQuiz->questions) ? max(1, $seoQuiz->questions->count()) : 1 }}
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "{{ addslashes(getAppName()) }}",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "{{ getAppLogo() }}"
+                }
+              }
+            }
+        </script>
+    @endif
 
     <link rel="preconnect" href="//fonts.bunny.net">
     <link href="//fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
