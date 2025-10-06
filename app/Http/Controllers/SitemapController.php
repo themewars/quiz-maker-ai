@@ -10,6 +10,7 @@ class SitemapController extends Controller
     public function index()
     {
         $baseUrl = url('/');
+        $languages = array_keys(getAllLanguages());
 
         // Public, active, non-expired quizzes
         $quizzes = Quiz::query()
@@ -35,6 +36,7 @@ class SitemapController extends Controller
                 'baseUrl' => $baseUrl,
                 'staticUrls' => $staticUrls,
                 'quizzes' => $quizzes,
+                'languages' => $languages,
             ])
             ->header('Content-Type', 'application/xml');
     }
