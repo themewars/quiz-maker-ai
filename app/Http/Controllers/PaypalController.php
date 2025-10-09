@@ -21,6 +21,18 @@ class PaypalController extends Controller
     {
         $plan = json_decode($request->plan);
 
+        // Normalize currency & amount using server-side detection to avoid client drift
+        $currentCurrency = getCurrentCurrency();
+        $dbPlan = Plan::with(['prices.currency', 'currency'])->find($plan->id);
+        $dbPrice = optional($dbPlan->prices->firstWhere('currency_id', $currentCurrency->id))->price;
+        $effectiveAmount = $dbPrice !== null ? (float) $dbPrice : (float) $dbPlan->price;
+        // Override the client payload
+        $plan->payable_amount = $effectiveAmount;
+        $plan->currency = (object) [
+            'code' => strtoupper($currentCurrency->code),
+            'symbol' => $currentCurrency->symbol,
+        ];
+
         $data = [
             'user_id' => Auth::id(),
             'plan_id' => $plan->id,
@@ -59,8 +71,8 @@ class PaypalController extends Controller
                 [
                     'reference_id' => $plan->id,
                     'amount' => [
-                        'value' => $plan->payable_amount,
-                        'currency_code' => $plan->currency->code,
+                        'value' => number_format((float) $plan->payable_amount, 2, '.', ''),
+                        'currency_code' => strtoupper($plan->currency->code),
                     ],
                 ],
             ],
