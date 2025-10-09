@@ -75,26 +75,46 @@ class SetCurrency
 
     private function detectCurrencyFromIP(Request $request): string
     {
+        // 1) Prefer proxy/CDN headers (Cloudflare, common proxies)
+        $country = strtoupper((string) (
+            $request->headers->get('CF-IPCountry')
+            ?? $request->headers->get('X-Country-Code')
+            ?? $request->headers->get('X-AppEngine-Country')
+            ?? ''
+        ));
+        if ($country === 'IN') {
+            return 'INR';
+        } elseif ($country !== '') {
+            return 'USD';
+        }
+
+        // 2) Localhost/dev defaults
         $ip = $request->ip();
-        
-        // For localhost/testing, default to INR
         if (in_array($ip, ['127.0.0.1', '::1', 'localhost'])) {
             return 'INR';
         }
 
+        // 3) External lookup with short timeout (best-effort)
         try {
-            // Use a free GeoIP service to detect country
-            $response = file_get_contents("http://ip-api.com/json/{$ip}?fields=countryCode");
-            $data = json_decode($response, true);
-            
-            if (isset($data['countryCode']) && $data['countryCode'] === 'IN') {
-                return 'INR';
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 1.5,
+                ],
+            ]);
+            $response = @file_get_contents("http://ip-api.com/json/{$ip}?fields=countryCode", false, $context);
+            if ($response) {
+                $data = json_decode($response, true);
+                if (isset($data['countryCode']) && strtoupper($data['countryCode']) === 'IN') {
+                    return 'INR';
+                }
             }
-        } catch (\Exception $e) {
-            // Fallback to USD if GeoIP fails
+        } catch (\Throwable $e) {
+            // ignore and fallback
         }
 
-        return 'USD';
+        // 4) Final fallback - allow env override
+        $fallback = strtoupper((string) env('DEFAULT_CURRENCY', 'USD'));
+        return $fallback === 'INR' ? 'INR' : 'USD';
     }
 
     private function isValidCurrency(string $currencyCode): bool
