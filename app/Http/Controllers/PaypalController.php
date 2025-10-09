@@ -95,6 +95,10 @@ class PaypalController extends Controller
         ];
 
         $order = $provider->createOrder($data);
+        \Log::info('paypal.createOrder', [
+            'request' => $data,
+            'response' => $order,
+        ]);
 
         if (!is_array($order) || empty($order['links'])) {
             Notification::make()
