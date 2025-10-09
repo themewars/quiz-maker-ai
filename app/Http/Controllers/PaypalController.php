@@ -39,12 +39,24 @@ class PaypalController extends Controller
         ];
 
         if ($plan->currency->code != null && ! in_array(strtoupper($plan->currency->code), getPayPalSupportedCurrencies())) {
-            Notification::make()
-                ->danger()
-                ->title(__('messages.subscription.paypal_not_support_this_currency'))
-                ->send();
-
-            return redirect()->back();
+            // Auto-fallback to USD for unsupported currencies in PayPal
+            $fallbackCode = 'USD';
+            $fallbackCurrency = \App\Models\Currency::where('code', $fallbackCode)->first();
+            if ($fallbackCurrency) {
+                $fallbackPrice = optional($dbPlan->prices->firstWhere('currency_id', $fallbackCurrency->id))->price;
+                $fallbackAmount = $fallbackPrice !== null ? (float) $fallbackPrice : (float) $dbPlan->price * 0.012; // rough INR->USD
+                $plan->payable_amount = $fallbackAmount;
+                $plan->currency = (object) [
+                    'code' => $fallbackCode,
+                    'symbol' => '$',
+                ];
+            } else {
+                Notification::make()
+                    ->danger()
+                    ->title(__('messages.subscription.paypal_not_support_this_currency'))
+                    ->send();
+                return redirect()->back();
+            }
         }
 
         session(['data' => $data]);
