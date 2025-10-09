@@ -20,7 +20,12 @@ class PricingController extends Controller
             ->map(function ($plan) use ($currentCurrency) {
                 // Get price for current currency
                 $planPrice = $plan->prices()->where('currency_id', $currentCurrency->id)->first();
-                $plan->current_price = $planPrice ? $planPrice->price : $plan->price;
+                if ($planPrice) {
+                    $plan->current_price = $planPrice->price;
+                } else {
+                    // Fallback convert from base (assume base INR)
+                    $plan->current_price = $this->convertFromInr((float) $plan->price, $currentCurrency->code);
+                }
                 $plan->current_currency = $currentCurrency;
                 
                 // Get all currency prices for this plan
@@ -32,5 +37,20 @@ class PricingController extends Controller
         $faqs = Faq::where('status', 1)->get();
             
         return view('pricing.index', compact('plans', 'faqs', 'allCurrencies', 'currentCurrency'));
+    }
+
+    private function convertFromInr(float $amountInInr, string $targetCode): float
+    {
+        $rates = [
+            'INR' => 1.0,
+            'USD' => 0.012,
+            'EUR' => 0.011,
+            'GBP' => 0.0095,
+            'JPY' => 1.8,
+            'CAD' => 0.016,
+            'AUD' => 0.018,
+        ];
+        $rate = $rates[strtoupper($targetCode)] ?? 1.0;
+        return round($amountInInr * $rate, 2);
     }
 }
