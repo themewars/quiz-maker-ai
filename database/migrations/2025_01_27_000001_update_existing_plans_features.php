@@ -19,6 +19,7 @@ return new class extends Migration
             'answer_key' => true,
             'share_results' => true,
             'email_participants' => true,
+            'display_leaderboard' => true,
             'updated_at' => now(),
         ]);
     }
@@ -34,6 +35,7 @@ return new class extends Migration
             'answer_key' => false,
             'share_results' => false,
             'email_participants' => false,
+            'display_leaderboard' => false,
             'updated_at' => now(),
         ]);
     }

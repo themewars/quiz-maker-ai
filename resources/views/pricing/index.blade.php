@@ -131,12 +131,21 @@
                                     <span>Generate exams from PDFs/URLs</span>
                                 </li>
                             @endif
-                            <li class="feature-item">
-                                <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <span>Display leaderboard</span>
-                            </li>
+                            @if ($plan->display_leaderboard)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Display leaderboard: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Display leaderboard: Disabled</span>
+                                </li>
+                            @endif
                             @if ($plan->share_results)
                                 <li class="feature-item">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">

@@ -57,6 +57,7 @@ class Plan extends Model
         'multi_teacher',
         'share_results',
         'email_participants',
+        'display_leaderboard',
         // misc
         'allowed_question_types',
         'badge_text',
@@ -97,6 +98,7 @@ class Plan extends Model
         'multi_teacher' => 'boolean',
         'share_results' => 'boolean',
         'email_participants' => 'boolean',
+        'display_leaderboard' => 'boolean',
         // misc
         'allowed_question_types' => 'array',
     ];
@@ -220,6 +222,7 @@ class Plan extends Model
                     Toggle::make('multi_teacher')->label('Multi Teacher Enabled'),
                     Toggle::make('share_results')->label('Share results with participants'),
                     Toggle::make('email_participants')->label('Email participants'),
+                    Toggle::make('display_leaderboard')->label('Display Leaderboard Enabled'),
                 ])->columns(3),
                 Section::make(__('Question Types'))
                     ->schema([
