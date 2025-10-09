@@ -69,6 +69,9 @@ class Setting extends Model implements HasMedia
         'quiz_complete_mail_to_participant',
         'quiz_complete_mail_to_creator',
         'custom_legal_pages',
+        // currency controls
+        'enforce_home_currency',
+        'home_currency_code',
     ];
 
     /**
@@ -76,6 +79,7 @@ class Setting extends Model implements HasMedia
      */
     protected $casts = [
         'custom_legal_pages' => 'array',
+        'enforce_home_currency' => 'boolean',
     ];
 
     const APP_LOGO = 'app_logo';
@@ -134,6 +138,22 @@ class Setting extends Model implements HasMedia
                     ])
                     ->inline()
                     ->required(),
+
+                ToggleButtons::make('enforce_home_currency')
+                    ->label('Enforce Home Currency on Homepage:')
+                    ->options([
+                        '1' => __('messages.common.yes'),
+                        '0' => __('messages.common.no'),
+                    ])
+                    ->inline()
+                    ->required(),
+
+                Select::make('home_currency_code')
+                    ->label('Home Currency:')
+                    ->options(\App\Models\Currency::pluck('name', 'code'))
+                    ->searchable()
+                    ->preload()
+                    ->visible(fn(Get $get) => (string)$get('enforce_home_currency') === '1'),
 
                 ToggleButtons::make('enable_landing_page')
                     ->label(__('messages.setting.enable_landing_page') . ':')

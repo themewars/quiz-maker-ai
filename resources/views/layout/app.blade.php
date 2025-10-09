@@ -80,6 +80,11 @@
 
                 <div class="auth-buttons">
                     <!-- Currency Switcher -->
+                    @php
+                        $enforceCurrencyOnHome = (bool) (getSetting()->enforce_home_currency ?? false);
+                        $isHome = request()->is('/') || request()->is('home');
+                    @endphp
+                    @if(!($enforceCurrencyOnHome && $isHome))
                     <div class="currency-switcher-header">
                         <select id="header-currency-select" class="currency-dropdown-header">
                             @foreach(getAllCurrencies() as $currency)
@@ -91,6 +96,7 @@
                             @endforeach
                         </select>
                     </div>
+                    @endif
                     
                     @auth
                         <a href="{{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }}"

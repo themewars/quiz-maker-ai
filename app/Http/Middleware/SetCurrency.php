@@ -16,7 +16,18 @@ class SetCurrency
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Get currency from session, cookie, or detect from IP
+        // If admin enforces home currency on homepage, apply it
+        $enforce = (bool) (getSetting()->enforce_home_currency ?? false);
+        if ($enforce && $this->isHomePage($request)) {
+            $forced = getSetting()->home_currency_code ?? null;
+            if ($forced && $this->isValidCurrency($forced)) {
+                session(['currency' => strtoupper($forced)]);
+                app()->instance('currency', strtoupper($forced));
+                return $next($request);
+            }
+        }
+
+        // Otherwise, get currency from session, cookie, or detect from IP
         $currencyCode = $this->getCurrencyCode($request);
         
         // Set currency in session and app
@@ -24,6 +35,12 @@ class SetCurrency
         app()->instance('currency', $currencyCode);
         
         return $next($request);
+    }
+
+    private function isHomePage(Request $request): bool
+    {
+        $path = trim($request->path(), '/');
+        return $path === '' || $path === 'home';
     }
 
     private function getCurrencyCode(Request $request): string
