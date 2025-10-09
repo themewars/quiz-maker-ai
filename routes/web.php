@@ -24,11 +24,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::middleware('SetLanguage')->group(function () {
+Route::middleware(['SetLanguage', 'SetCurrency'])->group(function () {
     Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
     Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
 
     Route::get('change-language/{code}', [UserQuizController::class, 'changeLanguage'])->name('change.language');
+    
+    // Currency switching routes
+    Route::post('switch-currency', [App\Http\Controllers\CurrencyController::class, 'switch'])->name('currency.switch');
+    Route::get('current-currency', [App\Http\Controllers\CurrencyController::class, 'getCurrent'])->name('currency.current');
 
     // Route of Quiz player
     Route::get('q/{code}/player', [UserQuizController::class, 'createPlayer'])->name('create.quiz-player');

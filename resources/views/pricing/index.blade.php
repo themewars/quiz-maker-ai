@@ -15,10 +15,28 @@
         </div>
     </section>
 
+    <!-- Currency Switcher Section -->
+    <section class="currency-switcher-section">
+        <div class="container">
+            <div class="currency-switcher">
+                <label for="currency-select">{{ __('messages.currency.select_currency') }}:</label>
+                <select id="currency-select" class="currency-dropdown">
+                    @foreach($allCurrencies as $currency)
+                        <option value="{{ $currency->code }}" 
+                                data-symbol="{{ $currency->symbol }}"
+                                {{ $currentCurrency->code === $currency->code ? 'selected' : '' }}>
+                            {{ $currency->symbol }} {{ $currency->code }} - {{ $currency->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </section>
+
     <!-- Pricing Plans Section -->
     <section class="pricing-plans">
         <div class="container">
-            <div class="pricing-grid">
+            <div class="pricing-grid" id="pricing-grid">
                 @foreach($plans as $plan)
                     <div class="pricing-card animate-fade-in {{ $loop->index == 1 ? 'popular' : '' }}">
                         @if($loop->index == 1)
@@ -28,13 +46,13 @@
                         <div class="pricing-header">
                             <h3>{{ $plan->name }}</h3>
                             @if(getCurrencyPosition())
-                                <div class="price">{{ $plan->currency->symbol ?? '₹' }}
-                                    {{ $plan->price ?? 0 }} /
+                                <div class="price" data-plan-id="{{ $plan->id }}">{{ $currentCurrency->symbol }}
+                                    <span class="amount">{{ number_format($plan->current_price, 2) }}</span> /
                                     <span class="frequency">{{ __(\App\Enums\PlanFrequency::from($plan->frequency)->getLabel()) }}</span>
                                 </div>
                             @else
-                                <div class="price">
-                                    {{ $plan->price ?? 0 }} {{ $plan->currency->symbol ?? '₹' }}
+                                <div class="price" data-plan-id="{{ $plan->id }}">
+                                    <span class="amount">{{ number_format($plan->current_price, 2) }}</span> {{ $currentCurrency->symbol }}
                                     <span class="frequency">{{ __(\App\Enums\PlanFrequency::from($plan->frequency)->getLabel()) }}</span>
                                 </div>
                             @endif
@@ -210,4 +228,149 @@
         </div>
     </section>
 </main>
+
+<!-- Currency Switcher JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currencySelect = document.getElementById('currency-select');
+    const pricingGrid = document.getElementById('pricing-grid');
+    
+    // Store plan data for currency switching
+    const planData = @json($plans->map(function($plan) {
+        return [
+            'id' => $plan->id,
+            'prices' => $plan->all_prices->map(function($price) {
+                return [
+                    'currency_id' => $price->currency_id,
+                    'currency_code' => $price->currency->code,
+                    'currency_symbol' => $price->currency->symbol,
+                    'price' => $price->price
+                ];
+            })->toArray()
+        ];
+    }));
+    
+    currencySelect.addEventListener('change', function() {
+        const selectedCurrency = this.value;
+        const selectedOption = this.options[this.selectedIndex];
+        const currencySymbol = selectedOption.getAttribute('data-symbol');
+        
+        // Show loading state
+        pricingGrid.style.opacity = '0.5';
+        
+        // Switch currency via AJAX
+        fetch('{{ route("currency.switch") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                currency: selectedCurrency
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update pricing display
+                updatePricingDisplay(selectedCurrency, currencySymbol);
+                
+                // Reload page to update all prices
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            } else {
+                alert('Failed to switch currency. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to switch currency. Please try again.');
+        })
+        .finally(() => {
+            pricingGrid.style.opacity = '1';
+        });
+    });
+    
+    function updatePricingDisplay(currencyCode, currencySymbol) {
+        // Update all price displays
+        const priceElements = document.querySelectorAll('.price');
+        
+        priceElements.forEach(priceElement => {
+            const planId = parseInt(priceElement.getAttribute('data-plan-id'));
+            const plan = planData.find(p => p.id === planId);
+            
+            if (plan) {
+                const currencyPrice = plan.prices.find(p => p.currency_code === currencyCode);
+                if (currencyPrice) {
+                    const amountElement = priceElement.querySelector('.amount');
+                    if (amountElement) {
+                        amountElement.textContent = parseFloat(currencyPrice.price).toFixed(2);
+                    }
+                    
+                    // Update currency symbol
+                    if (getCurrencyPosition()) {
+                        // Currency before amount
+                        const currencySpan = priceElement.querySelector('.currency');
+                        if (currencySpan) {
+                            currencySpan.textContent = currencySymbol;
+                        }
+                    } else {
+                        // Currency after amount
+                        const text = priceElement.innerHTML;
+                        const updatedText = text.replace(/\$|₹|€|£|¥/g, currencySymbol);
+                        priceElement.innerHTML = updatedText;
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+
+<style>
+.currency-switcher-section {
+    padding: 2rem 0;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.currency-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.currency-switcher label {
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.currency-dropdown {
+    padding: 0.5rem 1rem;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    background: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.currency-dropdown:hover {
+    border-color: #0056b3;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+.currency-dropdown:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.pricing-grid {
+    transition: opacity 0.3s ease;
+}
+</style>
 @endsection

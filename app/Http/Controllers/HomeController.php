@@ -37,12 +37,16 @@ class HomeController extends Controller
         }
         $plans = $plansQuery->get();
         $testimonials = Testimonial::all();
-        $quizzes = Quiz::with('category')->whereNotNull('category_id')
+        // Eager-load relationships used in the view to prevent N+1 and missing data
+        $quizzes = Quiz::with(['category', 'user', 'questions'])
+            ->whereNotNull('category_id')
             ->where('status', 1)->where('is_show_home', 1)->where('is_public', 1)
             ->where(function ($query) {
                 $query->whereNull('quiz_expiry_date')
                     ->orWhere('quiz_expiry_date', '>=', Carbon::now());
-            })->orderBy('id', 'desc')->get();
+            })
+            ->orderBy('id', 'desc')
+            ->get();
         $faqs = Faq::where('status', 1)->get();
 
         return view('home.index', compact('plans', 'testimonials', 'quizzes', 'faqs'));

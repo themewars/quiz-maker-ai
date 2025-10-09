@@ -102,6 +102,23 @@ class Plan extends Model
         return $this->belongsTo(Currency::class);
     }
 
+    public function prices()
+    {
+        return $this->hasMany(PlanPrice::class);
+    }
+
+    public function getPriceForCurrency($currencyId)
+    {
+        $planPrice = $this->prices()->where('currency_id', $currencyId)->first();
+        return $planPrice ? $planPrice->price : $this->price;
+    }
+
+    public function getPaymentGatewayPlanIdForCurrency($currencyId)
+    {
+        $planPrice = $this->prices()->where('currency_id', $currencyId)->first();
+        return $planPrice ? $planPrice->payment_gateway_plan_id : $this->payment_gateway_plan_id;
+    }
+
     public static function getForm()
     {
         return [

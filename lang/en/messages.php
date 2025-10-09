@@ -723,5 +723,10 @@ return [
         'Nov' => 'Nov',
         'Dec' => 'Dec',
     ],
+    'currency' => [
+        'select_currency' => 'Select Currency',
+        'code' => 'Currency Code',
+        'symbol' => 'Currency Symbol',
+    ],
 
 ];

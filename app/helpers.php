@@ -763,3 +763,36 @@ if (!function_exists('getUserSettings')) {
         return null;
     }
 }
+
+if (!function_exists('getCurrentCurrency')) {
+    function getCurrentCurrency()
+    {
+        $currencyCode = session('currency', 'USD');
+        return \App\Models\Currency::where('code', $currencyCode)->first() ?? \App\Models\Currency::where('code', 'USD')->first();
+    }
+}
+
+if (!function_exists('getAllCurrencies')) {
+    function getAllCurrencies()
+    {
+        return \App\Models\Currency::all();
+    }
+}
+
+if (!function_exists('formatPrice')) {
+    function formatPrice($price, $currency = null)
+    {
+        if (!$currency) {
+            $currency = getCurrentCurrency();
+        }
+        
+        $formattedPrice = number_format($price, 2);
+        
+        // Check if currency should be before amount
+        if (getCurrencyPosition()) {
+            return $currency->symbol . ' ' . $formattedPrice;
+        }
+        
+        return $formattedPrice . ' ' . $currency->symbol;
+    }
+}

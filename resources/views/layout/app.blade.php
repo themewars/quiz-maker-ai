@@ -79,6 +79,19 @@
                 </div>
 
                 <div class="auth-buttons">
+                    <!-- Currency Switcher -->
+                    <div class="currency-switcher-header">
+                        <select id="header-currency-select" class="currency-dropdown-header">
+                            @foreach(getAllCurrencies() as $currency)
+                                <option value="{{ $currency->code }}" 
+                                        data-symbol="{{ $currency->symbol }}"
+                                        {{ getCurrentCurrency()->code === $currency->code ? 'selected' : '' }}>
+                                    {{ $currency->symbol }} {{ $currency->code }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
                     @auth
                         <a href="{{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }}"
                             class="btn btn-primary">{{ __('messages.dashboard.dashboard') }}</a>
@@ -374,6 +387,39 @@
             });
         });
 
+        // Header Currency Switcher
+        const headerCurrencySelect = document.getElementById('header-currency-select');
+        if (headerCurrencySelect) {
+            headerCurrencySelect.addEventListener('change', function() {
+                const selectedCurrency = this.value;
+                
+                // Switch currency via AJAX
+                fetch('{{ route("currency.switch") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        currency: selectedCurrency
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Reload page to update all prices
+                        window.location.reload();
+                    } else {
+                        alert('Failed to switch currency. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to switch currency. Please try again.');
+                });
+            });
+        }
+
         // Animation on scroll
         const animateElements = document.querySelectorAll(
             '.animate-fade-in, .animate-fade-in-left, .animate-fade-in-right, .animate-fade-in-delayed');
@@ -395,6 +441,46 @@
         // Check on scroll
         window.addEventListener('scroll', checkElementsInView);
     </script>
+
+    <style>
+        .currency-switcher-header {
+            margin-right: 1rem;
+        }
+
+        .currency-dropdown-header {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .currency-dropdown-header:hover {
+            border-color: #007bff;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
+        }
+
+        .currency-dropdown-header:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .currency-switcher-header {
+                margin-right: 0.5rem;
+            }
+            
+            .currency-dropdown-header {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+                min-width: 70px;
+            }
+        }
+    </style>
 </body>
 
 </html>
