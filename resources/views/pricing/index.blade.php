@@ -86,6 +86,18 @@
                                 </svg>
                                 <span>Max PDF pages: {{ (int)($plan->max_pdf_pages ?? 0) > 0 ? (int)$plan->max_pdf_pages : 'Unlimited' }}</span>
                             </li>
+                            <li class="feature-item">
+                                <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span>Images (OCR): {{ (int)($plan->max_images_ocr ?? 0) > 0 ? (int)$plan->max_images_ocr : 'Unlimited' }}</span>
+                            </li>
+                            <li class="feature-item">
+                                <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span>Website tokens: {{ (int)($plan->max_website_tokens ?? 0) > 0 ? (int)$plan->max_website_tokens : 'Unlimited' }}</span>
+                            </li>
                             @if ($plan->export_pdf)
                                 <li class="feature-item">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -116,19 +128,109 @@
                                     <span>Word export: Disabled</span>
                                 </li>
                             @endif
-                            @if ($plan->pdf_to_exam || $plan->website_to_exam)
+                            @if ($plan->website_to_exam)
                                 <li class="feature-item">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                         <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                    <span>Generate exams from PDFs/URLs</span>
+                                    <span>Website to Exam: Enabled</span>
                                 </li>
                             @else
                                 <li class="feature-item disabled">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                    <span>Generate exams from PDFs/URLs</span>
+                                    <span>Website to Exam: Disabled</span>
+                                </li>
+                            @endif
+                            @if ($plan->pdf_to_exam)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>PDF to Exam: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>PDF to Exam: Disabled</span>
+                                </li>
+                            @endif
+                            @if ($plan->answer_key)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Answer key: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Answer key: Disabled</span>
+                                </li>
+                            @endif
+                            @if ($plan->priority_support)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Priority support: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Priority support: Disabled</span>
+                                </li>
+                            @endif
+                            @if ($plan->multi_teacher)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Multi teacher: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Multi teacher: Disabled</span>
+                                </li>
+                            @endif
+                            @if ($plan->watermark)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Watermark: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Watermark: Disabled</span>
+                                </li>
+                            @endif
+                            @if ($plan->white_label)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>White label: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>White label: Disabled</span>
                                 </li>
                             @endif
                             @if ($plan->display_leaderboard)
