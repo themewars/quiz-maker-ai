@@ -34,15 +34,20 @@ class UpgradeSubscription extends Page
 
         $data['currentActivePlan'] = Subscription::with('plan')->where('user_id', auth()->id())->where('status', SubscriptionStatus::ACTIVE->value)->first();
 
-        $data['plans'] = Plan::where('status', true)
+        $currentCurrency = getCurrentCurrency();
+        $data['plans'] = Plan::with(['prices.currency', 'currency'])
+            ->where('status', true)
             ->where('assign_default', false)
-            ->get()->groupBy('frequency')->map(function ($plans) {
-                return $plans->map(function ($plan) {
+            ->get()->groupBy('frequency')->map(function ($plans) use ($currentCurrency) {
+                return $plans->map(function ($plan) use ($currentCurrency) {
+                    $planPrice = $plan->prices->firstWhere('currency_id', $currentCurrency->id);
+                    $effectivePrice = $planPrice ? (float) $planPrice->price : (float) $plan->price;
                     return [
                         'id' => $plan->id,
                         'name' => $plan->name,
-                        'price' => $plan->price,
-                        'currency_icon' => $plan->currency->symbol,
+                        'price' => $effectivePrice,
+                        'currency_icon' => $currentCurrency->symbol,
+                        'currency_code' => $currentCurrency->code,
                         'trial_days' => $plan->trial_days,
                         'no_of_quiz' => $plan->no_of_quiz,
                         'assign_default' => $plan->assign_default,
