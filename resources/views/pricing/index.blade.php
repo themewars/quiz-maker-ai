@@ -245,11 +245,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     'currency_id' => $price->currency_id,
                     'currency_code' => $price->currency->code,
                     'currency_symbol' => $price->currency->symbol,
-                    'price' => $price->price
+                    'price' => $price->price,
                 ];
-            })->toArray()
+            })->values()->all(),
         ];
-    }));
+    })->values()->all());
     
     currencySelect.addEventListener('change', function() {
         const selectedCurrency = this.value;
