@@ -935,14 +935,14 @@
                                 <div class="pricing-header">
                                     <h3>{{ $plan->name }}</h3>
                                     @if (getCurrencyPosition())
-                                        <div class="price">{{ $plan->currency->symbol ?? '' }}
-                                            {{ $plan->price ?? 0 }} /
+                                        <div class="price">{{ $currentCurrency->symbol ?? ($plan->currency->symbol ?? '') }}
+                                            {{ number_format($plan->current_price ?? $plan->price ?? 0, 2) }} /
                                             <span
                                                 class="frequency">{{ __(\App\Enums\PlanFrequency::from($plan->frequency)->getLabel()) }}</span>
                                         </div>
                                     @else
                                         <div class="price">
-                                            {{ $plan->price ?? 0 }} {{ $plan->currency->symbol ?? '' }}
+                                            {{ number_format($plan->current_price ?? $plan->price ?? 0, 2) }} {{ $currentCurrency->symbol ?? ($plan->currency->symbol ?? '') }}
                                             <span
                                                 class="frequency">{{ __(\App\Enums\PlanFrequency::from($plan->frequency)->getLabel()) }}</span>
                                         </div>
