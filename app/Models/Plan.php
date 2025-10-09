@@ -55,6 +55,8 @@ class Plan extends Model
         'watermark',
         'priority_support',
         'multi_teacher',
+        'share_results',
+        'email_participants',
         // misc
         'allowed_question_types',
         'badge_text',
@@ -93,6 +95,8 @@ class Plan extends Model
         'watermark' => 'boolean',
         'priority_support' => 'boolean',
         'multi_teacher' => 'boolean',
+        'share_results' => 'boolean',
+        'email_participants' => 'boolean',
         // misc
         'allowed_question_types' => 'array',
     ];
@@ -214,6 +218,8 @@ class Plan extends Model
                     Toggle::make('watermark')->label('Watermark Enabled'),
                     Toggle::make('priority_support')->label('Priority Support Enabled'),
                     Toggle::make('multi_teacher')->label('Multi Teacher Enabled'),
+                    Toggle::make('share_results')->label('Share results with participants'),
+                    Toggle::make('email_participants')->label('Email participants'),
                 ])->columns(3),
                 Section::make(__('Question Types'))
                     ->schema([
