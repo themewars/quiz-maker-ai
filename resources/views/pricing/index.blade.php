@@ -46,13 +46,13 @@
                         <div class="pricing-header">
                             <h3>{{ $plan->name }}</h3>
                             @if(getCurrencyPosition())
-                                <div class="price" data-plan-id="{{ $plan->id }}">{{ $currentCurrency->symbol }}
+                                <div class="price" data-plan-id="{{ $plan->id }}"><span class="currency">{{ $currentCurrency->symbol }}</span>
                                     <span class="amount">{{ number_format($plan->current_price, 2) }}</span> /
                                     <span class="frequency">{{ __(\App\Enums\PlanFrequency::from($plan->frequency)->getLabel()) }}</span>
                                 </div>
                             @else
                                 <div class="price" data-plan-id="{{ $plan->id }}">
-                                    <span class="amount">{{ number_format($plan->current_price, 2) }}</span> {{ $currentCurrency->symbol }}
+                                    <span class="amount">{{ number_format($plan->current_price, 2) }}</span> <span class="currency">{{ $currentCurrency->symbol }}</span>
                                     <span class="frequency">{{ __(\App\Enums\PlanFrequency::from($plan->frequency)->getLabel()) }}</span>
                                 </div>
                             @endif
@@ -232,6 +232,7 @@
 <!-- Currency Switcher JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const currencyBefore = {{ getCurrencyPosition() ? 'true' : 'false' }};
     const currencySelect = document.getElementById('currency-select');
     const pricingGrid = document.getElementById('pricing-grid');
     
@@ -309,17 +310,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                     // Update currency symbol
-                    if (getCurrencyPosition()) {
-                        // Currency before amount
-                        const currencySpan = priceElement.querySelector('.currency');
-                        if (currencySpan) {
-                            currencySpan.textContent = currencySymbol;
-                        }
-                    } else {
-                        // Currency after amount
-                        const text = priceElement.innerHTML;
-                        const updatedText = text.replace(/\$|₹|€|£|¥/g, currencySymbol);
-                        priceElement.innerHTML = updatedText;
+                    const currencySpan = priceElement.querySelector('.currency');
+                    if (currencySpan) {
+                        currencySpan.textContent = currencySymbol;
                     }
                 }
             }
