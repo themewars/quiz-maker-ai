@@ -1018,11 +1018,11 @@
                                     </li>
                                     <li class="feature-item">
                                         <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                                        <span>Share results with participants: {{ !empty($plan->share_results) ? 'Enabled' : 'Disabled' }}</span>
+                                        <span>Share results with participants: {{ $plan->share_results ? 'Enabled' : 'Disabled' }}</span>
                                     </li>
                                     <li class="feature-item">
                                         <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                                        <span>Email participants: {{ !empty($plan->email_participants) ? 'Enabled' : 'Disabled' }}</span>
+                                        <span>Email participants: {{ $plan->email_participants ? 'Enabled' : 'Disabled' }}</span>
                                     </li>
                                     @if ($loop->index == 0)
                                         <li class="feature-item disabled">
