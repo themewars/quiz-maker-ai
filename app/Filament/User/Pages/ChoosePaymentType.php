@@ -51,8 +51,16 @@ class ChoosePaymentType extends Page implements HasForms
     protected function getViewData(): array
     {
         // New Plan
-        $plan = $this->plan;
-        $plan->currency_icon = $plan->currency->symbol;
+        $plan = $this->plan->load('prices.currency', 'currency');
+
+        // Resolve current currency from session
+        $currentCurrency = getCurrentCurrency();
+        $planPrice = $plan->prices->firstWhere('currency_id', $currentCurrency->id);
+        $effectivePrice = $planPrice ? (float) $planPrice->price : (float) $plan->price;
+
+        // Attach currency and amount for checkout consistency
+        $plan->currency_icon = $currentCurrency->symbol;
+        $plan->setRelation('currency', $currentCurrency);
         $plan->start_date = Carbon::now();
         $plan->end_date = Carbon::now()->addMonth()->endOfDay();
         $plan->total_days = 30;
@@ -70,13 +78,13 @@ class ChoosePaymentType extends Page implements HasForms
         }
 
         $plan->total_days = floor($plan->start_date->diffInDays($plan->end_date));
-        $plan->payable_amount = $plan->price > 0 ? $plan->price : 0;
-        $this->paymentAmount = $plan->price > 0 ? $plan->price : 0;
+        $plan->payable_amount = $effectivePrice > 0 ? $effectivePrice : 0;
+        $this->paymentAmount = $plan->payable_amount;
 
         $currentActivePlan = empty(GetCurrentSubscription::run()) ? null : GetCurrentSubscription::run();
 
         if ($currentActivePlan) {
-            $price = $plan->price - $currentActivePlan['remaining_balance'];
+            $price = $plan->payable_amount - $currentActivePlan['remaining_balance'];
             $plan->payable_amount = $price > 0 ? $price : 0;
             $this->paymentAmount = $price > 0 ? $price : 0;
         }
