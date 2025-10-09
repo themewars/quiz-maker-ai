@@ -86,18 +86,36 @@
                                 </svg>
                                 <span>Max PDF pages: {{ (int)($plan->max_pdf_pages ?? 0) > 0 ? (int)$plan->max_pdf_pages : 'Unlimited' }}</span>
                             </li>
-                            <li class="feature-item">
-                                <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <span>PDF export: {{ $plan->export_pdf ? 'Enabled' : 'Disabled' }}</span>
-                            </li>
-                            <li class="feature-item">
-                                <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <span>Word export: {{ $plan->export_word ? 'Enabled' : 'Disabled' }}</span>
-                            </li>
+                            @if ($plan->export_pdf)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>PDF export: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>PDF export: Disabled</span>
+                                </li>
+                            @endif
+                            @if ($plan->export_word)
+                                <li class="feature-item">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Word export: Enabled</span>
+                                </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Word export: Disabled</span>
+                                </li>
+                            @endif
                             @if ($plan->pdf_to_exam || $plan->website_to_exam)
                                 <li class="feature-item">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
