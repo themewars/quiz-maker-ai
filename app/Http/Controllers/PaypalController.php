@@ -72,7 +72,30 @@ class PaypalController extends Controller
 
         $order = $provider->createOrder($data);
 
-        return redirect($order['links'][1]['href']);
+        if (!is_array($order) || empty($order['links'])) {
+            Notification::make()
+                ->danger()
+                ->title(__('messages.subscription.paypal_not_support_this_currency'))
+                ->send();
+
+            return redirect()->back();
+        }
+
+        $approveLink = collect($order['links'])->firstWhere('rel', 'approve')['href'] ?? null;
+        if (!$approveLink && isset($order['links'][1]['href'])) {
+            $approveLink = $order['links'][1]['href'];
+        }
+
+        if (!$approveLink) {
+            Notification::make()
+                ->danger()
+                ->title(__('messages.subscription.paypal_not_support_this_currency'))
+                ->send();
+
+            return redirect()->back();
+        }
+
+        return redirect($approveLink);
     }
 
     public function success(Request $request)

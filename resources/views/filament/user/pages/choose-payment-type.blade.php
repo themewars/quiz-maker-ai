@@ -210,7 +210,7 @@
                         </div>
                         {{-- Razorpay Payment --}}
                     @elseif ($paymentType == 1)
-                        <input type="hidden" id="planInput" name="plan" value="{{ $plan }}">
+                        <input type="hidden" id="planInput" name="plan" value='@json($plan)'>
                         <div class="pt-4 flex justify-center">
                             <x-filament::button wire:loading.attr="disabled" type="submit" class="px-4"
                                 id="razorpayPayment">
@@ -235,7 +235,7 @@
                     @elseif ($paymentType == 2)
                         <form action="{{ route('paypal.purchase') }}" method="POST" class="flex justify-center">
                             @csrf
-                            <input type="hidden" name="plan" value="{{ $plan }}">
+                            <input type="hidden" name="plan" value='@json($plan)'>
                             <div class="pt-4">
                                 <x-filament::button wire:loading.attr="disabled" type="submit" class="px-4">
                                     <span class="flex justify-center">
