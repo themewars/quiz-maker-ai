@@ -35,8 +35,23 @@ class PricingController extends Controller
             });
             
         $faqs = Faq::where('status', 1)->get();
+
+        // Build lightweight planData for JS (avoid complex @json closures in blade)
+        $planData = $plans->map(function ($plan) {
+            return [
+                'id' => $plan->id,
+                'prices' => $plan->prices->map(function ($price) {
+                    return [
+                        'currency_id' => $price->currency_id,
+                        'currency_code' => $price->currency->code,
+                        'currency_symbol' => $price->currency->symbol,
+                        'price' => $price->price,
+                    ];
+                })->values()->all(),
+            ];
+        })->values()->all();
             
-        return view('pricing.index', compact('plans', 'faqs', 'allCurrencies', 'currentCurrency'));
+        return view('pricing.index', compact('plans', 'faqs', 'allCurrencies', 'currentCurrency', 'planData'));
     }
 
     private function convertFromInr(float $amountInInr, string $targetCode): float

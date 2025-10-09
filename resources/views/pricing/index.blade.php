@@ -236,20 +236,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const currencySelect = document.getElementById('currency-select');
     const pricingGrid = document.getElementById('pricing-grid');
     
-    // Store plan data for currency switching
-    const planData = @json($plans->map(function($plan) {
-        return [
-            'id' => $plan->id,
-            'prices' => $plan->all_prices->map(function($price) {
-                return [
-                    'currency_id' => $price->currency_id,
-                    'currency_code' => $price->currency->code,
-                    'currency_symbol' => $price->currency->symbol,
-                    'price' => $price->price,
-                ];
-            })->values()->all(),
-        ];
-    })->values()->all());
+    // Store plan data for currency switching (prebuilt in controller)
+    const planData = @json($planData);
     
     currencySelect.addEventListener('change', function() {
         const selectedCurrency = this.value;
