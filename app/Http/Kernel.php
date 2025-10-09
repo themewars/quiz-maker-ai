@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'SetLanguage' => \App\Http\Middleware\SetLanguage::class,
+        'SetCurrency' => \App\Http\Middleware\SetCurrency::class,
     ];
 }
