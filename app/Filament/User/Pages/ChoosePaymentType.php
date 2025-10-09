@@ -61,6 +61,8 @@ class ChoosePaymentType extends Page implements HasForms
         // Attach currency and amount for checkout consistency
         $plan->currency_icon = $currentCurrency->symbol;
         $plan->setRelation('currency', $currentCurrency);
+        // Overwrite display price to effective currency price
+        $plan->price = $effectivePrice;
         $plan->start_date = Carbon::now();
         $plan->end_date = Carbon::now()->addMonth()->endOfDay();
         $plan->total_days = 30;
