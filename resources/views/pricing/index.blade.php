@@ -98,78 +98,53 @@
                                 </svg>
                                 <span>Word export: {{ $plan->export_word ? 'Enabled' : 'Disabled' }}</span>
                             </li>
-                            @if($loop->index == 0)
-                                <li class="feature-item disabled">
-                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <span>Generate exams from PDFs/URLs</span>
-                                </li>
-                                <li class="feature-item disabled">
-                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <span>Display leaderboard</span>
-                                </li>
-                                <li class="feature-item disabled">
-                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <span>Share results with participants</span>
-                                </li>
-                                <li class="feature-item disabled">
-                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <span>Email participants</span>
-                                </li>
-                            @elseif($loop->index == 1)
+                            @if ($plan->pdf_to_exam || $plan->website_to_exam)
                                 <li class="feature-item">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                         <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                     <span>Generate exams from PDFs/URLs</span>
                                 </li>
+                            @else
+                                <li class="feature-item disabled">
+                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span>Generate exams from PDFs/URLs</span>
+                                </li>
+                            @endif
+                            <li class="feature-item">
+                                <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span>Display leaderboard</span>
+                            </li>
+                            @if ($plan->share_results)
                                 <li class="feature-item">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                         <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                    <span>Display leaderboard</span>
+                                    <span>Share results with participants</span>
                                 </li>
+                            @else
                                 <li class="feature-item disabled">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                         <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                     <span>Share results with participants</span>
                                 </li>
-                                <li class="feature-item disabled">
+                            @endif
+                            @if ($plan->email_participants)
+                                <li class="feature-item">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                     <span>Email participants</span>
                                 </li>
                             @else
-                                <li class="feature-item">
+                                <li class="feature-item disabled">
                                     <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <span>Generate exams from PDFs/URLs</span>
-                                </li>
-                                <li class="feature-item">
-                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <span>Display leaderboard</span>
-                                </li>
-                                <li class="feature-item">
-                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <span>Share results with participants</span>
-                                </li>
-                                <li class="feature-item">
-                                    <svg class="feature-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                     <span>Email participants</span>
                                 </li>
