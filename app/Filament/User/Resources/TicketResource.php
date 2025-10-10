@@ -114,7 +114,7 @@ class TicketResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\MessagesRelationManager::class,
         ];
     }
 

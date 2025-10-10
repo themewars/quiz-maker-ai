@@ -1,37 +1,38 @@
 <?php
 
-namespace App\Filament\Resources\TicketResource\Widgets;
+namespace App\Filament\User\Resources\TicketResource\RelationManagers;
 
 use App\Models\TicketMessage;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TicketMessagesWidget extends BaseWidget
+class MessagesRelationManager extends RelationManager
 {
-    protected int | string | array $columnSpan = 'full';
+    protected static string $relationship = 'messages';
 
-    protected static ?string $heading = 'Messages';
+    protected static ?string $title = 'Messages';
 
-    public ?int $ticketId = null;
-
-    public function mount(): void
+    public function form(Form $form): Form
     {
-        $this->ticketId = $this->getRecord()->id ?? null;
+        return $form
+            ->schema([
+                Forms\Components\Textarea::make('message')
+                    ->required()
+                    ->rows(3)
+                    ->label('Your Message'),
+            ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->query(
-                TicketMessage::query()
-                    ->where('ticket_id', $this->ticketId)
-                    ->orderBy('created_at', 'asc')
-            )
+            ->recordTitleAttribute('message')
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('From')
@@ -44,21 +45,18 @@ class TicketMessagesWidget extends BaseWidget
                     ->dateTime()
                     ->label('Time'),
             ])
+            ->filters([
+                //
+            ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Reply')
-                    ->form([
-                        Forms\Components\Textarea::make('message')
-                            ->required()
-                            ->rows(3)
-                            ->label('Your Reply'),
-                    ])
                     ->using(function (array $data): TicketMessage {
                         return TicketMessage::create([
-                            'ticket_id' => $this->ticketId,
+                            'ticket_id' => $this->getOwnerRecord()->id,
                             'user_id' => auth()->id(),
                             'message' => $data['message'],
-                            'is_admin_reply' => true,
+                            'is_admin_reply' => false,
                         ]);
                     })
                     ->after(function () {
@@ -68,6 +66,18 @@ class TicketMessagesWidget extends BaseWidget
                             ->send();
                     }),
             ])
+            ->actions([
+                Tables\Actions\EditAction::make()
+                    ->visible(fn (TicketMessage $record): bool => $record->user_id === auth()->id()),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn (TicketMessage $record): bool => $record->user_id === auth()->id()),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ])
+            ->defaultSort('created_at', 'asc')
             ->paginated(false);
     }
 }

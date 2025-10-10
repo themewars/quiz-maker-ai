@@ -23,10 +23,4 @@ class ViewTicket extends ViewRecord
         ];
     }
 
-    public function getHeaderWidgets(): array
-    {
-        return [
-            TicketResource\Widgets\TicketMessagesWidget::class,
-        ];
-    }
 }
