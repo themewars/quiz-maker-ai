@@ -76,7 +76,7 @@ class QuizzesResource extends Resource implements HasForms
                     ->url(fn($record) => route('quiz-player', ['code' => $record->unique_code]), true)
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->iconPosition(IconPosition::After)
-                    ->limit( thirty: 40 )
+                    ->limit(40)
                     ->tooltip(fn($record) => $record->title)
                     ->extraAttributes(['class' => 'whitespace-nowrap']),
                 TextColumn::make('quiz_type')
