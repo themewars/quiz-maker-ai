@@ -798,7 +798,7 @@ PROMPT;
             ->label(__('messages.common.create'))
             ->extraAttributes([
                 'x-data' => '{}',
-                'x-on:click' => "$el.dataset.origText ??= $el.innerHTML; $el.innerHTML = 'Please Wait';",
+                'x-on:click' => '$el.dataset.origText ??= $el.innerHTML; $el.innerHTML = "Please Wait";',
                 'wire:loading.attr' => 'disabled',
                 'wire:target' => 'create',
                 'wire:loading.class' => 'opacity-70 cursor-not-allowed',
