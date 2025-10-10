@@ -42,6 +42,17 @@ class CreateQuizzes extends CreateRecord
         $tabType[$tab] ?? Quiz::TEXT_TYPE;
     }
 
+    protected function getCreateFormAction(): Action
+    {
+        return parent::getCreateFormAction()
+            ->extraAttributes([
+                'x-data' => '{}',
+                'x-on:click' => '$nextTick(()=>{ const s = $el.querySelector("span"); if (s) s.textContent = "Please Wait"; })',
+                'wire:loading.attr' => 'disabled',
+                'wire:target' => 'create',
+            ]);
+    }
+
     protected function handleRecordCreation(array $data): Model
     {
         $userId = Auth::id();
