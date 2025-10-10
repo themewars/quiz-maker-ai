@@ -4,21 +4,28 @@
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
-    "@type": "Quiz",
+    "@type": "QAPage",
     "name": "{{ addslashes($quiz->title) }}",
-    "description": "{{ addslashes($quiz->quiz_description) }}",
-    "author": {
-        "@type": "Organization",
-        "name": "{{ getAppName() }}"
-    },
-    "datePublished": "{{ $quiz->created_at ? $quiz->created_at->format('Y-m-d') : now()->format('Y-m-d') }}",
-    "url": "{{ request()->url() }}",
     "mainEntity": {
         "@type": "Question",
         "name": "{{ addslashes($quiz->title) }}",
+        "answerCount": {{ $quiz->questions ? $quiz->questions->count() : 0 }},
         "acceptedAnswer": {
             "@type": "Answer",
-            "text": "{{ addslashes($quiz->quiz_description) }}"
+            "text": "{{ addslashes($quiz->quiz_description) }}",
+            "author": {
+                "@type": "Organization",
+                "name": "{{ getAppName() }}"
+            },
+            "datePublished": "{{ $quiz->created_at ? $quiz->created_at->format('Y-m-d') : now()->format('Y-m-d') }}"
+        }
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "{{ getAppName() }}",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "{{ getSetting()->app_logo ? asset('uploads/app_logo/' . getSetting()->app_logo) : asset('images/logo.png') }}"
         }
     }
 }
