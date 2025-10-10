@@ -244,7 +244,13 @@ class EditQuizzes extends EditRecord
                         ->multiple()
                         ->preload()
                         ->searchable()
-                        ->options(\App\Models\User::where('id', '!=', auth()->id())->pluck('name','id'))
+                        ->options(function(){
+                            // Show only users with the 'teacher' role, excluding current user and admins
+                            return \App\Models\User::query()
+                                ->where('id', '!=', auth()->id())
+                                ->role('teacher')
+                                ->pluck('name','id');
+                        })
                         ->default(fn() => $this->record?->teachers()->pluck('users.id')->toArray() ?? [])
                 ])
                 ->action(function(array $data){
