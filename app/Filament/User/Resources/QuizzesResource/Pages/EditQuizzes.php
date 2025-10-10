@@ -245,11 +245,16 @@ class EditQuizzes extends EditRecord
                         ->preload()
                         ->searchable()
                         ->options(function(){
-                            // Show only users with the 'teacher' role, excluding current user and admins
-                            return \App\Models\User::query()
-                                ->where('id', '!=', auth()->id())
-                                ->role('teacher')
-                                ->pluck('name','id');
+                            $query = \App\Models\User::query()->where('id', '!=', auth()->id());
+                            // Prefer 'teacher' role if it exists; otherwise exclude admins
+                            if (\Spatie\Permission\Models\Role::query()->where('name', 'teacher')->exists()) {
+                                $query->role('teacher');
+                            } else {
+                                $query->whereDoesntHave('roles', function($q){
+                                    $q->whereIn('name', ['admin','super-admin']);
+                                });
+                            }
+                            return $query->pluck('name','id');
                         })
                         ->default(fn() => $this->record?->teachers()->pluck('users.id')->toArray() ?? [])
                 ])
