@@ -70,17 +70,13 @@ class QuizzesResource extends Resource implements HasForms
             ->actionsColumnLabel(__('messages.common.action'))
             ->actionsAlignment(getActiveLanguage()['code'] == 'ar' ? 'start' : 'end')
             ->striped()
-            ->contentGrid([
-                'md' => 1,
-                'sm' => 1,
-            ])
             ->columns([
                 TextColumn::make('title')
                     ->label(__('messages.common.title'))
                     ->url(fn($record) => route('quiz-player', ['code' => $record->unique_code]), true)
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->iconPosition(IconPosition::After)
-                    ->limit(40)
+                    ->limit( thirty: 40 )
                     ->tooltip(fn($record) => $record->title)
                     ->extraAttributes(['class' => 'whitespace-nowrap']),
                 TextColumn::make('quiz_type')
@@ -138,7 +134,9 @@ class QuizzesResource extends Resource implements HasForms
                     ->tooltip('Share exam link')
                     ->url(fn(Quiz $record) => route('quiz-player', ['code' => $record->unique_code]))
                     ->openUrlInNewTab()
-                    ->visible(fn(Quiz $record): bool => $record->questions()->exists()),
+                    ->visible(fn(Quiz $record): bool => $record->questions()->exists())
+                    ->hiddenLabel()
+                    ->size('md'),
                 Tables\Actions\Action::make('export_pdf')
                     ->label('PDF')
                     ->icon('heroicon-o-arrow-down-tray')
@@ -147,7 +145,10 @@ class QuizzesResource extends Resource implements HasForms
                     ->visible(function(Quiz $record){
                         $sub = getActiveSubscription();
                         return $record->questions()->exists() && $sub && optional($sub->plan)->export_pdf;
-                    }),
+                    })
+                    ->hiddenLabel()
+                    ->size('md')
+                    ->tooltip('PDF'),
                 Tables\Actions\Action::make('export_word')
                     ->label('Word')
                     ->icon('heroicon-o-document-text')
@@ -156,7 +157,10 @@ class QuizzesResource extends Resource implements HasForms
                     ->visible(function(Quiz $record){
                         $sub = getActiveSubscription();
                         return $record->questions()->exists() && $sub && optional($sub->plan)->export_word;
-                    }),
+                    })
+                    ->hiddenLabel()
+                    ->size('md')
+                    ->tooltip('Word'),
                 Tables\Actions\Action::make('export_ppt')
                     ->label('PPT')
                     ->icon('heroicon-o-presentation-chart-bar')
@@ -165,7 +169,10 @@ class QuizzesResource extends Resource implements HasForms
                     ->visible(function(Quiz $record){
                         $sub = getActiveSubscription();
                         return $record->questions()->exists() && $sub && optional($sub->plan)->ppt_quiz;
-                    }),
+                    })
+                    ->hiddenLabel()
+                    ->size('md')
+                    ->tooltip('PPT'),
                 \App\Filament\Actions\CustomDeleteAction::make()
                     ->setCommonProperties()
                     ->successNotificationTitle(__('messages.quiz.quiz_deleted_success'))
