@@ -230,9 +230,13 @@ class EditQuizzes extends EditRecord
             Action::make('manageTeachers')
                 ->label('Manage Teachers')
                 ->icon('heroicon-o-user-group')
-                ->visible(function(){
+                ->disabled(function(){
                     $sub = getActiveSubscription();
-                    return $sub && optional($sub->plan)->multi_teacher;
+                    return !($sub && optional($sub->plan)->multi_teacher);
+                })
+                ->tooltip(function(){
+                    $sub = getActiveSubscription();
+                    return ($sub && optional($sub->plan)->multi_teacher) ? null : 'Enable Multi Teacher in your plan to use this feature.';
                 })
                 ->form([
                     \Filament\Forms\Components\Select::make('teachers')
