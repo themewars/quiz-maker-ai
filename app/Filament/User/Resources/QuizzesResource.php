@@ -69,20 +69,28 @@ class QuizzesResource extends Resource implements HasForms
             ->defaultSort('id', 'desc')
             ->actionsColumnLabel(__('messages.common.action'))
             ->actionsAlignment(getActiveLanguage()['code'] == 'ar' ? 'start' : 'end')
+            ->striped()
+            ->contentGrid([
+                'md' => 1,
+                'sm' => 1,
+            ])
             ->columns([
                 TextColumn::make('title')
-                    ->wrap()
                     ->label(__('messages.common.title'))
                     ->url(fn($record) => route('quiz-player', ['code' => $record->unique_code]), true)
                     ->icon('heroicon-o-arrow-top-right-on-square')
-                    ->iconPosition(IconPosition::After),
+                    ->iconPosition(IconPosition::After)
+                    ->limit(40)
+                    ->tooltip(fn($record) => $record->title)
+                    ->extraAttributes(['class' => 'whitespace-nowrap']),
                 TextColumn::make('quiz_type')
                     ->label(__('messages.quiz.question_type'))
                     ->formatStateUsing(function ($state, $record) {
                         $options = Quiz::QUIZ_TYPE;
 
                         return $options[$state] ?? __('messages.common.n/a');
-                    }),
+                    })
+                    ->extraAttributes(['class' => 'whitespace-nowrap']),
                 TextColumn::make('quiz_user_count')
                     ->label(__('messages.quiz.participant_count'))
                     ->counts('quizUser')
