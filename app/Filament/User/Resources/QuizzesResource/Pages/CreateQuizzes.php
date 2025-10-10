@@ -191,13 +191,17 @@ class CreateQuizzes extends CreateRecord
         if (isset($this->data['file_upload']) && is_array($this->data['file_upload'])) {
             foreach ($this->data['file_upload'] as $file) {
                 if ($file instanceof \Illuminate\Http\UploadedFile) {
-                    // Check file size limit (10MB from media-library config)
-                    $maxFileSize = 10 * 1024 * 1024; // 10MB
+                    // Check file size limit based on active subscription plan (MB -> bytes)
+                    $planMb = 10; // default fallback
+                    if ($subscription && $subscription->plan && is_numeric($subscription->plan->max_pdf_upload_mb)) {
+                        $planMb = max(1, (int) $subscription->plan->max_pdf_upload_mb);
+                    }
+                    $maxFileSize = $planMb * 1024 * 1024;
                     if ($file->getSize() > $maxFileSize) {
                         Notification::make()
                             ->danger()
                             ->title('File Size Exceeded')
-                            ->body('File size exceeds the maximum allowed limit of 10MB. Please upload a smaller file.')
+                            ->body('File size exceeds the maximum allowed limit of ' . $planMb . 'MB. Please upload a smaller file.')
                             ->persistent()
                             ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
                             ->send();
