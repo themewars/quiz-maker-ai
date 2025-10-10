@@ -1,42 +1,7 @@
 @extends('layout.quiz_app')
 @section('content')
 
-@php
-$structuredData = [
-    '@context' => 'https://schema.org',
-    '@type' => 'QAPage',
-    'name' => $quiz->title,
-    'datePublished' => $quiz->created_at ? $quiz->created_at->format('c') : now()->format('c'),
-    'mainEntity' => [
-        '@type' => 'Question',
-        'name' => $quiz->title,
-        'answerCount' => $quiz->questions ? $quiz->questions->count() : 0,
-        'acceptedAnswer' => [
-            '@type' => 'Answer',
-            'text' => $quiz->quiz_description ?: $quiz->title,
-            'author' => [
-                '@type' => 'Organization',
-                'name' => getAppName(),
-                'url' => url('/')
-            ],
-            'datePublished' => $quiz->created_at ? $quiz->created_at->format('c') : now()->format('c')
-        ]
-    ],
-    'publisher' => [
-        '@type' => 'Organization',
-        'name' => getAppName(),
-        'url' => url('/'),
-        'logo' => [
-            '@type' => 'ImageObject',
-            'url' => getSetting()->app_logo ? asset('uploads/app_logo/' . getSetting()->app_logo) : asset('images/logo.png')
-        ]
-    ]
-];
-@endphp
 
-<script type="application/ld+json">
-{!! json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-</script>
 
     <div class="flex flex-col min-h-screen justify-center items-center p-4 md:my-0 my-10">
         {{-- <h1 class="font-bold lg:text-[54px] md:text-5xl sm:text-4xl text-3xl lg:mb-16 sm:mb-10 mb-7">
