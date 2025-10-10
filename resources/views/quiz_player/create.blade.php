@@ -1,37 +1,41 @@
 @extends('layout.quiz_app')
 @section('content')
 
+@php
+$structuredData = [
+    '@context' => 'https://schema.org',
+    '@type' => 'QAPage',
+    'name' => $quiz->title,
+    'datePublished' => $quiz->created_at ? $quiz->created_at->format('c') : now()->format('c'),
+    'mainEntity' => [
+        '@type' => 'Question',
+        'name' => $quiz->title,
+        'answerCount' => $quiz->questions ? $quiz->questions->count() : 0,
+        'acceptedAnswer' => [
+            '@type' => 'Answer',
+            'text' => $quiz->quiz_description ?: $quiz->title,
+            'author' => [
+                '@type' => 'Organization',
+                'name' => getAppName(),
+                'url' => url('/')
+            ],
+            'datePublished' => $quiz->created_at ? $quiz->created_at->format('c') : now()->format('c')
+        ]
+    ],
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => getAppName(),
+        'url' => url('/'),
+        'logo' => [
+            '@type' => 'ImageObject',
+            'url' => getSetting()->app_logo ? asset('uploads/app_logo/' . getSetting()->app_logo) : asset('images/logo.png')
+        ]
+    ]
+];
+@endphp
+
 <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "QAPage",
-    "name": "{{ addslashes($quiz->title) }}",
-    "datePublished": "{{ $quiz->created_at ? $quiz->created_at->format('c') : now()->format('c') }}",
-    "mainEntity": {
-        "@type": "Question",
-        "name": "{{ addslashes($quiz->title) }}",
-        "answerCount": {{ $quiz->questions ? $quiz->questions->count() : 0 }},
-        "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "{{ addslashes($quiz->quiz_description ?: $quiz->title) }}",
-            "author": {
-                "@type": "Organization",
-                "name": "{{ getAppName() }}",
-                "url": "{{ url('/') }}"
-            },
-            "datePublished": "{{ $quiz->created_at ? $quiz->created_at->format('c') : now()->format('c') }}"
-        }
-    },
-    "publisher": {
-        "@type": "Organization",
-        "name": "{{ getAppName() }}",
-        "url": "{{ url('/') }}",
-        "logo": {
-            "@type": "ImageObject",
-            "url": "{{ getSetting()->app_logo ? asset('uploads/app_logo/' . getSetting()->app_logo) : asset('images/logo.png') }}"
-        }
-    }
-}
+{!! json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
 </script>
 
     <div class="flex flex-col min-h-screen justify-center items-center p-4 md:my-0 my-10">
