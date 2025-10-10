@@ -73,7 +73,6 @@ class QuizzesResource extends Resource implements HasForms
                 TextColumn::make('title')
                     ->wrap()
                     ->label(__('messages.common.title'))
-                    ->description(fn($record) => route('quiz-player', ['code' => $record->unique_code]))
                     ->url(fn($record) => route('quiz-player', ['code' => $record->unique_code]), true)
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->iconPosition(IconPosition::After),
