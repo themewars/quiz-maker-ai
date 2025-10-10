@@ -162,6 +162,13 @@ class Quiz extends Model implements HasMedia
         return $this->hasMany(UserQuiz::class);
     }
 
+    public function collaborators()
+    {
+        return $this->belongsToMany(User::class, 'quiz_collaborators')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
     public function teachers()
     {
         return $this->belongsToMany(User::class, 'quiz_teachers', 'quiz_id', 'user_id')->withTimestamps();
