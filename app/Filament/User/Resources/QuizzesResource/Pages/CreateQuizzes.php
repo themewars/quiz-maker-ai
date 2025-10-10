@@ -47,9 +47,10 @@ class CreateQuizzes extends CreateRecord
         return parent::getCreateFormAction()
             ->extraAttributes([
                 'x-data' => '{}',
-                'x-on:click' => '$nextTick(()=>{ const s = $el.querySelector("span"); if (s) s.textContent = "Please Wait"; })',
+                'x-on:click' => '$nextTick(()=>{ const s = $el.querySelector(".fi-btn-label"); if (s) s.textContent = "Please Wait"; })',
                 'wire:loading.attr' => 'disabled',
                 'wire:target' => 'create',
+                'wire:loading.class' => 'opacity-70 cursor-not-allowed',
             ]);
     }
 
