@@ -6,23 +6,26 @@
     "@context": "https://schema.org",
     "@type": "QAPage",
     "name": "{{ addslashes($quiz->title) }}",
+    "datePublished": "{{ $quiz->created_at ? $quiz->created_at->format('c') : now()->format('c') }}",
     "mainEntity": {
         "@type": "Question",
         "name": "{{ addslashes($quiz->title) }}",
         "answerCount": {{ $quiz->questions ? $quiz->questions->count() : 0 }},
         "acceptedAnswer": {
             "@type": "Answer",
-            "text": "{{ addslashes($quiz->quiz_description) }}",
+            "text": "{{ addslashes($quiz->quiz_description ?: $quiz->title) }}",
             "author": {
                 "@type": "Organization",
-                "name": "{{ getAppName() }}"
+                "name": "{{ getAppName() }}",
+                "url": "{{ url('/') }}"
             },
-            "datePublished": "{{ $quiz->created_at ? $quiz->created_at->format('Y-m-d') : now()->format('Y-m-d') }}"
+            "datePublished": "{{ $quiz->created_at ? $quiz->created_at->format('c') : now()->format('c') }}"
         }
     },
     "publisher": {
         "@type": "Organization",
         "name": "{{ getAppName() }}",
+        "url": "{{ url('/') }}",
         "logo": {
             "@type": "ImageObject",
             "url": "{{ getSetting()->app_logo ? asset('uploads/app_logo/' . getSetting()->app_logo) : asset('images/logo.png') }}"
