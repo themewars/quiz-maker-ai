@@ -794,8 +794,16 @@ PROMPT;
 
     protected function getFormActions(): array
     {
+        $create = parent::getFormActions()[0]
+            ->label(__('messages.common.create'))
+            ->extraAttributes([
+                'x-data' => '{}',
+                'class' => 'relative',
+            ])
+            ->content(fn() => '<span class="fi-btn-label" wire:loading.remove wire:target="create">'.e(__('messages.common.create')).'</span><span wire:loading wire:target="create">Please Wait</span>');
+
         return [
-            parent::getFormActions()[0],
+            $create,
             Action::make('cancel')->label(__('messages.common.cancel'))->color('gray')->url(QuizzesResource::getUrl('index')),
         ];
     }
