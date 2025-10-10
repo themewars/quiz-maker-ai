@@ -423,7 +423,11 @@ class Quiz extends Model implements HasMedia
                                                         ->live()
                                                         ->collection(Quiz::QUIZ_PATH)
                                                         ->acceptedFileTypes(['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
-                                                        ->maxSize(10240) // 10MB in KB
+                                                        ->maxSize(function () {
+                                                            $sub = getActiveSubscription();
+                                                            $mb = $sub && optional($sub->plan)->max_pdf_upload_mb ? (int) $sub->plan->max_pdf_upload_mb : 10; // default 10MB if not set
+                                                            return max(1, $mb) * 1024; // convert MB to KB as Filament expects KB
+                                                        })
                                                         ->helperText('Maximum file size: 10MB. PDF page limits may apply based on your plan.'),
                                                 ]),
                                         ])

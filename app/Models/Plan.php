@@ -42,6 +42,7 @@ class Plan extends Model
         'max_questions_per_exam',
         'max_questions_per_month',
         'max_pdf_pages',
+        'max_pdf_upload_mb',
         'max_images_ocr',
         'max_website_tokens',
         // toggles
@@ -83,6 +84,7 @@ class Plan extends Model
         'max_questions_per_exam' => 'integer',
         'max_questions_per_month' => 'integer',
         'max_pdf_pages' => 'integer',
+        'max_pdf_upload_mb' => 'integer',
         'max_images_ocr' => 'integer',
         'max_website_tokens' => 'integer',
         // toggles
@@ -206,6 +208,7 @@ class Plan extends Model
                     TextInput::make('max_questions_per_exam')->numeric()->label('Max Questions Per Exam')->hint('Set to -1 for unlimited questions per exam'),
                     TextInput::make('max_questions_per_month')->numeric()->label('Max Questions Per Month')->hint('Set to -1 for unlimited questions per month'),
                     TextInput::make('max_pdf_pages')->numeric()->label('Max PDF Pages Allowed')->hint('Leave empty for unlimited'),
+                    TextInput::make('max_pdf_upload_mb')->numeric()->label('Max PDF Upload Size (MB)')->hint('Leave empty for unlimited'),
                     TextInput::make('max_images_ocr')->numeric()->label('Max Images Allowed (OCR)')->hint('Leave empty for unlimited'),
                     TextInput::make('max_website_tokens')->numeric()->label('Max Website Tokens Allowed')->hint('Leave empty for unlimited'),
                 ])->columns(3),

@@ -345,7 +345,12 @@ class Exam extends Model implements HasMedia
                                                         })
                                                         ->live()
                                                         ->collection(Quiz::QUIZ_PATH)
-                                                        ->acceptedFileTypes(['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
+                                                        ->acceptedFileTypes(['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+                                                        ->maxSize(function () {
+                                                            $sub = getActiveSubscription();
+                                                            $mb = $sub && optional($sub->plan)->max_pdf_upload_mb ? (int) $sub->plan->max_pdf_upload_mb : 10;
+                                                            return max(1, $mb) * 1024; // MB to KB
+                                                        }),
                                                 ]),
                                         ])
                                         ->activeTab(function ($get) {
