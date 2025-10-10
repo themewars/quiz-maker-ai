@@ -54,29 +54,7 @@
         <meta name="twitter:image" content="{{ getAppLogo() }}">
     @endif
 
-    {{-- Minimal JSON-LD to help search engines understand the page --}}
-    @if ($seoQuiz)
-        <script type="application/ld+json">
-            {
-              "@context": "https://schema.org",
-              "@type": "QAPage",
-              "name": "{{ addslashes($seoQuiz->title ?? getAppName()) }}",
-              "mainEntity": {
-                "@type": "Question",
-                "name": "{{ addslashes(Str::limit(strip_tags($seoQuiz->quiz_description ?? ($seoQuiz->description ?? '')), 160, '')) }}",
-                "answerCount": {{ isset($seoQuiz->questions) ? max(1, $seoQuiz->questions->count()) : 1 }}
-              },
-              "publisher": {
-                "@type": "Organization",
-                "name": "{{ addslashes(getAppName()) }}",
-                "logo": {
-                  "@type": "ImageObject",
-                  "url": "{{ getAppLogo() }}"
-                }
-              }
-            }
-        </script>
-    @endif
+    {{-- JSON-LD for exam pages intentionally removed as per request --}}
 
     <link rel="preconnect" href="//fonts.bunny.net">
     <link href="//fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
