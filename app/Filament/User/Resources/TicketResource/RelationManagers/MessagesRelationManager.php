@@ -51,6 +51,7 @@ class MessagesRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Reply')
+                    ->visible(fn (): bool => !in_array($this->getOwnerRecord()->status, ['resolved', 'closed']))
                     ->using(function (array $data): TicketMessage {
                         return TicketMessage::create([
                             'ticket_id' => $this->getOwnerRecord()->id,
@@ -68,9 +69,15 @@ class MessagesRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->visible(fn (TicketMessage $record): bool => $record->user_id === auth()->id()),
+                    ->visible(fn (TicketMessage $record): bool => 
+                        $record->user_id === auth()->id() && 
+                        !in_array($this->getOwnerRecord()->status, ['resolved', 'closed'])
+                    ),
                 Tables\Actions\DeleteAction::make()
-                    ->visible(fn (TicketMessage $record): bool => $record->user_id === auth()->id()),
+                    ->visible(fn (TicketMessage $record): bool => 
+                        $record->user_id === auth()->id() && 
+                        !in_array($this->getOwnerRecord()->status, ['resolved', 'closed'])
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
