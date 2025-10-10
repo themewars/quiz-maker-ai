@@ -315,6 +315,29 @@
             </div>
 
             <div class="faq-container">
+                <script type="application/ld+json">
+                {
+                    "@context": "https://schema.org",
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                        @foreach($faqs as $faq)
+                        {
+                            "@type": "Question",
+                            "name": "{{ addslashes($faq->question) }}",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "{{ addslashes($faq->answer) }}",
+                                "author": {
+                                    "@type": "Organization",
+                                    "name": "{{ getAppName() }}"
+                                },
+                                "datePublished": "{{ $faq->created_at ? $faq->created_at->format('Y-m-d') : now()->format('Y-m-d') }}"
+                            }
+                        }{{ $loop->last ? '' : ',' }}
+                        @endforeach
+                    ]
+                }
+                </script>
                 @foreach($faqs as $faq)
                     <div class="faq-item">
                         <div class="faq-question" data-accordion="faq-{{ $loop->index }}">
