@@ -54,6 +54,8 @@ class CreateQuizzes extends CreateRecord
             ]);
     }
 
+    // Duplicate removed; using getCreateFormAction() customization instead
+
     protected function handleRecordCreation(array $data): Model
     {
         $userId = Auth::id();
