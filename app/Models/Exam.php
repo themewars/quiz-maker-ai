@@ -350,6 +350,11 @@ class Exam extends Model implements HasMedia
                                                             $sub = getActiveSubscription();
                                                             $mb = $sub && optional($sub->plan)->max_pdf_upload_mb ? (int) $sub->plan->max_pdf_upload_mb : 10;
                                                             return max(1, $mb) * 1024; // MB to KB
+                                                        })
+                                                        ->helperText(function () {
+                                                            $sub = getActiveSubscription();
+                                                            $mb = $sub && optional($sub->plan)->max_pdf_upload_mb ? (int) $sub->plan->max_pdf_upload_mb : 10;
+                                                            return 'Maximum file size: ' . $mb . 'MB. PDF page limits may apply based on your plan.';
                                                         }),
                                                 ]),
                                         ])
