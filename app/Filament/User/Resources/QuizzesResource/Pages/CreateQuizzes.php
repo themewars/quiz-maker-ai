@@ -797,15 +797,22 @@ PROMPT;
         $create = parent::getFormActions()[0]
             ->label(__('messages.common.create'))
             ->extraAttributes([
-                'x-data' => '{}',
-                'x-on:click' => '$el.dataset.origText ??= $el.innerHTML; $el.innerHTML = "Please Wait";',
-                'wire:loading.attr' => 'disabled',
+                'wire:loading.remove' => true,
                 'wire:target' => 'create',
-                'wire:loading.class' => 'opacity-70 cursor-not-allowed',
+            ]);
+
+        $waiting = Action::make('please_wait')
+            ->label('Please Wait')
+            ->color('gray')
+            ->disabled()
+            ->extraAttributes([
+                'wire:loading.flex' => true,
+                'wire:target' => 'create',
             ]);
 
         return [
             $create,
+            $waiting,
             Action::make('cancel')->label(__('messages.common.cancel'))->color('gray')->url(QuizzesResource::getUrl('index')),
         ];
     }
