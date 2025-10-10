@@ -798,9 +798,11 @@ PROMPT;
             ->label(__('messages.common.create'))
             ->extraAttributes([
                 'x-data' => '{}',
-                'class' => 'relative',
-            ])
-            ->content(fn() => '<span class="fi-btn-label" wire:loading.remove wire:target="create">'.e(__('messages.common.create')).'</span><span wire:loading wire:target="create">Please Wait</span>');
+                'x-on:click' => '$nextTick(()=>{ const s = $el.querySelector(".fi-btn-label") || $el.querySelector("span"); if (s) { s.textContent = "Please Wait"; } })',
+                'wire:loading.attr' => 'disabled',
+                'wire:target' => 'create',
+                'wire:loading.class' => 'opacity-70 cursor-not-allowed',
+            ]);
 
         return [
             $create,
