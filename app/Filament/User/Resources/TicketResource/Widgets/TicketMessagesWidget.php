@@ -17,12 +17,19 @@ class TicketMessagesWidget extends BaseWidget
 
     protected static ?string $heading = 'Messages';
 
+    public ?int $ticketId = null;
+
+    public function mount(): void
+    {
+        $this->ticketId = $this->getRecord()->id ?? null;
+    }
+
     public function table(Table $table): Table
     {
         return $table
             ->query(
                 TicketMessage::query()
-                    ->where('ticket_id', $this->getRecord()->id)
+                    ->where('ticket_id', $this->ticketId)
                     ->orderBy('created_at', 'asc')
             )
             ->columns([
@@ -48,7 +55,7 @@ class TicketMessagesWidget extends BaseWidget
                     ])
                     ->using(function (array $data): TicketMessage {
                         return TicketMessage::create([
-                            'ticket_id' => $this->getRecord()->id,
+                            'ticket_id' => $this->ticketId,
                             'user_id' => auth()->id(),
                             'message' => $data['message'],
                             'is_admin_reply' => false,
