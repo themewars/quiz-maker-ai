@@ -28,6 +28,7 @@ class PaymentSetting extends Model
         'stripe_enabled',
         'stripe_key',
         'stripe_secret',
+        'auto_approve_payments',
     ];
 
     const PAYPAL_MODE = [
@@ -99,6 +100,12 @@ class PaymentSetting extends Model
                 ->validationAttribute(__('messages.payment.manual_payment_guide'))
                 ->columnSpanFull()
                 ->visible(fn(Get $get) => $get('manually_enabled') == 1),
+            
+            Toggle::make('auto_approve_payments')
+                ->label('Auto-approve Payment Gateway Subscriptions')
+                ->helperText('When enabled, Stripe/PayPal/Razorpay payments will be automatically approved. When disabled, all payments require admin approval.')
+                ->default(false)
+                ->columnSpanFull(),
         ];
     }
 }

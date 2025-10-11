@@ -30,6 +30,18 @@ class CreateSubscription
             $transactionId = $data['transaction_id'] ?? null;
             $trialDays = $data['trial_days'] ?? $plan['trial_days'];
 
+            // Determine subscription status based on payment type
+            $subscriptionStatus = SubscriptionStatus::PENDING->value; // Default to pending for admin approval
+            
+            // Only auto-approve for verified payment gateways if admin has enabled it
+            if ($paymentType && in_array($paymentType, [Subscription::TYPE_RAZORPAY, Subscription::TYPE_PAYPAL, Subscription::TYPE_STRIPE])) {
+                // Check if auto-approval is enabled in settings
+                $autoApproveEnabled = PaymentSetting::first()->auto_approve_payments ?? false;
+                if ($autoApproveEnabled) {
+                    $subscriptionStatus = SubscriptionStatus::ACTIVE->value;
+                }
+            }
+
             $subscriptionData = [
                 'user_id' => $data['user_id'],
                 'plan_id' => $plan['id'],
@@ -39,7 +51,7 @@ class CreateSubscription
                 'plan_frequency' => $plan['frequency'],
                 'starts_at' => Carbon::now(),
                 'ends_at' => Carbon::now()->addMonth()->endOfDay(),
-                'status' => SubscriptionStatus::PENDING->value,
+                'status' => $subscriptionStatus,
                 'notes' => $notes,
                 'payment_type' => $paymentType,
             ];
