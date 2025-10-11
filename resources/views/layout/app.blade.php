@@ -11,8 +11,11 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- CSS Files -->
+    @vite(['resources/css/app.css', 'resources/css/home.css', 'resources/js/app.js'])
+    
+    <!-- Bootstrap CSS -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 </head>
 <body class="font-sans antialiased">
     <!-- Page Heading -->
@@ -29,5 +32,8 @@
 
     <!-- Live Chat Widget -->
     @include('components.live-chat-widget')
+    
+    <!-- Bootstrap JS -->
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 </body>
 </html>

@@ -60,16 +60,24 @@
         right: 20px !important;
     }
     
-    /* Prevent chat widget from affecting page scrolling */
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
+    /* Prevent chat widget from affecting page scrolling - only for chat widget */
+    #tawk-widget * {
+        box-sizing: border-box !important;
     }
     
     /* Ensure main content is not affected */
     main {
         position: relative !important;
         z-index: 1 !important;
+    }
+    
+    /* Prevent chat widget from affecting site icons and images */
+    .hero img,
+    .feature img,
+    .icon,
+    svg {
+        max-width: 100% !important;
+        height: auto !important;
     }
 </style>
 @else
@@ -114,14 +122,22 @@
         right: 20px !important;
     }
     
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
+    #tawk-widget * {
+        box-sizing: border-box !important;
     }
     
     main {
         position: relative !important;
         z-index: 1 !important;
+    }
+    
+    /* Prevent chat widget from affecting site icons and images */
+    .hero img,
+    .feature img,
+    .icon,
+    svg {
+        max-width: 100% !important;
+        height: auto !important;
     }
 </style>
 @endif
