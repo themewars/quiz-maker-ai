@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -28,13 +29,32 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
+        // Check if user exists and get user details
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            // Check if email is verified
+            if ($user->email_verified_at == null) {
+                throw ValidationException::withMessages([
+                    'email' => 'Your email address is not verified. Please check your email for verification link.',
+                ]);
+            }
+
+            // Check if account is active
+            if ($user->status == false) {
+                throw ValidationException::withMessages([
+                    'email' => 'Your account has been deactivated. Please contact support.',
+                ]);
+            }
+        }
+
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended($this->redirectTo);
         }
 
         throw ValidationException::withMessages([
-            'email' => __('auth.failed'),
+            'email' => 'The provided credentials do not match our records.',
         ]);
     }
 

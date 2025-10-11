@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules;
 
 class ResetPasswordController extends Controller
 {
-    protected $redirectTo = '/user';
+    protected $redirectTo = '/login';
 
     public function showResetForm(Request $request, $token = null)
     {
@@ -24,7 +24,7 @@ class ResetPasswordController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users,email',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
         );
 
         return $response == Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($response))
-            : back()->withErrors(['email' => [__($response)]]);
+            ? redirect()->route('login')->with('status', 'Your password has been reset successfully.')
+            : back()->withErrors(['email' => 'Invalid reset token or email. Please try again.']);
     }
 }

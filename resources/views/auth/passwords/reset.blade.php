@@ -64,6 +64,16 @@
                     
                     <h2 class="text-center mb-4">Reset Password</h2>
                     
+                    @if ($errors->any())
+                        <div class="alert alert-danger" role="alert">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
 

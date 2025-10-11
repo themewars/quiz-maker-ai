@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Plan;
+use App\Models\Subscription;
+use App\Actions\Subscription\CreateSubscription;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -29,9 +32,18 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
+        // Assign default role
+        $user->assignRole(User::USER_ROLE);
+
+        // Create default subscription
+        $this->createDefaultSubscription($user);
+
+        // Send email verification notification
+        $user->sendEmailVerificationNotification();
+
         auth()->login($user);
 
-        return redirect($this->redirectTo);
+        return redirect($this->redirectTo)->with('status', 'Registration successful! Please verify your email address.');
     }
 
     protected function validator(array $data)
@@ -49,6 +61,21 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'status' => true,
         ]);
+    }
+
+    protected function createDefaultSubscription(User $user)
+    {
+        $plan = Plan::where('assign_default', true)->first();
+        if ($plan) {
+            $data['plan'] = $plan->load('currency')->toArray();
+            $data['user_id'] = $user->id;
+            $data['payment_type'] = Subscription::TYPE_FREE;
+            if ($plan->trial_days != null && $plan->trial_days > 0) {
+                $data['trial_days'] = $plan->trial_days;
+            }
+            CreateSubscription::run($data);
+        }
     }
 }
