@@ -16,7 +16,14 @@ class GetCurrentSubscription
         $currentPlan = Subscription::where('user_id', auth()->id())->where('status', SubscriptionStatus::ACTIVE->value)->first();
 
         if (!empty($currentPlan) && !$currentPlan->isExpired()) {
-            $currentPlan['currency_icon'] = $currentPlan['plan']['currency']['symbol'];
+            // Convert current plan to current session currency for consistency
+            $currentCurrency = getCurrentCurrency();
+            $originalCurrency = $currentPlan['plan']['currency'];
+            
+            // Use current session currency instead of original plan currency
+            $currentPlan['currency_icon'] = $currentCurrency->symbol;
+            $currentPlan['currency_code'] = $currentCurrency->code;
+            
             $currentPlan['used_days'] = round(abs(now()->diffInDays($currentPlan['starts_at'])));
 
             if ($currentPlan['plan_frequency'] == PlanFrequency::MONTHLY->value) {
@@ -31,10 +38,30 @@ class GetCurrentSubscription
             $perDayPrice = round($currentPlan['plan_amount'] / $currentPlan['total_days'], 2);
             $currentPlan['remaining_balance'] = round($currentPlan['plan_amount'] - ($perDayPrice * $currentPlan['used_days']));
             $currentPlan['used_balance'] = round($currentPlan['plan_amount'] - $currentPlan['remaining_balance']);
+            
+            // Convert amounts to current currency if different from original
+            if ($originalCurrency->code !== $currentCurrency->code) {
+                $conversionRate = $this->getCurrencyConversionRate($originalCurrency->code, $currentCurrency->code);
+                $currentPlan['plan_amount'] = round($currentPlan['plan_amount'] * $conversionRate, 2);
+                $currentPlan['remaining_balance'] = round($currentPlan['remaining_balance'] * $conversionRate, 2);
+                $currentPlan['used_balance'] = round($currentPlan['used_balance'] * $conversionRate, 2);
+            }
         } else {
             return $currentPlan = [];
         }
 
         return $currentPlan->toArray();
+    }
+    
+    private function getCurrencyConversionRate($fromCurrency, $toCurrency)
+    {
+        // Simple conversion rates (you can make this dynamic)
+        $rates = [
+            'INR' => ['USD' => 0.012, 'EUR' => 0.011],
+            'USD' => ['INR' => 83.0, 'EUR' => 0.92],
+            'EUR' => ['INR' => 90.0, 'USD' => 1.09],
+        ];
+        
+        return $rates[$fromCurrency][$toCurrency] ?? 1.0;
     }
 }
