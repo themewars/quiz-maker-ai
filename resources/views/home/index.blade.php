@@ -1,10 +1,12 @@
-@extends('layout.quiz_app')
+@extends('layout.app')
 
 @section('title')
     {{ __('messages.home.home') }}
 @endsection
 
 @section('content')
+
+    <main>
         @php
             $uiReplace = function ($text) {
                 $search = ['QuizWhiz AI', 'QuizWhiz', 'quizzes', 'Quizzes', 'quiz ', ' Quiz', 'AI quiz'];

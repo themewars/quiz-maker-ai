@@ -1,0 +1,30 @@
+0082c8c FIX: Homepage title and layout issues resolved
+35264a5 RESTORE: Original layout state before chat system
+1ffc803 FIX: Navigation and footer links restored
+2a499d4 FIX: Homepage CSS issues resolved
+05e2cb5 REMOVE: Live chat system completely reverted
+d2b3533 FIX: CSS loading order and conflicts on homepage
+47a3f9a FIX: Home page structure and chat widget issues
+77a7248 FIX: Home page layout issues - switch to proper layout
+695c3c6 FIX: Resolve CSS conflicts causing oversized icons and images
+9ea64ce FIX: Resolve CSS conflicts caused by live chat widget
+8713b45 FIX: Replace undefined  variable with @yield('content')
+d1ba6e3 FIX: Remove missing layouts.navigation include causing ViewException
+eb23725 FEATURE: Add Direct Tawk.to Integration with Fallback
+6027262 FIX: Live Chat Settings Error - Replace undefined setting() function
+5247030 FEATURE: Add Live Chat System with Tawk.to Integration
+741f6ee FIX: Convert current plan currency to match session currency
+8674ca9 SECURITY FIX: Prevent credit balance from overriding payment method for all payment types
+f07420a CORRECTED: Restore payment gateway auto-approval, keep manual payment admin approval
+7caee39 CRITICAL FIX: Prevent credit balance logic from overriding manual payment status
+199bf71 CRITICAL SECURITY FIX: Remove payment gateway auto-approval
+80ecccf Fix user registration redirect to dashboard
+2d0ba05 Configure payment approval system as requested
+7578eb6 SECURITY FIX: Force manual payments to always be PENDING
+eda3919 CRITICAL SECURITY FIX: Remove all automatic payment approvals
+e82d3a3 Fix payment security issue - require admin approval for all subscriptions
+2200b36 Fix email verification mail server issue - disable email sending and auto-verify users
+fdc72ac Complete authentication system overhaul - fix all major issues
+d89963f Fix auth pages CSS and functionality - add Bootstrap CDN and modern styling
+360429d Fix Laravel auth trait compatibility issues - replace deprecated traits with modern implementations
+eaa5581 Fix Filament auth route references to use custom auth routes
