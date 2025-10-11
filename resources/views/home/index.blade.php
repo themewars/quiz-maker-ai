@@ -5,8 +5,6 @@
 @endsection
 
 @section('content')
-
-    <main>
         @php
             $uiReplace = function ($text) {
                 $search = ['QuizWhiz AI', 'QuizWhiz', 'quizzes', 'Quizzes', 'quiz ', ' Quiz', 'AI quiz'];
@@ -1305,6 +1303,5 @@
                 </div>
             </div>
         </section>
-    </main>
 
 @endsection
