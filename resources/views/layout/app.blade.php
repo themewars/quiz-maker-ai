@@ -72,7 +72,7 @@
                             <a href="{{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }}"
                                 class="btn btn-primary">{{ __('messages.dashboard.dashboard') }}</a>
                         @else
-                            <a href="{{ route('filament.auth.auth.register') }}"
+                            <a href="{{ route('register') }}"
                                 class="btn btn-primary">{{ __('messages.home.sign_up_free') }}</a>
                         @endauth
                     </div>
@@ -83,9 +83,9 @@
                         <a href="{{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }}"
                             class="btn btn-primary">{{ __('messages.dashboard.dashboard') }}</a>
                     @else
-                        <a href="{{ route('filament.auth.auth.login') }}"
+                        <a href="{{ route('login') }}"
                             class="btn btn-outline desktop-only">{{ __('messages.home.log_in') }}</a>
-                        <a href="{{ route('filament.auth.auth.register') }}"
+                        <a href="{{ route('register') }}"
                             class="btn btn-primary sign-up-button-desktop">{{ __('messages.home.sign_up_free') }}</a>
                     @endauth
                     <button class="mobile-menu-toggle mobile-only">
