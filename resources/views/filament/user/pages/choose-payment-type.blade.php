@@ -180,7 +180,79 @@
 
                 <div class="">
                     @if ($paymentAmount > 0)
-                        {{ $this->form }}
+                        <!-- Payment Type Selection Cards -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-center">
+                                {{ __('messages.plan.select_payment_type') }}
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                @php
+                                    $paymentTypes = \App\Models\Subscription::getPaymentType();
+                                @endphp
+                                
+                                @foreach($paymentTypes as $typeId => $typeName)
+                                    <div class="payment-card relative cursor-pointer border-2 rounded-lg p-4 transition-all duration-200 hover:shadow-lg {{ $paymentType == $typeId ? 'selected border-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300' }}"
+                                         wire:click="$set('paymentType', {{ $typeId }})"
+                                         onclick="document.querySelector('select[name=\"data.payment_type\"]').value = '{{ $typeId }}'; document.querySelector('select[name=\"data.payment_type\"]').dispatchEvent(new Event('change'));">
+                                        
+                                        <!-- Selection Indicator -->
+                                        <div class="absolute top-2 right-2">
+                                            <div class="selection-indicator w-5 h-5 rounded-full border-2 flex items-center justify-center {{ $paymentType == $typeId ? 'border-primary-500 bg-primary-500' : 'border-gray-300 dark:border-gray-600' }}">
+                                                @if($paymentType == $typeId)
+                                                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <!-- Payment Type Icon -->
+                                        <div class="text-center mb-3">
+                                            @if($typeId == 1) {{-- RazorPay --}}
+                                                <div class="payment-icon w-12 h-12 mx-auto bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                                    </svg>
+                                                </div>
+                                            @elseif($typeId == 2) {{-- PayPal --}}
+                                                <div class="payment-icon w-12 h-12 mx-auto bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                                                    <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.432-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.105-.722c-1.125-5.08-5.24-7.62-10.48-7.62H3.28a.641.641 0 0 0-.633.74l2.47 19.696c.062.358.37.64.733.64h4.606c.524 0 .968-.382 1.05-.9l1.12-7.106h2.19c4.298 0 7.664-1.747 8.647-6.797.03-.144.054-.289.077-.432.292-1.867-.002-3.137-1.012-4.287z"/>
+                                                    </svg>
+                                                </div>
+                                            @elseif($typeId == 3) {{-- Stripe --}}
+                                                <div class="payment-icon w-12 h-12 mx-auto bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                                                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.274 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/>
+                                                    </svg>
+                                                </div>
+                                            @elseif($typeId == 4) {{-- Manual --}}
+                                                <div class="payment-icon w-12 h-12 mx-auto bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                                                    <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                                    </svg>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <!-- Payment Type Name -->
+                                        <div class="text-center">
+                                            <h4 class="font-medium text-gray-900 dark:text-white">{{ $typeName }}</h4>
+                                            @if($typeId == 4)
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Admin approval required</p>
+                                            @else
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Instant payment</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Hidden Form for Livewire -->
+                        <div style="display: none;">
+                            {{ $this->form }}
+                        </div>
                     @endif
 
                     {{-- Manually Payment --}}
@@ -292,6 +364,86 @@
         @endif --}}
     </div>
 </section>
+
+@push('styles')
+<style>
+    .payment-card {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .payment-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .payment-card.selected {
+        border-color: #6366f1 !important;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    }
+    
+    .dark .payment-card.selected {
+        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    }
+    
+    .payment-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, transparent 0%, rgba(99, 102, 241, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .payment-card:hover::before {
+        opacity: 1;
+    }
+    
+    .payment-icon {
+        transition: transform 0.3s ease;
+    }
+    
+    .payment-card:hover .payment-icon {
+        transform: scale(1.1);
+    }
+    
+    .selection-indicator {
+        transition: all 0.3s ease;
+    }
+    
+    .payment-card.selected .selection-indicator {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+        }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .payment-card {
+            padding: 1rem;
+        }
+        
+        .payment-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+    }
+</style>
+@endpush
 
 @push('scripts')
 @vite('resources/js/razorpay-checkout.js')
