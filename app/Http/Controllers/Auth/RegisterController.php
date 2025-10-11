@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
-    use RegistersUsers;
-
     protected $redirectTo = '/user';
 
     public function __construct()
@@ -22,6 +21,17 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        auth()->login($user);
+
+        return redirect($this->redirectTo);
     }
 
     protected function validator(array $data)
