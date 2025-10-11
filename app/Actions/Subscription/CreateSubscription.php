@@ -68,6 +68,7 @@ class CreateSubscription
                 }
             }
 
+            // Only auto-approve FREE plans (no payment required)
             if ($paymentType == Subscription::TYPE_FREE) {
                 $subscriptionData['payable_amount'] = null;
                 $subscriptionData['status'] = SubscriptionStatus::ACTIVE->value;
@@ -80,17 +81,15 @@ class CreateSubscription
                 if ($price <= 0) {
                     $subscriptionData['payment_type'] = $currentSubscription['payment_type'];
                     $subscriptionData['payable_amount'] = $price > 0 ? $price : 0;
-                    $subscriptionData['status'] = SubscriptionStatus::ACTIVE->value;
+                    // Even with credit balance, require admin approval for security
+                    // $subscriptionData['status'] = SubscriptionStatus::ACTIVE->value; // REMOVED
                 } else {
                     $subscriptionData['payable_amount'] = $price > 0 ? $price : 0;
                 }
             }
 
-            if ($paymentType != null) {
-                if ($paymentType == Subscription::TYPE_RAZORPAY || $paymentType == Subscription::TYPE_PAYPAL || $paymentType == Subscription::TYPE_STRIPE) {
-                    $subscriptionData['status'] = SubscriptionStatus::ACTIVE->value;
-                }
-            }
+            // Remove automatic approval - all payments now require admin approval
+            // This section was causing automatic approval bypassing our security fix
 
             $subscription = Subscription::create($subscriptionData);
 
