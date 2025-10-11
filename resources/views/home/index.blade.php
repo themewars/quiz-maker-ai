@@ -32,7 +32,7 @@
                         </h1>
                         <p>{{ $uiReplace(getSetting()->hero_description ?? __('messages.home.upload_pdfs_or_urls')) }}</p>
                         <div class="hero-buttons">
-                            <a href="@auth {{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }} @else {{ route('filament.auth.auth.register') }} @endauth"
+                            <a href="@auth {{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }} @else {{ route('register') }} @endauth"
                                 class="btn btn-primary btn-lg">{{ __('messages.home.get_started_free') }}</a>
                             <a href="#about" class="btn btn-outline btn-lg">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -557,7 +557,7 @@
                             </div>
 
                             <div class="mx-auto d-flex justify-content-center">
-                                <a href="@auth {{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }} @else {{ route('filament.auth.auth.register') }} @endauth"
+                                <a href="@auth {{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }} @else {{ route('register') }} @endauth"
                                     class="btn btn-primary btn-lg">
                                     {{ __('messages.home.try_it_free') }}
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -1154,7 +1154,7 @@
                                     @endif
                                 @else
                                     <a class="btn btn-outline btn-bg-white popular full-width"
-                                        href="{{ route('filament.auth.auth.register') }}">{{ __('messages.home.sign_up_free') }}</a>
+                                        href="{{ route('register') }}">{{ __('messages.home.sign_up_free') }}</a>
                                 @endauth
 
                             </div>
@@ -1298,7 +1298,7 @@
                     <h2>{{ __('messages.home.transform_content_into_learning') }}</h2>
                     <p>{{ __('messages.home.transform_content_into_learning_description') }}</p>
                     <div class="cta-buttons">
-                        <a href="@auth {{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }} @else {{ route('filament.auth.auth.register') }} @endauth"
+                        <a href="@auth {{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }} @else {{ route('register') }} @endauth"
                             class="btn btn-white">{{ __('messages.home.get_started_free') }}</a>
                         {{-- <button class="btn btn-outline-white">View Demo</button> --}}
                     </div>

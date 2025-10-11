@@ -295,7 +295,7 @@
                             @endif
                         @else
                             <a class="btn btn-outline btn-bg-white popular full-width"
-                                href="{{ route('filament.auth.auth.register') }}">
+                                href="{{ route('register') }}">
                                 {{ $plan->price == 0 ? __('messages.home.sign_up_free') : __('messages.home.sign_up_free') }}
                             </a>
                         @endauth

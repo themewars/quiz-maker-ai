@@ -106,7 +106,7 @@
                             <a href="{{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }}"
                                 class="btn btn-primary">{{ __('messages.dashboard.dashboard') }}</a>
                         @else
-                            <a href="{{ route('filament.auth.auth.register') }}"
+                            <a href="{{ route('register') }}"
                                 class="btn btn-primary">{{ __('messages.home.sign_up_free') }}</a>
                         @endauth
                     </div>

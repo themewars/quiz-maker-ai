@@ -41,7 +41,7 @@
                 </div>
                 <div class="text-center">
                     <span>{{ __('messages.home.already_have_account') }}</span>
-                    <a href="{{ route('filament.auth.auth.login') }}">{{ __('messages.home.log_in') }}</a>
+                    <a href="{{ route('login') }}">{{ __('messages.home.log_in') }}</a>
                 </div>
                 @if (env('GOOGLE_CLIENT_ID') && env('GOOGLE_CLIENT_SECRET'))
                     <a href="{{ route('socialite.redirect', 'google') }}" class="google-button">

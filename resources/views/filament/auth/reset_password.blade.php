@@ -41,7 +41,7 @@
                 </div>
                 <div class="text-center">
                     <span>{{ __('messages.home.remember_password') }}</span>
-                    <a href="{{ route('filament.auth.auth.login') }}">{{ __('messages.home.back_to_login') }}</a>
+                    <a href="{{ route('login') }}">{{ __('messages.home.back_to_login') }}</a>
                 </div>
             </div>
         </div>
