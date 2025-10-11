@@ -30,9 +30,6 @@
     <!-- Page Content -->
     @yield('content')
 
-    <!-- Live Chat Widget -->
-    @include('components.live-chat-widget')
-    
     <!-- Bootstrap JS -->
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 </body>

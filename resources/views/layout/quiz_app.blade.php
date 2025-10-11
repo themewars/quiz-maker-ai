@@ -61,13 +61,23 @@
     
     <!-- CSS Files -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    @vite('resources/css/app.css')
-    @vite('resources/css/home.css')
+    @vite(['resources/css/app.css', 'resources/css/home.css', 'resources/assets/js/pages.js', 'resources/js/app.js'])
+    
+    <!-- Debug CSS -->
+    <style>
+        /* Ensure proper CSS loading */
+        body { font-family: 'Outfit', sans-serif !important; }
+        .hero, .features, .about, .pricing { 
+            position: relative !important; 
+            z-index: 1 !important; 
+        }
+        /* Fix any layout issues */
+        .container { max-width: 1200px !important; margin: 0 auto !important; }
+        img, svg { max-width: 100% !important; height: auto !important; }
+    </style>
     
     <!-- JavaScript Files -->
     <script async src="https://www.google.com/recaptcha/api.js"></script>
-    @vite('resources/assets/js/pages.js')
-    @vite('resources/js/app.js')
 
 </head>
 
