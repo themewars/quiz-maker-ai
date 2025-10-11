@@ -33,10 +33,12 @@ class CreateSubscription
             // Determine subscription status based on payment type
             $subscriptionStatus = SubscriptionStatus::PENDING->value; // Default to pending for admin approval
             
-            // Auto-approve payment gateways (Stripe/PayPal/Razorpay) - they are verified
-            if ($paymentType && in_array($paymentType, [Subscription::TYPE_RAZORPAY, Subscription::TYPE_PAYPAL, Subscription::TYPE_STRIPE])) {
-                $subscriptionStatus = SubscriptionStatus::ACTIVE->value;
-            }
+            // SECURITY FIX: All payments require admin approval regardless of payment method
+            // Payment gateways are NOT auto-approved anymore for security
+            // This prevents international users from bypassing admin approval
+            // if ($paymentType && in_array($paymentType, [Subscription::TYPE_RAZORPAY, Subscription::TYPE_PAYPAL, Subscription::TYPE_STRIPE])) {
+            //     $subscriptionStatus = SubscriptionStatus::ACTIVE->value;
+            // }
 
             $subscriptionData = [
                 'user_id' => $data['user_id'],
