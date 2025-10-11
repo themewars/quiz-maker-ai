@@ -83,7 +83,10 @@ class CreateSubscription
             if (!empty($currentSubscription)) {
                 $price = $subscriptionData['payable_amount'] - $currentSubscription['remaining_balance'];
                 if ($price <= 0) {
-                    $subscriptionData['payment_type'] = $currentSubscription['payment_type'];
+                    // Don't override payment_type for manual payments - keep original payment method
+                    if ($paymentType != Subscription::TYPE_MANUALLY) {
+                        $subscriptionData['payment_type'] = $currentSubscription['payment_type'];
+                    }
                     $subscriptionData['payable_amount'] = $price > 0 ? $price : 0;
                     // Even with credit balance, require admin approval for security
                     // $subscriptionData['status'] = SubscriptionStatus::ACTIVE->value; // REMOVED
