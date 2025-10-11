@@ -26,7 +26,7 @@
         }
     @endphp
 
-    <title>{{ $seoTitle ?? getAppName() }}</title>
+    <title>{{ $seoTitle ?? (isset($title) ? $title : getAppName()) }}</title>
     @if (!empty($seoDescription))
         <meta name="description" content="{{ $seoDescription }}">
     @endif
