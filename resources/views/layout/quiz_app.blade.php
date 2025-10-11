@@ -122,6 +122,9 @@
 
     @yield('content')
 
+    <!-- Live Chat Widget -->
+    @include('components.live-chat-widget')
+
     <!-- Site Footer -->
     <footer>
         <div class="container">

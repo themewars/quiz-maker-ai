@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layout.quiz_app')
 
 @section('title')
     {{ __('messages.home.home') }}
