@@ -28,7 +28,6 @@ class PaymentSetting extends Model
         'stripe_enabled',
         'stripe_key',
         'stripe_secret',
-        'auto_approve_payments',
     ];
 
     const PAYPAL_MODE = [
