@@ -126,18 +126,7 @@ class CustomRegister extends Register
         // Auto-login and redirect to dashboard based on user role
         auth()->login($user);
 
-        // Use Livewire redirect method
-        if ($user->hasRole(User::ADMIN_ROLE)) {
-            $this->redirect(route('filament.admin.pages.dashboard'));
-            return null;
-        }
-        
-        if ($user->hasRole(User::USER_ROLE)) {
-            $this->redirect(route('filament.user.pages.dashboard'));
-            return null;
-        }
-
-        $this->redirect(route('home'));
-        return null;
+        // Force redirect to user dashboard after registration
+        return redirect()->route('filament.user.pages.dashboard');
     }
 }
