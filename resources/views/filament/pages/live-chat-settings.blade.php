@@ -1,60 +1,10 @@
 <x-filament-panels::page>
     <div class="space-y-6">
-        <!-- Live Chat Configuration -->
+        <!-- Live Chat Configuration Form -->
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold mb-4">Live Chat Configuration</h3>
             
-            <form wire:submit="saveSettings" class="space-y-4">
-                <!-- Tawk.to Widget ID -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Tawk.to Widget ID
-                    </label>
-                    <input 
-                        type="text" 
-                        wire:model="tawkWidgetId"
-                        placeholder="Enter your Tawk.to Widget ID"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <p class="text-sm text-gray-500 mt-1">
-                        Get your Widget ID from <a href="https://www.tawk.to" target="_blank" class="text-blue-600">tawk.to</a>
-                    </p>
-                </div>
-                
-                <!-- Chat Enabled -->
-                <div class="flex items-center">
-                    <input 
-                        type="checkbox" 
-                        wire:model="chatEnabled"
-                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <label class="ml-2 text-sm text-gray-700">
-                        Enable Live Chat
-                    </label>
-                </div>
-                
-                <!-- Admin Online Status -->
-                <div class="flex items-center">
-                    <input 
-                        type="checkbox" 
-                        wire:model="adminOnlineStatus"
-                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <label class="ml-2 text-sm text-gray-700">
-                        Show Admin Online Status
-                    </label>
-                </div>
-                
-                <!-- Save Button -->
-                <div class="pt-4">
-                    <button 
-                        type="submit"
-                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        Save Settings
-                    </button>
-                </div>
-            </form>
+            {{ $this->form }}
         </div>
         
         <!-- Integration Instructions -->
