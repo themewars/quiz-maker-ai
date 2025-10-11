@@ -119,6 +119,7 @@
                             <a href="{{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }}"
                                 class="btn btn-primary">{{ __('messages.dashboard.dashboard') }}</a>
                         @else
+                            <a href="{{ route('login') }}" class="btn btn-outline">{{ __('messages.auth.login') }}</a>
                             <a href="{{ route('register') }}"
                                 class="btn btn-primary">{{ __('messages.home.sign_up_free') }}</a>
                         @endauth
@@ -155,16 +156,20 @@
                         <li><a class="scrollspy-link" href="{{ route('home') . '#features' }}">{{ __('messages.home.features') }}</a></li>
                         <li><a class="scrollspy-link" href="{{ route('home') . '#about' }}">{{ __('messages.home.about') }}</a></li>
                         <li><a href="{{ route('pricing') }}">{{ __('messages.home.pricing') }}</a></li>
+                        @guest
+                            <li><a href="{{ route('login') }}">{{ __('messages.auth.login') }}</a></li>
+                            <li><a href="{{ route('register') }}">{{ __('messages.auth.register') }}</a></li>
+                        @endguest
                     </ul>
                 </div>
 
                 <div class="grid-item">
                     <h3>{{ __('messages.home.legal') }}</h3>
                     <ul>
-                        @if (getSetting() && getSetting()->terms)
+                        @if (getSetting() && getSetting()->terms_and_condition)
                             <li><a href="{{ route('terms') }}">{{ __('messages.home.terms') }}</a></li>
                         @endif
-                        @if (getSetting() && getSetting()->policy)
+                        @if (getSetting() && getSetting()->privacy_policy)
                             <li><a href="{{ route('policy') }}">{{ __('messages.home.privacy_policy') }}</a></li>
                         @endif
                         @if (getSetting() && getSetting()->cookie_policy)
