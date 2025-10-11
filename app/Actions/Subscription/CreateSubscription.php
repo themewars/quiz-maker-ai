@@ -69,9 +69,15 @@ class CreateSubscription
             }
 
             // Only auto-approve FREE plans (no payment required)
+            // Manual payments (TYPE_MANUALLY = 4) should always be PENDING
             if ($paymentType == Subscription::TYPE_FREE) {
                 $subscriptionData['payable_amount'] = null;
                 $subscriptionData['status'] = SubscriptionStatus::ACTIVE->value;
+            }
+            
+            // Ensure manual payments are always PENDING (security fix)
+            if ($paymentType == Subscription::TYPE_MANUALLY) {
+                $subscriptionData['status'] = SubscriptionStatus::PENDING->value;
             }
 
             $currentSubscription = GetCurrentSubscription::run();
