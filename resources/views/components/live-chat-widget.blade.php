@@ -47,4 +47,15 @@
         bottom: 20px !important;
         right: 20px !important;
     }
+    
+    /* Ensure chat widget doesn't interfere with page layout */
+    #tawk-widget * {
+        box-sizing: border-box !important;
+    }
+    
+    /* Prevent conflicts with site elements */
+    .hero, .features, .about, .pricing {
+        position: relative !important;
+        z-index: 1 !important;
+    }
 </style>

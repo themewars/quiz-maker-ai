@@ -58,13 +58,16 @@
 
     <link rel="preconnect" href="//fonts.bunny.net">
     <link href="//fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    
+    <!-- CSS Files -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/bootstrap.min.js') }}" ></script>
-    <script async src="https://www.google.com/recaptcha/api.js"></script>
     @vite('resources/css/app.css')
     @vite('resources/css/home.css')
+    
+    <!-- JavaScript Files -->
+    <script async src="https://www.google.com/recaptcha/api.js"></script>
     @vite('resources/assets/js/pages.js')
-    @vite('resources/js/app.js')   
+    @vite('resources/js/app.js')
 
 </head>
 
@@ -293,6 +296,9 @@
             });
         });
     </script>
+
+    <!-- Bootstrap JS -->
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
 </body>
 
