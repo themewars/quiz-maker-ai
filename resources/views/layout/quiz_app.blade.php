@@ -58,26 +58,13 @@
 
     <link rel="preconnect" href="//fonts.bunny.net">
     <link href="//fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-    
-    <!-- CSS Files -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/css/home.css', 'resources/assets/js/pages.js', 'resources/js/app.js'])
-    
-    <!-- Debug CSS -->
-    <style>
-        /* Ensure proper CSS loading */
-        body { font-family: 'Outfit', sans-serif !important; }
-        .hero, .features, .about, .pricing { 
-            position: relative !important; 
-            z-index: 1 !important; 
-        }
-        /* Fix any layout issues */
-        .container { max-width: 1200px !important; margin: 0 auto !important; }
-        img, svg { max-width: 100% !important; height: auto !important; }
-    </style>
-    
-    <!-- JavaScript Files -->
+    <script src="{{ asset('js/bootstrap.min.js') }}" ></script>
     <script async src="https://www.google.com/recaptcha/api.js"></script>
+    @vite('resources/css/app.css')
+    @vite('resources/css/home.css')
+    @vite('resources/assets/js/pages.js')
+    @vite('resources/js/app.js')   
 
 </head>
 
@@ -119,7 +106,6 @@
                             <a href="{{ auth()->user()->hasRole('admin') ? route('filament.admin.pages.dashboard') : route('filament.user.pages.dashboard') }}"
                                 class="btn btn-primary">{{ __('messages.dashboard.dashboard') }}</a>
                         @else
-                            <a href="{{ route('login') }}" class="btn btn-outline">{{ __('messages.auth.login') }}</a>
                             <a href="{{ route('register') }}"
                                 class="btn btn-primary">{{ __('messages.home.sign_up_free') }}</a>
                         @endauth
@@ -166,10 +152,10 @@
                 <div class="grid-item">
                     <h3>{{ __('messages.home.legal') }}</h3>
                     <ul>
-                        @if (getSetting() && getSetting()->terms_and_condition)
+                        @if (getSetting() && getSetting()->terms)
                             <li><a href="{{ route('terms') }}">{{ __('messages.home.terms') }}</a></li>
                         @endif
-                        @if (getSetting() && getSetting()->privacy_policy)
+                        @if (getSetting() && getSetting()->policy)
                             <li><a href="{{ route('policy') }}">{{ __('messages.home.privacy_policy') }}</a></li>
                         @endif
                         @if (getSetting() && getSetting()->cookie_policy)
@@ -308,9 +294,6 @@
             });
         });
     </script>
-
-    <!-- Bootstrap JS -->
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
 </body>
 
