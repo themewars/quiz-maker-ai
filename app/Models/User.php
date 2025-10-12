@@ -92,6 +92,16 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasAvatar,
 
     public function canAccessPanel(Panel $panel): bool
     {
+        // Allow access to admin panel for users with admin role
+        if ($panel->getId() === 'admin') {
+            return $this->hasRole('admin');
+        }
+        
+        // Allow access to user panel for users with user role
+        if ($panel->getId() === 'user') {
+            return $this->hasRole('user');
+        }
+        
         return true;
     }
 

@@ -28,6 +28,11 @@ class RedirectAuthenticated extends Middleware
 
         $panel = Filament::getCurrentPanel();
 
+        // Debug logging
+        \Log::info('RedirectAuthenticated - User ID: ' . $user->id . ', Email: ' . $user->email);
+        \Log::info('RedirectAuthenticated - Panel ID: ' . ($panel ? $panel->getId() : 'null'));
+        \Log::info('RedirectAuthenticated - Can access panel: ' . ($user->canAccessPanel($panel) ? 'true' : 'false'));
+        
         abort_if(
             $user instanceof FilamentUser ?
                 (! $user->canAccessPanel($panel)) : (config('app.env') !== 'local'),

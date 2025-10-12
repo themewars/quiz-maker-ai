@@ -62,7 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 RedirectAuthenticated::class,
-                RoleMiddleware::class . ':admin',
+                // RoleMiddleware::class . ':admin', // Temporarily disabled for debugging
             ])
             ->renderHook('panels::user-menu.after', function () {
                 return Blade::render("
