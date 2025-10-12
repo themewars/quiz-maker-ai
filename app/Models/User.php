@@ -97,24 +97,26 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasAvatar,
         \Log::info('User canAccessPanel - Panel ID: ' . $panel->getId());
         \Log::info('User canAccessPanel - User roles: ' . $this->roles->pluck('name')->implode(', '));
         
-        // Temporarily allow all authenticated users to access any panel
-        \Log::info('User canAccessPanel - Allowing access to all panels');
-        return true;
-        
-        // Original logic (commented out for debugging)
-        /*
-        // Allow access to admin panel for users with admin role
-        if ($panel->getId() === 'admin') {
-            return $this->hasRole('admin');
+        // Admin users can access both admin and user panels
+        if ($this->hasRole('admin')) {
+            \Log::info('User canAccessPanel - Admin user, allowing access to all panels');
+            return true;
         }
         
-        // Allow access to user panel for users with user role
+        // Regular users can only access user panel
         if ($panel->getId() === 'user') {
-            return $this->hasRole('user');
+            \Log::info('User canAccessPanel - Regular user accessing user panel');
+            return true;
         }
         
+        // Regular users cannot access admin panel
+        if ($panel->getId() === 'admin') {
+            \Log::info('User canAccessPanel - Regular user denied admin panel access');
+            return false;
+        }
+        
+        \Log::info('User canAccessPanel - Default: allowing access');
         return true;
-        */
     }
 
     public function getFilamentAvatarUrl(): ?string
