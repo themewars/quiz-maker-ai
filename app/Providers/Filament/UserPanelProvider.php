@@ -81,8 +81,8 @@ class UserPanelProvider extends PanelProvider
                 CheckNoOfQuiz::class
             ])
             ->authMiddleware([
-                // RedirectAuthenticated::class, // Temporarily disabled for debugging
-                // RoleMiddleware::class . ':user', // Temporarily disabled to allow admin access
+                RedirectAuthenticated::class,
+                RoleMiddleware::class . ':user',
             ]);
     }
 

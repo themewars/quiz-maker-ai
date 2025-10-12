@@ -97,26 +97,32 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasAvatar,
         \Log::info('User canAccessPanel - Panel ID: ' . $panel->getId());
         \Log::info('User canAccessPanel - User roles: ' . $this->roles->pluck('name')->implode(', '));
         
-        // Admin users can access both admin and user panels
-        if ($this->hasRole('admin')) {
-            \Log::info('User canAccessPanel - Admin user, allowing access to all panels');
+        // Admin users can access admin panel
+        if ($this->hasRole(User::ADMIN_ROLE) && $panel->getId() === 'admin') {
+            \Log::info('User canAccessPanel - Admin user accessing admin panel');
             return true;
         }
         
         // Regular users can only access user panel
-        if ($panel->getId() === 'user') {
+        if ($this->hasRole(User::USER_ROLE) && $panel->getId() === 'user') {
             \Log::info('User canAccessPanel - Regular user accessing user panel');
             return true;
         }
         
+        // Admin users cannot access user panel (strict separation)
+        if ($this->hasRole(User::ADMIN_ROLE) && $panel->getId() === 'user') {
+            \Log::info('User canAccessPanel - Admin user denied user panel access');
+            return false;
+        }
+        
         // Regular users cannot access admin panel
-        if ($panel->getId() === 'admin') {
+        if ($this->hasRole(User::USER_ROLE) && $panel->getId() === 'admin') {
             \Log::info('User canAccessPanel - Regular user denied admin panel access');
             return false;
         }
         
-        \Log::info('User canAccessPanel - Default: allowing access');
-        return true;
+        \Log::info('User canAccessPanel - Default: denying access');
+        return false;
     }
 
     public function getFilamentAvatarUrl(): ?string

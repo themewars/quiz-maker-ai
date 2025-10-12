@@ -32,7 +32,7 @@ class CreateAdminUser extends Command
         
         // Ensure admin role exists
         $adminRole = Role::firstOrCreate(
-            ['name' => 'admin'],
+            ['name' => User::ADMIN_ROLE],
             ['guard_name' => 'web']
         );
         
@@ -48,7 +48,7 @@ class CreateAdminUser extends Command
             $adminUser->syncRoles([]);
             
             // Assign admin role
-            $adminUser->assignRole('admin');
+            $adminUser->assignRole(User::ADMIN_ROLE);
             
             $this->info('Admin role assigned to existing user.');
         } else {
@@ -64,7 +64,7 @@ class CreateAdminUser extends Command
             $this->info('New admin user created: ' . $adminUser->email);
             
             // Assign admin role
-            $adminUser->assignRole('admin');
+            $adminUser->assignRole(User::ADMIN_ROLE);
             
             $this->info('Admin role assigned to new user.');
         }

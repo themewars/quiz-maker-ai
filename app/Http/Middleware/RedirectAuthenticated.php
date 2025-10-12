@@ -36,17 +36,22 @@ class RedirectAuthenticated extends Middleware
         \Log::info('RedirectAuthenticated - Is FilamentUser: ' . ($user instanceof FilamentUser ? 'true' : 'false'));
         \Log::info('RedirectAuthenticated - App env: ' . config('app.env'));
         
-        // Temporarily allow all authenticated users to access any panel
+        // Check if user can access the current panel
         if ($user instanceof FilamentUser) {
-            \Log::info('RedirectAuthenticated - Allowing access for authenticated FilamentUser');
-            return $next($request);
+            if ($user->canAccessPanel($panel)) {
+                \Log::info('RedirectAuthenticated - User can access panel, allowing');
+                return;
+            } else {
+                \Log::info('RedirectAuthenticated - User cannot access panel, denying');
+                abort(403, 'You do not have permission to access this panel.');
+            }
         }
         
-        abort_if(
-            $user instanceof FilamentUser ?
-                (! $user->canAccessPanel($panel)) : (config('app.env') !== 'local'),
-            403,
-        );
+        // For non-FilamentUser, deny access unless in local environment
+        if (config('app.env') !== 'local') {
+            \Log::info('RedirectAuthenticated - Non-FilamentUser denied access in production');
+            abort(403, 'Access denied.');
+        }
     }
 
     protected function redirectTo($request): ?string

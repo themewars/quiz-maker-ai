@@ -384,6 +384,11 @@ class EditQuizzes extends EditRecord
         return $this->getResource()::getUrl('index');
     }
 
+    public function getRelationManagers(): array
+    {
+        return [];
+    }
+
     protected function getFormActions(): array
     {
         return [
