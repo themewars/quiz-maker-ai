@@ -82,7 +82,7 @@ class UserPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 RedirectAuthenticated::class,
-                RoleMiddleware::class . ':user',
+                // RoleMiddleware::class . ':user', // Temporarily disabled to allow admin access
             ]);
     }
 

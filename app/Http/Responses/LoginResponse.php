@@ -37,6 +37,12 @@ class LoginResponse implements LoginResponseContract
                 \Log::info('LoginResponse - Redirecting to user dashboard');
                 return redirect()->route('filament.user.pages.dashboard');
             }
+            
+            // Fallback: If no role or unknown role, redirect to admin panel for admin users
+            if ($user->hasRole('admin')) {
+                \Log::info('LoginResponse - Fallback: Redirecting admin to admin dashboard');
+                return redirect()->route('filament.admin.pages.dashboard');
+            }
         }
 
         \Log::info('LoginResponse - Redirecting to home (fallback)');

@@ -92,10 +92,16 @@ class CustomLogin extends BaseLogin
 
         $user = Filament::auth()->user();
 
+        // Debug logging
+        \Log::info('CustomLogin - User ID: ' . $user->id . ', Email: ' . $user->email);
+        \Log::info('CustomLogin - Panel ID: ' . Filament::getCurrentPanel()->getId());
+        \Log::info('CustomLogin - Can access panel: ' . ($user->canAccessPanel(Filament::getCurrentPanel()) ? 'true' : 'false'));
+
         if (
             ($user instanceof FilamentUser) &&
             (! $user->canAccessPanel(Filament::getCurrentPanel()))
         ) {
+            \Log::info('CustomLogin - User cannot access panel, logging out');
             Filament::auth()->logout();
 
             $this->throwFailureValidationException();
