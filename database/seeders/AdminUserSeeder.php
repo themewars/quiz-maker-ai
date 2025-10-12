@@ -18,7 +18,7 @@ class AdminUserSeeder extends Seeder
     {
         $user = User::create([
             'name' => 'Super Admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'rai3717@gmail.com',
             'password' => Hash::make('123456'),
             'email_verified_at' => Carbon::now(),
         ]);
