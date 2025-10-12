@@ -17,6 +17,17 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    protected function redirectTo()
+    {
+        $user = auth()->user();
+        
+        if ($user && $user->hasRole(User::ADMIN_ROLE)) {
+            return '/admin';
+        }
+        
+        return '/user';
+    }
+
     public function showLoginForm()
     {
         return view('auth.login');
@@ -50,7 +61,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended($this->redirectTo);
+            return redirect()->intended($this->redirectTo());
         }
 
         throw ValidationException::withMessages([
@@ -68,6 +79,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        return redirect()->intended($this->redirectTo);
+        // Use dynamic redirectTo method instead of static property
+        return redirect()->intended($this->redirectTo());
     }
 }
