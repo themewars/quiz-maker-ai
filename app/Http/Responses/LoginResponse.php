@@ -27,21 +27,19 @@ class LoginResponse implements LoginResponseContract
             // Debug logging
             \Log::info('LoginResponse - User ID: ' . $user->id . ', Email: ' . $user->email);
             \Log::info('LoginResponse - Role: ' . ($role ? $role->name : 'null'));
+            \Log::info('LoginResponse - Has admin role: ' . ($user->hasRole('admin') ? 'true' : 'false'));
+            \Log::info('LoginResponse - Current URL: ' . $request->url());
+            \Log::info('LoginResponse - Current route: ' . $request->route()->getName());
 
-            if ($role && $role->name === User::ADMIN_ROLE) {
-                \Log::info('LoginResponse - Redirecting to admin dashboard');
+            // Force admin users to admin panel regardless of login location
+            if ($user->hasRole('admin')) {
+                \Log::info('LoginResponse - Admin user detected, forcing redirect to admin dashboard');
                 return redirect()->route('filament.admin.pages.dashboard');
             }
 
             if ($role && $role->name === User::USER_ROLE) {
                 \Log::info('LoginResponse - Redirecting to user dashboard');
                 return redirect()->route('filament.user.pages.dashboard');
-            }
-            
-            // Fallback: If no role or unknown role, redirect to admin panel for admin users
-            if ($user->hasRole('admin')) {
-                \Log::info('LoginResponse - Fallback: Redirecting admin to admin dashboard');
-                return redirect()->route('filament.admin.pages.dashboard');
             }
         }
 

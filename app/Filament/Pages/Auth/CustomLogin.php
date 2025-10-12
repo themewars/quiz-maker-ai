@@ -96,6 +96,14 @@ class CustomLogin extends BaseLogin
         \Log::info('CustomLogin - User ID: ' . $user->id . ', Email: ' . $user->email);
         \Log::info('CustomLogin - Panel ID: ' . Filament::getCurrentPanel()->getId());
         \Log::info('CustomLogin - Can access panel: ' . ($user->canAccessPanel(Filament::getCurrentPanel()) ? 'true' : 'false'));
+        \Log::info('CustomLogin - Has admin role: ' . ($user->hasRole('admin') ? 'true' : 'false'));
+
+        // Force admin users to admin panel
+        if ($user->hasRole('admin')) {
+            \Log::info('CustomLogin - Admin user detected, redirecting to admin panel');
+            session()->regenerate();
+            return redirect()->route('filament.admin.pages.dashboard');
+        }
 
         if (
             ($user instanceof FilamentUser) &&
