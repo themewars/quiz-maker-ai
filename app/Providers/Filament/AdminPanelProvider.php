@@ -61,7 +61,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                RedirectAuthenticated::class,
+                // RedirectAuthenticated::class, // Temporarily disabled for debugging
                 // RoleMiddleware::class . ':admin', // Temporarily disabled for debugging
             ])
             ->renderHook('panels::user-menu.after', function () {
