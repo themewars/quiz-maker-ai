@@ -7,8 +7,6 @@ export default defineConfig({
             input: [
                 "resources/css/home.css",
                 "resources/css/app.css",
-                "resources/css/filament/admin/theme.css",
-                "resources/css/filament/user/theme.css",
                 "resources/css/admin.scss",
                 "resources/css/demo.scss",
                 "resources/css/login.css",
