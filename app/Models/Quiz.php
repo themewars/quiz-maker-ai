@@ -248,12 +248,6 @@ class Quiz extends Model implements HasMedia
                             Grid::make(1)
                                 ->schema([
                                     Group::make([
-                                        Textarea::make('custom_prompt')
-                                            ->label('Prompt:')
-                                            ->placeholder('Describe exactly what the exam should contain (topics, tone, constraints)')
-                                            ->helperText('Optional: A custom instruction for AI. If filled, AI will prioritize this.')
-                                            ->rows(2)
-                                            ->columnSpanFull(),
                                         TextInput::make('title')
                                             ->label(__('messages.quiz.title') . ':')
                                             ->placeholder(__('messages.quiz.quiz_title'))
@@ -355,6 +349,16 @@ class Quiz extends Model implements HasMedia
                                 ->schema([
                                     Tabs::make('Tabs')
                                         ->tabs([
+                                            Tab::make('Prompt')
+                                                ->label('Prompt')
+                                                ->schema([
+                                                    Textarea::make('custom_prompt')
+                                                        ->label('Prompt:')
+                                                        ->placeholder('Describe exactly what the exam should contain (topics, tone, constraints)')
+                                                        ->helperText('Optional: AI will prioritize this instruction if provided.')
+                                                        ->rows(4)
+                                                        ->cols(10),
+                                                ]),
                                             Tab::make('Text')
                                                 ->label(__('messages.quiz.text'))
                                                 ->schema([
