@@ -23,8 +23,12 @@ class AdminDashboardCardCount extends BaseWidget
         $activeUsers = $userQuery->where('status', 1)->count();
 
 
-        $paidUser = Subscription::where('status', SubscriptionStatus::ACTIVE)->count();
-        $payableAmount = Subscription::get()->sum('payable_amount');
+        // Count only users with an active PAID subscription (payable_amount > 0), distinct by user
+        $paidUser = Subscription::where('status', SubscriptionStatus::ACTIVE)
+            ->where('payable_amount', '>', 0)
+            ->distinct('user_id')
+            ->count('user_id');
+        $payableAmount = Subscription::sum('payable_amount');
 
 
         $totalQuiz = Quiz::get()->count();
