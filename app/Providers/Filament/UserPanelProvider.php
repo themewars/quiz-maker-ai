@@ -47,6 +47,17 @@ class UserPanelProvider extends PanelProvider
             ->profile(CustomEditProfile::class, isSimple: false)
             ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
             ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
+            ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => (
+                '<style>
+                    /* Fix faded text in stats cards only */
+                    .fi .fi-stats-overview-stat-value,
+                    .fi .fi-stats-overview-stat-description,
+                    .fi .fi-stats-overview-stat-label {
+                        color: #1f2937 !important;
+                        opacity: 1 !important;
+                    }
+                </style>'
+            ))
             ->discoverResources(in: app_path('Filament/User/Resources'), for: 'App\\Filament\\User\\Resources')
             ->discoverPages(in: app_path('Filament/User/Pages'), for: 'App\\Filament\\User\\Pages')
             ->userMenuItems([
