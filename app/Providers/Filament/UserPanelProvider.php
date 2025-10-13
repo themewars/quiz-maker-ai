@@ -15,7 +15,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -46,6 +45,8 @@ class UserPanelProvider extends PanelProvider
             ->breadcrumbs(false)
             ->sidebarCollapsibleOnDesktop()
             ->profile(CustomEditProfile::class, isSimple: false)
+            ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
+            ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverResources(in: app_path('Filament/User/Resources'), for: 'App\\Filament\\User\\Resources')
             ->discoverPages(in: app_path('Filament/User/Pages'), for: 'App\\Filament\\User\\Pages')
             ->userMenuItems([
@@ -65,72 +66,6 @@ class UserPanelProvider extends PanelProvider
                     ->sort(UserSidebar::MANAGE_SUBSCRIPTION->value)
                     ->isActiveWhen(fn() => request()->routeIs('filament.user.pages.manage-subscription')),
             ])
-            ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => (
-                '<style>
-                    /* User panel - Force readable contrast */
-                    .fi { opacity: 1 !important; }
-                    .fi * { opacity: 1 !important; }
-
-                    /* Override all faded text and make it dark */
-                    .fi .text-gray-500,
-                    .fi .text-gray-400,
-                    .fi .text-gray-300,
-                    .fi .text-gray-200,
-                    .fi .text-gray-100,
-                    .fi .text-slate-500,
-                    .fi .text-slate-400,
-                    .fi .text-slate-300,
-                    .fi .text-slate-200,
-                    .fi .text-slate-100,
-                    .fi .opacity-70,
-                    .fi .opacity-60,
-                    .fi .opacity-50,
-                    .fi .opacity-40,
-                    .fi .opacity-30 {
-                        color: #1f2937 !important;
-                        opacity: 1 !important;
-                    }
-
-                    /* Stats cards - make numbers and text dark */
-                    .fi .fi-stats-overview-stat-value,
-                    .fi .fi-stats-overview-stat-description,
-                    .fi .fi-stats-overview-stat-label {
-                        color: #1f2937 !important;
-                        opacity: 1 !important;
-                    }
-
-                    /* Headings and labels */
-                    .fi .fi-heading,
-                    .fi .fi-section-header,
-                    .fi .fi-widget-header,
-                    .fi .fi-table-header,
-                    .fi h1, .fi h2, .fi h3, .fi h4, .fi h5, .fi h6 {
-                        color: #111827 !important;
-                        opacity: 1 !important;
-                    }
-
-                    /* Body text */
-                    .fi p, .fi span, .fi div, .fi td, .fi th {
-                        color: #374151 !important;
-                        opacity: 1 !important;
-                    }
-
-                    /* Neutralize global rules (like img/svg width:100%) inside Filament scope */
-                    .fi svg { width: 20px !important; height: 20px !important; line-height: 1 !important; display: inline-block !important; }
-                    .fi .fi-input-wrp svg { width: 16px !important; height: 16px !important; }
-                    .fi .fi-brand svg, .fi .fi-logo svg { width: auto !important; height: auto !important; }
-
-                    /* Flags and small images in topbar/sidebar (language switch, user menu) */
-                    .fi .fi-topbar img, .fi .fi-sidebar img, .fi .filament-language-switch img { 
-                        width: 20px !important; height: 14px !important; object-fit: contain !important; display: inline-block !important; max-width: none !important; 
-                    }
-
-                    /* Table/action icons (if provided as <img>) */
-                    .fi .fi-action-icon img, .fi .fi-table img { width: 20px !important; height: 20px !important; object-fit: contain !important; }
-                </style>'
-            ))
-            ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
-            ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverWidgets(in: app_path('Filament/User/Widgets'), for: 'App\\Filament\\User\\Widgets')
             ->middleware([
                 EncryptCookies::class,
@@ -149,13 +84,6 @@ class UserPanelProvider extends PanelProvider
                 RedirectAuthenticated::class,
                 RoleMiddleware::class . ':user',
             ]);
-    }
-
-    public function register(): void
-    {
-        parent::register();
-        FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/css/filament/user/theme.css')"));
-        FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/js/app.js')"));
     }
 
     public function changePassword(): string
