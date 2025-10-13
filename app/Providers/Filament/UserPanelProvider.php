@@ -66,12 +66,18 @@ class UserPanelProvider extends PanelProvider
             ])
             ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => (
                 '<style>
-                    /* Hard cap icon sizes inside Filament to avoid global svg rules inflating them */
+                    /* Neutralize global rules (like img/svg width:100%) inside Filament scope */
                     .fi svg { width: 20px !important; height: 20px !important; line-height: 1 !important; display: inline-block !important; }
-                    /* Preserve large brand/logo areas */
-                    .fi .fi-brand svg, .fi .fi-logo svg { width: auto !important; height: auto !important; }
-                    /* Inputs (like selects) often have chevrons: ensure visibility */
                     .fi .fi-input-wrp svg { width: 16px !important; height: 16px !important; }
+                    .fi .fi-brand svg, .fi .fi-logo svg { width: auto !important; height: auto !important; }
+
+                    /* Flags and small images in topbar/sidebar (language switch, user menu) */
+                    .fi .fi-topbar img, .fi .fi-sidebar img, .fi .filament-language-switch img { 
+                        width: 20px !important; height: 14px !important; object-fit: contain !important; display: inline-block !important; max-width: none !important; 
+                    }
+
+                    /* Table/action icons (if provided as <img>) */
+                    .fi .fi-action-icon img, .fi .fi-table img { width: 20px !important; height: 20px !important; object-fit: contain !important; }
                 </style>'
             ))
             ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
