@@ -86,25 +86,6 @@ class UserPanelProvider extends PanelProvider
     public function register(): void
     {
         parent::register();
-        \Filament\Support\Facades\FilamentView::registerRenderHook(
-            'panels::body.end',
-            fn(): string => '<style>
-                .fi { opacity: 1 !important; }
-                .fi .fi-stats-overview, .fi .fi-wi-stats-overview-stat, .fi .fi-widget, .fi .fi-section, .fi .fi-card, .fi .fi-simple-main { opacity: 1 !important; }
-                .fi .fi-heading, .fi .fi-section-header, .fi .fi-stats-overview-stat-value, .fi .fi-stats-overview-stat-description { color: #1f2937 !important; opacity: 1 !important; }
-                .fi .opacity-70, .fi .opacity-60, .fi .opacity-50, .fi .opacity-40, .fi .opacity-30 { opacity: 1 !important; }
-                .fi-sidebar, .fi-sidebar .fi-sidebar-item, .fi-topbar { opacity: 1 !important; }
-                /* Stats overview (top faded cards) */
-                .fi .fi-wi-stats-overview-stat, .fi .fi-wi-stats-overview-stat * { opacity: 1 !important; color: #111827 !important; }
-                .fi .fi-wi-stats-overview-stat svg { color: #6b7280 !important; opacity: 1 !important; }
-                .fi .fi-wi-stats-overview-stat .fi-card { background-color: #ffffff !important; }
-            </style>'
-        );
-
-        \Filament\Support\Facades\FilamentView::registerRenderHook(
-            'panels::head.end',
-            fn(): string => '<script>try{localStorage.setItem("theme","light");document.documentElement.classList.remove("dark");}catch(e){}</script>'
-        );
     }
 
     public function changePassword(): string
