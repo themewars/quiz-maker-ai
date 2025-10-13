@@ -65,8 +65,14 @@ class AdminPanelProvider extends PanelProvider
         FilamentView::registerRenderHook(
             'panels::body.end',
             fn(): string => '<style>
-                .fi-stats-overview, .fi-wi-stats-overview-stat, .fi-widget, .fi-section, .fi-card, .fi-simple-main { opacity: 1 !important; }
-                .fi-heading, .fi-section-header, .fi-stats-overview-stat-value, .fi-stats-overview-stat-description { color: #1f2937 !important; opacity: 1 !important; }
+                /* Force full opacity in Filament pane only */
+                .fi { opacity: 1 !important; }
+                .fi .fi-stats-overview, .fi .fi-wi-stats-overview-stat, .fi .fi-widget, .fi .fi-section, .fi .fi-card, .fi .fi-simple-main { opacity: 1 !important; }
+                .fi .fi-heading, .fi .fi-section-header, .fi .fi-stats-overview-stat-value, .fi .fi-stats-overview-stat-description { color: #1f2937 !important; opacity: 1 !important; }
+                /* Neutralize Tailwind opacity utilities that might leak from global CSS */
+                .fi .opacity-70, .fi .opacity-60, .fi .opacity-50, .fi .opacity-40, .fi .opacity-30 { opacity: 1 !important; }
+                /* Sidebar/menu readability */
+                .fi-sidebar, .fi-sidebar .fi-sidebar-item, .fi-topbar { opacity: 1 !important; }
             </style>'
         );
     }
