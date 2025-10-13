@@ -10,6 +10,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\ThemeMode;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
@@ -32,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->brandName('ExamGenerator AI')
             ->viteTheme('resources/css/filament/admin/theme.css')
+            ->defaultThemeMode(ThemeMode::Light)
             ->colors([
                 'primary' => Color::Purple,
             ])
