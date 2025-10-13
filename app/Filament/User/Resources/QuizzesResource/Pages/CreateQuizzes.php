@@ -309,6 +309,9 @@ class CreateQuizzes extends CreateRecord
         ];
 
         $userCustomPrompt = trim((string)($data['custom_prompt'] ?? ''));
+        if (strlen($userCustomPrompt) > 1000) {
+            $userCustomPrompt = substr($userCustomPrompt, 0, 1000);
+        }
 
         $prompt = <<<PROMPT
 

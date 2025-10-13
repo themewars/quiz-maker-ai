@@ -358,7 +358,7 @@ class Quiz extends Model implements HasMedia
                                                         ->helperText('Optional: AI will prioritize this instruction if provided.')
                                                         ->rows(4)
                                                         ->cols(10),
-                                                ]),
+                                                ])->id('prompt-tab'),
                                             Tab::make('Text')
                                                 ->label(__('messages.quiz.text'))
                                                 ->schema([
@@ -453,17 +453,7 @@ class Quiz extends Model implements HasMedia
                                                 ]),
                                         ])
                                         ->activeTab(function ($get) {
-                                            $type = $get('type');
-                                            if (empty($type)) {
-                                                return 'Prompt';
-                                            }
-                                            return match ((int) $type) {
-                                                1 => 'Text',
-                                                2 => 'Subject',
-                                                3 => 'URL',
-                                                4 => 'Upload',
-                                                default => 'Prompt',
-                                            };
+                                            return $get('type') ?? 1; // restore original behavior; Prompt not default-selected
                                         })
                                         ->extraAttributes([
                                             'wire:click' => 'currentActiveTab',
