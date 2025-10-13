@@ -15,7 +15,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Enums\ThemeMode;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -39,7 +38,6 @@ class UserPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->favicon(getFaviconUrl())
             ->viteTheme('resources/css/filament/user/theme.css')
-            ->defaultThemeMode(ThemeMode::Light)
             ->colors([
                 'primary' => Color::Purple,
                 'sky' => Color::Sky,
