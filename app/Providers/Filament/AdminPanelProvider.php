@@ -28,21 +28,12 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->spa()
             ->id('admin')
             ->path('admin')
-            ->brandName(fn() => view('filament.brand_name'))
-            // ->brandLogo(getAppLogo())
-            ->favicon(getFaviconUrl())
+            ->brandName('ExamGenerator AI')
             ->colors([
                 'primary' => Color::Purple,
             ])
-            ->breadcrumbs(false)
-            ->sidebarCollapsibleOnDesktop()
-            ->profile(CustomEditProfile::class, isSimple: false)
-            // Temporarily disable render hooks to fix blank page
-            // ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
-            // ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
@@ -64,72 +55,12 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 RedirectAuthenticated::class,
                 RoleMiddleware::class . ':admin',
-            ])
-            // Temporarily disable user menu render hook to fix blank page
-            // ->renderHook('panels::user-menu.after', function () {
-            //     return Blade::render("
-            //         <script>
-            //             document.addEventListener('DOMContentLoaded', function() {
-            //                 const userAvatar = document.querySelector('.fi-user-avatar');
-            //                 
-            //                 if (userAvatar) {
-            //                     const parentButton = userAvatar.closest('button');
-            //                     
-            //                     if (parentButton) {
-            //                         const newHtml = `
-            //                             <div class='flex flex-col px-4'>
-            //                                 <p class='text-sm text-gray-600 dark:text-gray-200'>
-            //                                     {{ auth()->user()->name }}
-            //                                 </p>
-            //                                 <p class='text-xs text-gray-500 dark:text-gray-400'>
-            //                                     {{ auth()->user()->email }}
-            //                                 </p>
-            //                             </div>
-            //                         `;
-            //
-            //                         parentButton.insertAdjacentHTML('afterend', newHtml);
-            //                     }
-            //                 }
-            //             });
-            //         </script>
-            //     ");
-            // });
-            ->renderHook('panels::user-menu.after', function () {
-                return Blade::render("
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const userAvatar = document.querySelector('.fi-user-avatar');
-                            
-                            if (userAvatar) {
-                                const parentButton = userAvatar.closest('button');
-                                
-                                if (parentButton) {
-                                    const newHtml = `
-                                        <div class='flex flex-col px-4'>
-                                            <p class='text-sm text-gray-600 dark:text-gray-200'>
-                                                {{ auth()->user()->name }}
-                                            </p>
-                                            <p class='text-xs text-gray-500 dark:text-gray-400'>
-                                                {{ auth()->user()->email }}
-                                            </p>
-                                        </div>
-                                    `;
-
-                                    parentButton.insertAdjacentHTML('afterend', newHtml);
-                                }
-                            }
-                        });
-                    </script>
-                ");
-            });
+            ]);
     }
 
     public function register(): void
     {
         parent::register();
-        // Temporarily disable Vite assets to fix blank page
-        // FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/css/admin.scss')"));
-        // FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/js/app.js')"));
     }
 
     public function changePassword(): string
