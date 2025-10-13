@@ -2,25 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
-/* User panel light baseline */
-.fi { opacity: 1 }
-.fi .opacity-70, .fi .opacity-60, .fi .opacity-50, .fi .opacity-40, .fi .opacity-30 { opacity: 1 }
-.fi .fi-card, .fi .fi-section, .fi .fi-widget, .fi .fi-simple-main { opacity: 1 }
-/* Keep text readable on light theme */
-.fi .fi-heading, .fi .fi-section-header, .fi .fi-stats-overview-stat-value, .fi .fi-stats-overview-stat-description { color: #111827; opacity: 1 }
+/* User panel - Force readable contrast */
+.fi { opacity: 1 !important; }
+.fi * { opacity: 1 !important; }
+
+/* Override all faded text and make it dark */
+.fi .text-gray-500,
+.fi .text-gray-400,
+.fi .text-gray-300,
+.fi .text-gray-200,
+.fi .text-gray-100,
+.fi .text-slate-500,
+.fi .text-slate-400,
+.fi .text-slate-300,
+.fi .text-slate-200,
+.fi .text-slate-100,
+.fi .opacity-70,
+.fi .opacity-60,
+.fi .opacity-50,
+.fi .opacity-40,
+.fi .opacity-30 {
+    color: #1f2937 !important;
+    opacity: 1 !important;
+}
+
+/* Stats cards - make numbers and text dark */
+.fi .fi-stats-overview-stat-value,
+.fi .fi-stats-overview-stat-description,
+.fi .fi-stats-overview-stat-label {
+    color: #1f2937 !important;
+    opacity: 1 !important;
+}
+
+/* Headings and labels */
+.fi .fi-heading,
+.fi .fi-section-header,
+.fi .fi-widget-header,
+.fi .fi-table-header,
+.fi h1, .fi h2, .fi h3, .fi h4, .fi h5, .fi h6 {
+    color: #111827 !important;
+    opacity: 1 !important;
+}
+
+/* Body text */
+.fi p, .fi span, .fi div, .fi td, .fi th {
+    color: #374151 !important;
+    opacity: 1 !important;
+}
 
 /* Layout & backgrounds */
-body.fi-body { background-color: #f5f7fb; }
+body.fi-body { background-color: #f8fafc; }
 .fi .fi-main > section { background-color: #ffffff; }
 
 /* Topbar */
-.fi .fi-topbar { background-color: #ffffff; border-bottom: 1px solid #eef2f7; }
-.fi .fi-topbar .fi-user-menu-trigger { border-color: transparent; }
+.fi .fi-topbar { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; }
+.fi .fi-topbar .fi-user-menu-trigger { border-color: #d1d5db; }
 
 /* Sidebar */
-.fi .fi-sidebar { background-color: #ffffff; border-right: 1px solid #eef2f7; }
+.fi .fi-sidebar { background-color: #ffffff; border-right: 1px solid #e2e8f0; }
 .fi .fi-sidebar .fi-sidebar-item a { color: #374151; }
-.fi .fi-sidebar .fi-sidebar-item a:hover { background-color: #f3f4f6; }
+.fi .fi-sidebar .fi-sidebar-item a:hover { background-color: #f1f5f9; }
 
 /* Cards/Sections/Widgets */
 .fi .fi-card,
@@ -28,25 +69,30 @@ body.fi-body { background-color: #f5f7fb; }
 .fi .fi-widget,
 .fi .fi-simple-main > div { 
     background-color: #ffffff; 
-    border: 1px solid #eef2f7; 
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    border: 1px solid #e2e8f0; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Tables */
 .fi table { background-color: #ffffff; }
-.fi table thead th { background-color: #f9fafb; color: #111827; }
+.fi table thead th { background-color: #f8fafc; color: #1f2937 !important; }
 .fi table tbody tr { background-color: #ffffff; }
-.fi table tbody tr:nth-child(odd) { background-color: #fcfdff; }
+.fi table tbody tr:nth-child(odd) { background-color: #f8fafc; }
+.fi table td, .fi table th { color: #374151 !important; }
 
 /* Inputs */
 .fi input,
 .fi select,
-.fi textarea { background-color: #ffffff; }
+.fi textarea { 
+    background-color: #ffffff; 
+    color: #1f2937 !important;
+    border-color: #d1d5db;
+}
 
 /* ApexCharts (widgets) */
 .fi .apexcharts-tooltip, 
-.fi .apexcharts-menu { color: #111827; }
-.fi .apexcharts-legend-text { color: #111827 !important; }
+.fi .apexcharts-menu { color: #1f2937 !important; }
+.fi .apexcharts-legend-text { color: #1f2937 !important; }
 
 /* Small utilities to prevent global CSS bleed */
 .fi svg { width: 20px !important; height: 20px !important; line-height: 1 !important; display: inline-block !important; }
