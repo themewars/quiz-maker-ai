@@ -453,7 +453,17 @@ class Quiz extends Model implements HasMedia
                                                 ]),
                                         ])
                                         ->activeTab(function ($get) {
-                                            return $get('type') ?? 1;
+                                            $type = $get('type');
+                                            if (empty($type)) {
+                                                return 'Prompt';
+                                            }
+                                            return match ((int) $type) {
+                                                1 => 'Text',
+                                                2 => 'Subject',
+                                                3 => 'URL',
+                                                4 => 'Upload',
+                                                default => 'Prompt',
+                                            };
                                         })
                                         ->extraAttributes([
                                             'wire:click' => 'currentActiveTab',
