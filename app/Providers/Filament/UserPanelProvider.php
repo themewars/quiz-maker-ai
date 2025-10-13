@@ -31,6 +31,7 @@ class UserPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->spa()
             ->id('user')
             ->path('user')
             ->brandName(getAppName())
@@ -44,6 +45,8 @@ class UserPanelProvider extends PanelProvider
             ->breadcrumbs(false)
             ->sidebarCollapsibleOnDesktop()
             ->profile(CustomEditProfile::class, isSimple: false)
+            ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
+            ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverResources(in: app_path('Filament/User/Resources'), for: 'App\\Filament\\User\\Resources')
             ->discoverPages(in: app_path('Filament/User/Pages'), for: 'App\\Filament\\User\\Pages')
             ->userMenuItems([

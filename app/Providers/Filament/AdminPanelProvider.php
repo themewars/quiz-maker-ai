@@ -28,12 +28,20 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->spa()
             ->id('admin')
             ->path('admin')
-            ->brandName('ExamGenerator AI')
+            ->brandName(fn() => view('filament.brand_name'))
+            // ->brandLogo(getAppLogo())
+            ->favicon(getFaviconUrl())
             ->colors([
                 'primary' => Color::Purple,
             ])
+            ->breadcrumbs(false)
+            ->sidebarCollapsibleOnDesktop()
+            ->profile(CustomEditProfile::class, isSimple: false)
+            ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
+            ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
@@ -55,36 +63,18 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 RedirectAuthenticated::class,
                 RoleMiddleware::class . ':admin',
-            ]);
+            ])
+            ->renderHook('panels::user-menu.after', function () {
+                return Blade::render("\n                    <script>\n                        document.addEventListener('DOMContentLoaded', function() {\n                            const userAvatar = document.querySelector('.fi-user-avatar');\n                            \n                            if (userAvatar) {\n                                const parentButton = userAvatar.closest('button');\n                                \n                                if (parentButton) {\n                                    const newHtml = `\n                                        <div class='flex flex-col px-4'>\n                                            <p class='text-sm text-gray-600 dark:text-gray-200'>\n                                                {{ auth()->user()->name }}\n                                            </p>\n                                            <p class='text-xs text-gray-500 dark:text-gray-400'>\n                                                {{ auth()->user()->email }}\n                                            </p>\n                                        </div>\n                                    `;\n\n                                    parentButton.insertAdjacentHTML('afterend', newHtml);\n                                }\n                            }\n                        });\n                    </script>\n                ");
+            });
     }
 
     public function register(): void
     {
         parent::register();
-        // Panel-scoped minimal CSS fix to avoid washed-out UI without touching frontend assets
-        FilamentView::registerRenderHook(
-            'panels::body.end',
-            fn(): string => '<style>
-                /* Force full opacity in Filament pane only */
-                .fi { opacity: 1 !important; }
-                .fi .fi-stats-overview, .fi .fi-wi-stats-overview-stat, .fi .fi-widget, .fi .fi-section, .fi .fi-card, .fi .fi-simple-main { opacity: 1 !important; }
-                .fi .fi-heading, .fi .fi-section-header, .fi .fi-stats-overview-stat-value, .fi .fi-stats-overview-stat-description { color: #1f2937 !important; opacity: 1 !important; }
-                /* Neutralize Tailwind opacity utilities that might leak from global CSS */
-                .fi .opacity-70, .fi .opacity-60, .fi .opacity-50, .fi .opacity-40, .fi .opacity-30 { opacity: 1 !important; }
-                /* Sidebar/menu readability */
-                .fi-sidebar, .fi-sidebar .fi-sidebar-item, .fi-topbar { opacity: 1 !important; }
-                /* Stats overview (top faded cards) */
-                .fi .fi-wi-stats-overview-stat, .fi .fi-wi-stats-overview-stat * { opacity: 1 !important; color: #111827 !important; }
-                .fi .fi-wi-stats-overview-stat svg { color: #6b7280 !important; opacity: 1 !important; }
-                .fi .fi-wi-stats-overview-stat .fi-card { background-color: #ffffff !important; }
-            </style>'
-        );
-
-        // Force light mode regardless of OS preference / previous setting
-        FilamentView::registerRenderHook(
-            'panels::head.end',
-            fn(): string => '<script>try{localStorage.setItem("theme","light");document.documentElement.classList.remove("dark");}catch(e){}</script>'
-        );
+        FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/css/admin.scss')"));
+        // FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/css/demo.scss')"));
+        FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/js/app.js')"));
     }
 
     public function changePassword(): string
