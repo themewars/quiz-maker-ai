@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Question;
+use Filament\Facades\Filament;
 use Filament\Widgets\Widget;
 
 class QuestionCountWidget extends Widget
@@ -12,6 +13,12 @@ class QuestionCountWidget extends Widget
     protected int | string | array $columnSpan = 'full';
 
     public ?int $quizId = null;
+
+    public static function canView(): bool
+    {
+        $panel = Filament::getCurrentPanel();
+        return $panel && $panel->getId() === 'user';
+    }
 
     public function mount($record = null): void
     {
