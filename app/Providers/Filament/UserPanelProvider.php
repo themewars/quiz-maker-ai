@@ -64,6 +64,22 @@ class UserPanelProvider extends PanelProvider
                     ->sort(UserSidebar::MANAGE_SUBSCRIPTION->value)
                     ->isActiveWhen(fn() => request()->routeIs('filament.user.pages.manage-subscription')),
             ])
+            ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => (
+                '<style>
+                    /* Constrain oversized icons in Filament user panel */
+                    .fi .fi-sidebar .fi-sidebar-item-icon svg,
+                    .fi .fi-topbar .fi-icon svg,
+                    .fi [class^="fi-"] .fi-icon svg,
+                    .fi [class*=" fi-"] .fi-icon svg,
+                    .fi .fi-table [class^="fi-"] svg,
+                    .fi .fi-table [class*=" fi-"] svg {
+                        width: 20px !important;
+                        height: 20px !important;
+                    }
+                    /* Action icons in tables/buttons */
+                    .fi .fi-action-icon svg { width: 20px !important; height: 20px !important; }
+                </style>'
+            ))
             ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
             ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverWidgets(in: app_path('Filament/User/Widgets'), for: 'App\\Filament\\User\\Widgets')
