@@ -97,6 +97,11 @@ class UserPanelProvider extends PanelProvider
                 .fi-sidebar, .fi-sidebar .fi-sidebar-item, .fi-topbar { opacity: 1 !important; }
             </style>'
         );
+
+        \Filament\Support\Facades\FilamentView::registerRenderHook(
+            'panels::head.end',
+            fn(): string => '<script>try{localStorage.setItem("theme","light");document.documentElement.classList.remove("dark");}catch(e){}</script>'
+        );
     }
 
     public function changePassword(): string
