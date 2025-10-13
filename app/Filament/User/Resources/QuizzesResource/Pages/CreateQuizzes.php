@@ -308,6 +308,8 @@ class CreateQuizzes extends CreateRecord
             'language' => getAllLanguages()[$data['language']] ?? 'English',
         ];
 
+        $userCustomPrompt = trim((string)($data['custom_prompt'] ?? ''));
+
         $prompt = <<<PROMPT
 
     You are an expert in crafting engaging quizzes. Based on the quiz details provided, your task is to meticulously generate questions according to the specified question type. Your output should be exclusively in properly formatted JSON.
@@ -334,6 +336,9 @@ class CreateQuizzes extends CreateRecord
     - For Single Choice, Multiple Choice, and True/False questions, you MUST include the answers array with proper options.
     - Do NOT create questions without answers unless they are specifically Open Ended questions.
     - Each answer must have a "title" field and an "is_correct" field (true/false).
+
+    **If the user provided a custom prompt, follow it strictly (overrides defaults):**
+    {$userCustomPrompt}
 
     **Instructions:**
 

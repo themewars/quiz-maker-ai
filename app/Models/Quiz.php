@@ -248,6 +248,12 @@ class Quiz extends Model implements HasMedia
                             Grid::make(1)
                                 ->schema([
                                     Group::make([
+                                        Textarea::make('custom_prompt')
+                                            ->label('Prompt:')
+                                            ->placeholder('Describe exactly what the exam should contain (topics, tone, constraints)')
+                                            ->helperText('Optional: A custom instruction for AI. If filled, AI will prioritize this.')
+                                            ->rows(2)
+                                            ->columnSpanFull(),
                                         TextInput::make('title')
                                             ->label(__('messages.quiz.title') . ':')
                                             ->placeholder(__('messages.quiz.quiz_title'))
