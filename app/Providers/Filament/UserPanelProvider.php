@@ -15,6 +15,8 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentView;
+use Filament\Facades\Filament;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -47,40 +49,6 @@ class UserPanelProvider extends PanelProvider
             ->profile(CustomEditProfile::class, isSimple: false)
             ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
             ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
-            ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => (
-                '<style>
-                    /* Fix all faded text in user panel */
-                    .fi * {
-                        opacity: 1 !important;
-                    }
-                    .fi .fi-stats-overview-stat-value,
-                    .fi .fi-stats-overview-stat-description,
-                    .fi .fi-stats-overview-stat-label,
-                    .fi .text-gray-500,
-                    .fi .text-gray-400,
-                    .fi .text-gray-300,
-                    .fi .text-gray-200,
-                    .fi .text-gray-100,
-                    .fi .text-slate-500,
-                    .fi .text-slate-400,
-                    .fi .text-slate-300,
-                    .fi .text-slate-200,
-                    .fi .text-slate-100,
-                    .fi .opacity-70,
-                    .fi .opacity-60,
-                    .fi .opacity-50,
-                    .fi .opacity-40,
-                    .fi .opacity-30,
-                    .fi p,
-                    .fi span,
-                    .fi div,
-                    .fi td,
-                    .fi th {
-                        color: #1f2937 !important;
-                        opacity: 1 !important;
-                    }
-                </style>'
-            ))
             ->discoverResources(in: app_path('Filament/User/Resources'), for: 'App\\Filament\\User\\Resources')
             ->discoverPages(in: app_path('Filament/User/Pages'), for: 'App\\Filament\\User\\Pages')
             ->userMenuItems([
@@ -118,6 +86,13 @@ class UserPanelProvider extends PanelProvider
                 RedirectAuthenticated::class,
                 RoleMiddleware::class . ':user',
             ]);
+    }
+
+    public function register(): void
+    {
+        parent::register();
+        FilamentView::registerRenderHook('panels::body.end', fn(): string => Filament::getCurrentPanel()?->getId() === 'user' ? Blade::render("@vite('resources/css/user.scss')") : '');
+        FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/js/app.js')"));
     }
 
     public function changePassword(): string
