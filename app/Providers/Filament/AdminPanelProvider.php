@@ -63,10 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 RedirectAuthenticated::class,
                 RoleMiddleware::class . ':admin',
-            ])
-            ->renderHook('panels::user-menu.after', function () {
-                return Blade::render("\n                    <script>\n                        document.addEventListener('DOMContentLoaded', function() {\n                            const userAvatar = document.querySelector('.fi-user-avatar');\n                            \n                            if (userAvatar) {\n                                const parentButton = userAvatar.closest('button');\n                                \n                                if (parentButton) {\n                                    const newHtml = `\n                                        <div class='flex flex-col px-4'>\n                                            <p class='text-sm text-gray-600 dark:text-gray-200'>\n                                                {{ auth()->user()->name }}\n                                            </p>\n                                            <p class='text-xs text-gray-500 dark:text-gray-400'>\n                                                {{ auth()->user()->email }}\n                                            </p>\n                                        </div>\n                                    `;\n\n                                    parentButton.insertAdjacentHTML('afterend', newHtml);\n                                }\n                            }\n                        });\n                    </script>\n                ");
-            });
+            ]);
     }
 
     public function register(): void
