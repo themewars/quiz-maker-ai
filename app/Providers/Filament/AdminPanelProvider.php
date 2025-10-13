@@ -61,6 +61,14 @@ class AdminPanelProvider extends PanelProvider
     public function register(): void
     {
         parent::register();
+        // Panel-scoped minimal CSS fix to avoid washed-out UI without touching frontend assets
+        FilamentView::registerRenderHook(
+            'panels::body.end',
+            fn(): string => '<style>
+                .fi-stats-overview, .fi-wi-stats-overview-stat, .fi-widget, .fi-section, .fi-card, .fi-simple-main { opacity: 1 !important; }
+                .fi-heading, .fi-section-header, .fi-stats-overview-stat-value, .fi-stats-overview-stat-description { color: #1f2937 !important; opacity: 1 !important; }
+            </style>'
+        );
     }
 
     public function changePassword(): string

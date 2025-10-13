@@ -83,6 +83,18 @@ class UserPanelProvider extends PanelProvider
             ]);
     }
 
+    public function register(): void
+    {
+        parent::register();
+        \Filament\Support\Facades\FilamentView::registerRenderHook(
+            'panels::body.end',
+            fn(): string => '<style>
+                .fi-stats-overview, .fi-wi-stats-overview-stat, .fi-widget, .fi-section, .fi-card, .fi-simple-main { opacity: 1 !important; }
+                .fi-heading, .fi-section-header, .fi-stats-overview-stat-value, .fi-stats-overview-stat-description { color: #1f2937 !important; opacity: 1 !important; }
+            </style>'
+        );
+    }
+
     public function changePassword(): string
     {
         return '<a class="flex items-center w-full gap-2 p-2 text-sm transition-colors duration-75 rounded-md outline-none cursor-pointer fi-dropdown-list-item whitespace-nowrap disabled:pointer-events-none disabled:opacity-70 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 fi-dropdown-list-item-color-gray fi-color-gray" @click="$dispatch(\'open-modal\', {id: \'change-password-modal\'})">
