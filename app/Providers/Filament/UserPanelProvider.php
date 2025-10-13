@@ -67,6 +67,54 @@ class UserPanelProvider extends PanelProvider
             ])
             ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => (
                 '<style>
+                    /* User panel - Force readable contrast */
+                    .fi { opacity: 1 !important; }
+                    .fi * { opacity: 1 !important; }
+
+                    /* Override all faded text and make it dark */
+                    .fi .text-gray-500,
+                    .fi .text-gray-400,
+                    .fi .text-gray-300,
+                    .fi .text-gray-200,
+                    .fi .text-gray-100,
+                    .fi .text-slate-500,
+                    .fi .text-slate-400,
+                    .fi .text-slate-300,
+                    .fi .text-slate-200,
+                    .fi .text-slate-100,
+                    .fi .opacity-70,
+                    .fi .opacity-60,
+                    .fi .opacity-50,
+                    .fi .opacity-40,
+                    .fi .opacity-30 {
+                        color: #1f2937 !important;
+                        opacity: 1 !important;
+                    }
+
+                    /* Stats cards - make numbers and text dark */
+                    .fi .fi-stats-overview-stat-value,
+                    .fi .fi-stats-overview-stat-description,
+                    .fi .fi-stats-overview-stat-label {
+                        color: #1f2937 !important;
+                        opacity: 1 !important;
+                    }
+
+                    /* Headings and labels */
+                    .fi .fi-heading,
+                    .fi .fi-section-header,
+                    .fi .fi-widget-header,
+                    .fi .fi-table-header,
+                    .fi h1, .fi h2, .fi h3, .fi h4, .fi h5, .fi h6 {
+                        color: #111827 !important;
+                        opacity: 1 !important;
+                    }
+
+                    /* Body text */
+                    .fi p, .fi span, .fi div, .fi td, .fi th {
+                        color: #374151 !important;
+                        opacity: 1 !important;
+                    }
+
                     /* Neutralize global rules (like img/svg width:100%) inside Filament scope */
                     .fi svg { width: 20px !important; height: 20px !important; line-height: 1 !important; display: inline-block !important; }
                     .fi .fi-input-wrp svg { width: 16px !important; height: 16px !important; }
