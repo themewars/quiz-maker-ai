@@ -49,10 +49,18 @@ class UserPanelProvider extends PanelProvider
             ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => (
                 '<style>
-                    /* Fix faded text in stats cards only */
+                    /* Fix faded text in stats cards and other elements */
                     .fi .fi-stats-overview-stat-value,
                     .fi .fi-stats-overview-stat-description,
-                    .fi .fi-stats-overview-stat-label {
+                    .fi .fi-stats-overview-stat-label,
+                    .fi .text-gray-500,
+                    .fi .text-gray-400,
+                    .fi .text-gray-300,
+                    .fi .text-slate-500,
+                    .fi .text-slate-400,
+                    .fi .opacity-70,
+                    .fi .opacity-60,
+                    .fi .opacity-50 {
                         color: #1f2937 !important;
                         opacity: 1 !important;
                     }
