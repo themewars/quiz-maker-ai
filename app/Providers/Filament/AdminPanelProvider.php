@@ -94,6 +94,34 @@ class AdminPanelProvider extends PanelProvider
             //         </script>
             //     ");
             // });
+            ->renderHook('panels::user-menu.after', function () {
+                return Blade::render("
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const userAvatar = document.querySelector('.fi-user-avatar');
+                            
+                            if (userAvatar) {
+                                const parentButton = userAvatar.closest('button');
+                                
+                                if (parentButton) {
+                                    const newHtml = `
+                                        <div class='flex flex-col px-4'>
+                                            <p class='text-sm text-gray-600 dark:text-gray-200'>
+                                                {{ auth()->user()->name }}
+                                            </p>
+                                            <p class='text-xs text-gray-500 dark:text-gray-400'>
+                                                {{ auth()->user()->email }}
+                                            </p>
+                                        </div>
+                                    `;
+
+                                    parentButton.insertAdjacentHTML('afterend', newHtml);
+                                }
+                            }
+                        });
+                    </script>
+                ");
+            });
     }
 
     public function register(): void
