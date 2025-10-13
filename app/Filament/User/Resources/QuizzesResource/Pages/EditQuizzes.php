@@ -47,7 +47,7 @@ class EditQuizzes extends EditRecord
             '-upload-tab' => Quiz::UPLOAD_TYPE,
         ];
 
-        $tabType[$tab] ?? Quiz::TEXT_TYPE;
+        return $tabType[$tab] ?? Quiz::TEXT_TYPE;
     }
 
     // protected function afterValidate(): void

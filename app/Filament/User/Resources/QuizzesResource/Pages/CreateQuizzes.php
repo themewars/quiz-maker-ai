@@ -39,7 +39,7 @@ class CreateQuizzes extends CreateRecord
             '-upload-tab' => Quiz::UPLOAD_TYPE,
         ];
 
-        $tabType[$tab] ?? Quiz::TEXT_TYPE;
+        return $tabType[$tab] ?? Quiz::TEXT_TYPE;
     }
 
     protected function getCreateFormAction(): Action
@@ -138,7 +138,7 @@ class CreateQuizzes extends CreateRecord
                 $this->halt();
             }
         }
-        $activeTab = getTabType();
+        $activeTab = $data['type'] ?? getTabType();
 
         $descriptionFields = [
             Quiz::TEXT_TYPE => $data['quiz_description_text'] ?? null,
@@ -147,6 +147,18 @@ class CreateQuizzes extends CreateRecord
         ];
 
         $description = $descriptionFields[$activeTab] ?? null;
+
+        // Allow proceeding if a custom prompt is provided even when description fields are empty
+        $hasCustomPrompt = !empty(trim((string)($data['custom_prompt'] ?? '')));
+        if (empty($description) && empty($this->data['file_upload']) && !$hasCustomPrompt) {
+            Notification::make()
+                ->danger()
+                ->title(__('messages.quiz.quiz_description_required'))
+                ->persistent()
+                ->actions([NotificationAction::make('close')->label('Close')->button()->color('gray')->close()])
+                ->send();
+            $this->halt();
+        }
         
         // Debug logging
         Log::info("=== EXAM CREATION DEBUG START ===");

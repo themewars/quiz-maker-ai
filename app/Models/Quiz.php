@@ -455,9 +455,7 @@ class Quiz extends Model implements HasMedia
                                         ->activeTab(function ($get) {
                                             return $get('type') ?? 1; // restore original behavior; Prompt not default-selected
                                         })
-                                        ->extraAttributes([
-                                            'wire:click' => 'currentActiveTab',
-                                        ])
+                                        // Removed miswired Livewire handler; tab selection is tracked via form state and query string
                                         ->persistTabInQueryString(),
                                     Section::make()
                                         ->schema([
