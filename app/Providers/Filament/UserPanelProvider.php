@@ -37,6 +37,7 @@ class UserPanelProvider extends PanelProvider
             ->brandLogo(fn() => view('filament.logo'))
             ->brandLogoHeight('2.5rem')
             ->favicon(getFaviconUrl())
+            ->viteTheme('resources/css/filament/user/theme.css')
             ->colors([
                 'primary' => Color::Purple,
                 'sky' => Color::Sky,
