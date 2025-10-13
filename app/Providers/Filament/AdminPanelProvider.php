@@ -73,6 +73,10 @@ class AdminPanelProvider extends PanelProvider
                 .fi .opacity-70, .fi .opacity-60, .fi .opacity-50, .fi .opacity-40, .fi .opacity-30 { opacity: 1 !important; }
                 /* Sidebar/menu readability */
                 .fi-sidebar, .fi-sidebar .fi-sidebar-item, .fi-topbar { opacity: 1 !important; }
+                /* Stats overview (top faded cards) */
+                .fi .fi-wi-stats-overview-stat, .fi .fi-wi-stats-overview-stat * { opacity: 1 !important; color: #111827 !important; }
+                .fi .fi-wi-stats-overview-stat svg { color: #6b7280 !important; opacity: 1 !important; }
+                .fi .fi-wi-stats-overview-stat .fi-card { background-color: #ffffff !important; }
             </style>'
         );
 
