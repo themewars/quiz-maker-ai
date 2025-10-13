@@ -263,7 +263,7 @@ class Quiz extends Model implements HasMedia
                                             ->searchable()
                                             ->required()
                                             ->preload()
-                                            ->native(false)
+                                            ->native(true)
                                     ]),
                                     Section::make()
                                         ->schema([
@@ -291,7 +291,7 @@ class Quiz extends Model implements HasMedia
                                                 ->required()
                                                 ->preload()
                                                 ->live()
-                                                ->native(false)
+                                                ->native(true)
                                                 ->placeholder(__('messages.quiz.select_question'))
                                                 ->validationAttribute(__('messages.quiz.question_type')),
                                             Select::make('diff_level')
@@ -301,7 +301,7 @@ class Quiz extends Model implements HasMedia
                                                 ->required()
                                                 ->searchable()
                                                 ->preload()
-                                                ->native(false)
+                                                ->native(true)
                                                 ->placeholder(__('messages.quiz.select_difficulty'))
                                                 ->validationAttribute(__('messages.quiz.difficulty')),
                                             TextInput::make('max_questions')
@@ -337,7 +337,7 @@ class Quiz extends Model implements HasMedia
                                                 ->options(getAllLanguages())
                                                 ->preload()
                                                 ->searchable()
-                                                ->native(false)
+                                                ->native(true)
                                                 ->default('en')
                                                 ->validationAttribute(__('messages.home.language'))
                                         ])
