@@ -9,4 +9,52 @@
 /* Keep text readable on light theme */
 .fi .fi-heading, .fi .fi-section-header, .fi .fi-stats-overview-stat-value, .fi .fi-stats-overview-stat-description { color: #111827; opacity: 1 }
 
+/* Layout & backgrounds */
+body.fi-body { background-color: #f5f7fb; }
+.fi .fi-main > section { background-color: #ffffff; }
+
+/* Topbar */
+.fi .fi-topbar { background-color: #ffffff; border-bottom: 1px solid #eef2f7; }
+.fi .fi-topbar .fi-user-menu-trigger { border-color: transparent; }
+
+/* Sidebar */
+.fi .fi-sidebar { background-color: #ffffff; border-right: 1px solid #eef2f7; }
+.fi .fi-sidebar .fi-sidebar-item a { color: #374151; }
+.fi .fi-sidebar .fi-sidebar-item a:hover { background-color: #f3f4f6; }
+
+/* Cards/Sections/Widgets */
+.fi .fi-card,
+.fi .fi-section,
+.fi .fi-widget,
+.fi .fi-simple-main > div { 
+    background-color: #ffffff; 
+    border: 1px solid #eef2f7; 
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+/* Tables */
+.fi table { background-color: #ffffff; }
+.fi table thead th { background-color: #f9fafb; color: #111827; }
+.fi table tbody tr { background-color: #ffffff; }
+.fi table tbody tr:nth-child(odd) { background-color: #fcfdff; }
+
+/* Inputs */
+.fi input,
+.fi select,
+.fi textarea { background-color: #ffffff; }
+
+/* ApexCharts (widgets) */
+.fi .apexcharts-tooltip, 
+.fi .apexcharts-menu { color: #111827; }
+.fi .apexcharts-legend-text { color: #111827 !important; }
+
+/* Small utilities to prevent global CSS bleed */
+.fi svg { width: 20px !important; height: 20px !important; line-height: 1 !important; display: inline-block !important; }
+.fi .fi-input-wrp svg { width: 16px !important; height: 16px !important; }
+.fi .fi-brand svg, .fi .fi-logo svg { width: auto !important; height: auto !important; }
+.fi .fi-topbar img, .fi .fi-sidebar img, .fi .filament-language-switch img { 
+    width: 20px !important; height: 14px !important; object-fit: contain !important; display: inline-block !important; max-width: none !important; 
+}
+.fi .fi-action-icon img, .fi .fi-table img { width: 20px !important; height: 20px !important; object-fit: contain !important; }
+
 
