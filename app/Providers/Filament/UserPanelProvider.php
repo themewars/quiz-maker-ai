@@ -64,7 +64,6 @@ class UserPanelProvider extends PanelProvider
                     ->sort(UserSidebar::MANAGE_SUBSCRIPTION->value)
                     ->isActiveWhen(fn() => request()->routeIs('filament.user.pages.manage-subscription')),
             ])
-            ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => view('filament.user.styles'))
             ->discoverWidgets(in: app_path('Filament/User/Widgets'), for: 'App\\Filament\\User\\Widgets')
             ->middleware([
                 EncryptCookies::class,
