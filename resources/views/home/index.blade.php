@@ -4,6 +4,10 @@
     {{ __('messages.home.home') }}
 @endsection
 
+@section('meta_description')
+    Create AI-powered exams and quizzes instantly from PDFs, websites, and documents. Transform your content into interactive learning experiences with ExamGenerator AI - the smart way to generate educational assessments.
+@endsection
+
 @section('content')
 
     <main>

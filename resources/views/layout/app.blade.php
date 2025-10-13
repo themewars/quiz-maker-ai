@@ -12,7 +12,7 @@
     </title>
     <meta name="keywords" content="{{ !empty(getSetting()->seo_keywords) ? str_replace('QuizWhiz', 'ExamGenerator', getSetting()->seo_keywords) : str_replace('QuizWhiz', 'ExamGenerator', getAppName()) }}">
     <meta name="description"
-        content="{{ !empty(getSetting()->seo_description) ? getSetting()->seo_description : 'ExamGenerator AI is an intelligent platform that instantly converts PDFs and web content into engaging exams, multiple choice questions, and interactive polls for education and training.' }}">
+        content="@hasSection('meta_description')@yield('meta_description')@else{{ !empty(getSetting()->seo_description) ? getSetting()->seo_description : 'ExamGenerator AI is an intelligent platform that instantly converts PDFs and web content into engaging exams, multiple choice questions, and interactive polls for education and training.' }}@endif">
 
     <link rel="icon" type="image/png" href="{{ getFaviconUrl() }}" />
     <link

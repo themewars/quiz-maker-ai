@@ -1,6 +1,10 @@
 @extends('layout.app')
 
-@section('title', 'Pricing Plans - QuizWhiz AI')
+@section('title', 'Pricing Plans - ExamGenerator AI')
+
+@section('meta_description')
+    Choose the perfect ExamGenerator AI plan for your needs. Compare pricing, features, and benefits. Start with our free plan or upgrade to premium features for unlimited exams, advanced AI capabilities, and priority support.
+@endsection
 
 @section('content')
 <main>
