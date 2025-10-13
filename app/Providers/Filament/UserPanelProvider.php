@@ -64,6 +64,8 @@ class UserPanelProvider extends PanelProvider
                     ->sort(UserSidebar::MANAGE_SUBSCRIPTION->value)
                     ->isActiveWhen(fn() => request()->routeIs('filament.user.pages.manage-subscription')),
             ])
+            ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
+            ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverWidgets(in: app_path('Filament/User/Widgets'), for: 'App\\Filament\\User\\Widgets')
             ->middleware([
                 EncryptCookies::class,
