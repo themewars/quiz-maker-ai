@@ -346,16 +346,7 @@ class Quiz extends Model implements HasMedia
                                 ->schema([
                                     Tabs::make('Tabs')
                                         ->tabs([
-                                            Tab::make('Prompt')
-                                                ->label('Prompt')
-                                                ->schema([
-                                                    Textarea::make('custom_prompt')
-                                                        ->label('Prompt:')
-                                                        ->placeholder('Describe exactly what the exam should contain (topics, tone, constraints)')
-                                                        ->helperText('Optional: AI will prioritize this instruction if provided.')
-                                                        ->rows(4)
-                                                        ->cols(10),
-                                                ])->id('prompt-tab'),
+                                            
                                             Tab::make('Text')
                                                 ->label(__('messages.quiz.text'))
                                                 ->schema([

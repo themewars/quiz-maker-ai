@@ -624,7 +624,7 @@ if (! function_exists('getTabType')) {
 
         $tabType = [
             // Treat Prompt tab as Text-based generation
-            '-prompt-tab-tab' => Quiz::TEXT_TYPE,
+            
             '-subject-tab' => Quiz::SUBJECT_TYPE,
             '-text-tab' => Quiz::TEXT_TYPE,
             '-url-tab' => Quiz::URL_TYPE,

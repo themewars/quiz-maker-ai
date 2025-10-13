@@ -149,7 +149,6 @@ class CreateQuizzes extends CreateRecord
         $description = $descriptionFields[$activeTab] ?? null;
 
         // Allow proceeding if a custom prompt is provided even when description fields are empty
-        $hasCustomPrompt = !empty(trim((string)($data['custom_prompt'] ?? '')));
         if (empty($description) && empty($this->data['file_upload']) && !$hasCustomPrompt) {
             Notification::make()
                 ->danger()
@@ -320,10 +319,7 @@ class CreateQuizzes extends CreateRecord
             'language' => getAllLanguages()[$data['language']] ?? 'English',
         ];
 
-        $userCustomPrompt = trim((string)($data['custom_prompt'] ?? ''));
-        if (strlen($userCustomPrompt) > 1000) {
-            $userCustomPrompt = substr($userCustomPrompt, 0, 1000);
-        }
+        $userCustomPrompt = '';
 
         $prompt = <<<PROMPT
 
@@ -351,9 +347,6 @@ class CreateQuizzes extends CreateRecord
     - For Single Choice, Multiple Choice, and True/False questions, you MUST include the answers array with proper options.
     - Do NOT create questions without answers unless they are specifically Open Ended questions.
     - Each answer must have a "title" field and an "is_correct" field (true/false).
-
-    **If the user provided a custom prompt, follow it strictly (overrides defaults):**
-    {$userCustomPrompt}
 
     **Instructions:**
 
