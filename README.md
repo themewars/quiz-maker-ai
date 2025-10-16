@@ -64,3 +64,17 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Development Workflow (Examgenerator Development)
+
+To safely build new features before going live, use the dedicated local development copy:
+
+- Local development path (example):
+  `C:\Users\<your-user>\OneDrive\Desktop\Examgenerator Development\QuizWhiz AI v1.2.0\QuizWhiz AI v1.2.0\dist\quiz-master`
+
+- Process:
+  1. Add and test new features in the development copy first.
+  2. Once features are verified locally, copy/apply those changes to this project repository.
+  3. Commit and push the changes to Git. The live site will pull from Git to receive the new features.
+
+This ensures production remains stable while you iterate quickly in the development folder.
