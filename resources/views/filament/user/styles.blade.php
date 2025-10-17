@@ -11,12 +11,37 @@ button * { color: white !important; }
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function forceWhiteText() {
-        const buttons = document.querySelectorAll('button, [class*="fi-btn"], [class*="fi-ac-btn"]');
-        buttons.forEach(button => {
-            button.style.color = 'white !important';
-            const children = button.querySelectorAll('*');
-            children.forEach(child => {
-                child.style.color = 'white !important';
+        // Target all possible button selectors
+        const selectors = [
+            'button',
+            '[class*="fi-btn"]',
+            '[class*="fi-ac-btn"]',
+            '[class*="fi-fo-actions"] button',
+            '.fi-btn',
+            '.fi-ac-btn',
+            'button[type="submit"]',
+            'button[type="button"]',
+            'a[role="button"]',
+            '[data-color="primary"]',
+            '[data-color="success"]',
+            '[data-color="warning"]',
+            '[data-color="info"]',
+            '[data-color="gray"]'
+        ];
+        
+        selectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                // Force white text on element
+                element.style.setProperty('color', 'white', 'important');
+                element.style.setProperty('--tw-text-opacity', '1', 'important');
+                
+                // Force white text on all children
+                const children = element.querySelectorAll('*');
+                children.forEach(child => {
+                    child.style.setProperty('color', 'white', 'important');
+                    child.style.setProperty('--tw-text-opacity', '1', 'important');
+                });
             });
         });
     }
@@ -24,13 +49,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run immediately
     forceWhiteText();
     
-    // Run after a delay to catch dynamically loaded buttons
+    // Run multiple times to catch all buttons
+    setTimeout(forceWhiteText, 100);
+    setTimeout(forceWhiteText, 500);
     setTimeout(forceWhiteText, 1000);
-    setTimeout(forceWhiteText, 3000);
+    setTimeout(forceWhiteText, 2000);
+    setTimeout(forceWhiteText, 5000);
     
     // Run when DOM changes
-    const observer = new MutationObserver(forceWhiteText);
-    observer.observe(document.body, { childList: true, subtree: true });
+    const observer = new MutationObserver(function(mutations) {
+        let shouldRun = false;
+        mutations.forEach(mutation => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                shouldRun = true;
+            }
+        });
+        if (shouldRun) {
+            setTimeout(forceWhiteText, 100);
+        }
+    });
+    
+    observer.observe(document.body, { 
+        childList: true, 
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+    
+    // Also run on window load
+    window.addEventListener('load', forceWhiteText);
 });
 </script>
 
