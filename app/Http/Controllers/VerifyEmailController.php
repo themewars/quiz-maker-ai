@@ -17,7 +17,7 @@ class VerifyEmailController extends Controller
                 ->success()
                 ->title(__('messages.home.email_already_verified'))
                 ->send();
-            return redirect()->route('filament.auth.pages.login');
+            return redirect()->route('login');
         }
 
         if ($user->markEmailAsVerified()) {
@@ -25,13 +25,13 @@ class VerifyEmailController extends Controller
                 ->success()
                 ->title(__('messages.home.your_email_verified_success'))
                 ->send();
-            return redirect()->route('filament.auth.pages.login');
+            return redirect()->route('login');
         }
 
         Notification::make()
             ->danger()
             ->title(__('messages.home.your_email_verification_failed'))
             ->send();
-        return redirect()->route('filament.auth.pages.login');
+        return redirect()->route('login');
     }
 }
