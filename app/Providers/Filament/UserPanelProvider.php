@@ -91,7 +91,7 @@ class UserPanelProvider extends PanelProvider
     public function register(): void
     {
         parent::register();
-        FilamentView::registerRenderHook('panels::body.end', fn(): string => Filament::getCurrentPanel()?->getId() === 'user' ? Blade::render("@vite('resources/css/user.scss')") : '');
+        FilamentView::registerRenderHook('panels::body.end', fn(): string => Filament::getCurrentPanel()?->getId() === 'user' ? Blade::render("@vite('resources/css/admin.scss')") : '');
         FilamentView::registerRenderHook('panels::body.end', fn(): string => Blade::render("@vite('resources/js/app.js')"));
     }
 
