@@ -1,48 +1,24 @@
 <style>
-/* Targeted button text color fixes - Only for colored buttons */
-.fi-btn-primary, .fi-btn-primary * { color: white !important; }
-.fi-btn-success, .fi-btn-success * { color: white !important; }
-.fi-btn-warning, .fi-btn-warning * { color: white !important; }
-.fi-btn-info, .fi-btn-info * { color: white !important; }
-.fi-btn-danger, .fi-btn-danger * { color: white !important; }
-
-/* Action buttons with colors */
-.fi-ac-btn-primary, .fi-ac-btn-primary * { color: white !important; }
-.fi-ac-btn-success, .fi-ac-btn-success * { color: white !important; }
-.fi-ac-btn-warning, .fi-ac-btn-warning * { color: white !important; }
-.fi-ac-btn-info, .fi-ac-btn-info * { color: white !important; }
-.fi-ac-btn-danger, .fi-ac-btn-danger * { color: white !important; }
-
-/* Form action buttons with colors */
+/* Specific targeting for exam edit page buttons only */
 .fi-fo-actions .fi-btn-primary, .fi-fo-actions .fi-btn-primary * { color: white !important; }
 .fi-fo-actions .fi-btn-success, .fi-fo-actions .fi-btn-success * { color: white !important; }
 .fi-fo-actions .fi-btn-warning, .fi-fo-actions .fi-btn-warning * { color: white !important; }
 .fi-fo-actions .fi-btn-info, .fi-fo-actions .fi-btn-info * { color: white !important; }
 .fi-fo-actions .fi-btn-danger, .fi-fo-actions .fi-btn-danger * { color: white !important; }
 
-/* Specific targeting for fi-btn-label in colored buttons */
-.fi-btn-primary .fi-btn-label, .fi-btn-primary .fi-btn-label * { color: white !important; }
-.fi-btn-success .fi-btn-label, .fi-btn-success .fi-btn-label * { color: white !important; }
-.fi-btn-warning .fi-btn-label, .fi-btn-warning .fi-btn-label * { color: white !important; }
-.fi-btn-info .fi-btn-label, .fi-btn-info .fi-btn-label * { color: white !important; }
-.fi-btn-danger .fi-btn-label, .fi-btn-danger .fi-btn-label * { color: white !important; }
+/* Specific targeting for fi-btn-label in form action buttons */
+.fi-fo-actions .fi-btn-primary .fi-btn-label, .fi-fo-actions .fi-btn-primary .fi-btn-label * { color: white !important; }
+.fi-fo-actions .fi-btn-success .fi-btn-label, .fi-fo-actions .fi-btn-success .fi-btn-label * { color: white !important; }
+.fi-fo-actions .fi-btn-warning .fi-btn-label, .fi-fo-actions .fi-btn-warning .fi-btn-label * { color: white !important; }
+.fi-fo-actions .fi-btn-info .fi-btn-label, .fi-fo-actions .fi-btn-info .fi-btn-label * { color: white !important; }
+.fi-fo-actions .fi-btn-danger .fi-btn-label, .fi-fo-actions .fi-btn-danger .fi-btn-label * { color: white !important; }
 
-/* JavaScript to force white text on colored buttons only */
+/* JavaScript to force white text on form action buttons only */
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    function forceWhiteTextOnColoredButtons() {
-        // Target only colored buttons
-        const coloredButtonSelectors = [
-            '.fi-btn-primary',
-            '.fi-btn-success', 
-            '.fi-btn-warning',
-            '.fi-btn-info',
-            '.fi-btn-danger',
-            '.fi-ac-btn-primary',
-            '.fi-ac-btn-success',
-            '.fi-ac-btn-warning', 
-            '.fi-ac-btn-info',
-            '.fi-ac-btn-danger',
+    function forceWhiteTextOnFormActionButtons() {
+        // Target only form action buttons (exam edit page)
+        const formActionButtonSelectors = [
             '.fi-fo-actions .fi-btn-primary',
             '.fi-fo-actions .fi-btn-success',
             '.fi-fo-actions .fi-btn-warning',
@@ -50,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             '.fi-fo-actions .fi-btn-danger'
         ];
         
-        coloredButtonSelectors.forEach(selector => {
+        formActionButtonSelectors.forEach(selector => {
             const elements = document.querySelectorAll(selector);
             elements.forEach(element => {
                 // Force white text on element
@@ -68,12 +44,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Run immediately
-    forceWhiteTextOnColoredButtons();
+    forceWhiteTextOnFormActionButtons();
     
     // Run after delays
-    setTimeout(forceWhiteTextOnColoredButtons, 500);
-    setTimeout(forceWhiteTextOnColoredButtons, 1000);
-    setTimeout(forceWhiteTextOnColoredButtons, 2000);
+    setTimeout(forceWhiteTextOnFormActionButtons, 500);
+    setTimeout(forceWhiteTextOnFormActionButtons, 1000);
+    setTimeout(forceWhiteTextOnFormActionButtons, 2000);
     
     // Run when DOM changes
     const observer = new MutationObserver(function(mutations) {
@@ -84,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         if (shouldRun) {
-            setTimeout(forceWhiteTextOnColoredButtons, 100);
+            setTimeout(forceWhiteTextOnFormActionButtons, 100);
         }
     });
     
@@ -96,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Run on window load
-    window.addEventListener('load', forceWhiteTextOnColoredButtons);
+    window.addEventListener('load', forceWhiteTextOnFormActionButtons);
 });
 </script>
 
