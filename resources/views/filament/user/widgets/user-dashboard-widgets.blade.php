@@ -4,7 +4,18 @@
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
             <!-- Create Quiz Button -->
             <a href="{{ route('filament.user.resources.quizzes.create', ['tab' => 'text-tab']) }}" 
-               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+               class="inline-flex items-center gap-2 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+               style="
+                    padding:12px 20px;
+                    background: linear-gradient(90deg,#8b5cf6 0%, #7c3aed 100%);
+                    color:#ffffff; 
+                    font-weight:600; 
+                    border-radius:12px; 
+                    box-shadow:0 8px 24px rgba(123,58,237,.35);
+                    text-decoration:none;
+                    opacity:1; 
+                    filter:none; 
+               ">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -13,7 +24,18 @@
             
             <!-- View Quizzes Button -->
             <a href="{{ route('filament.user.resources.quizzes.index') }}" 
-               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+               class="inline-flex items-center gap-2 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+               style="
+                    padding:12px 20px;
+                    background: linear-gradient(90deg,#3b82f6 0%, #2563eb 100%);
+                    color:#ffffff; 
+                    font-weight:600; 
+                    border-radius:12px; 
+                    box-shadow:0 8px 24px rgba(37,99,235,.35);
+                    text-decoration:none;
+                    opacity:1; 
+                    filter:none; 
+               ">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -22,7 +44,18 @@
             
             <!-- Manage Subscription Button -->
             <a href="{{ route('filament.user.pages.manage-subscription') }}" 
-               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg shadow-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+               class="inline-flex items-center gap-2 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+               style="
+                    padding:12px 20px;
+                    background: linear-gradient(90deg,#10b981 0%, #059669 100%);
+                    color:#ffffff; 
+                    font-weight:600; 
+                    border-radius:12px; 
+                    box-shadow:0 8px 24px rgba(5,150,105,.35);
+                    text-decoration:none;
+                    opacity:1; 
+                    filter:none; 
+               ">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                 </svg>
