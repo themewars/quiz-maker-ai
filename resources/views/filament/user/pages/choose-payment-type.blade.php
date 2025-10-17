@@ -284,7 +284,7 @@
                     @elseif ($paymentType == 1)
                         <input type="hidden" id="planInput" name="plan" value='@json($plan)'>
                         <div class="pt-4 flex justify-center">
-                            <x-filament::button wire:loading.attr="disabled" type="submit" class="px-4"
+                            <x-filament::button wire:loading.attr="disabled" type="button" class="px-4"
                                 id="razorpayPayment">
                                 <span class="flex justify-center">
                                     <svg wire:loading aria-hidden="true" role="status"
@@ -447,6 +447,7 @@
 
 @push('scripts')
 @vite('resources/js/razorpay-checkout.js')
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
 <script>
     $(document).ready(function() {
@@ -456,9 +457,19 @@
 
         listenClick('#razorpayPayment', function(e) {
             e.preventDefault();
+            console.log('Razorpay button clicked');
             let planInput = $('#planInput').val();
             let plan = JSON.parse(planInput);
+            if (!plan || !plan.name) {
+                console.error('Plan payload missing or invalid', plan);
+                return;
+            }
 
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
             $.ajax({
                 url: "{{ route('razorpay.purchase') }}",
                 type: "POST",
@@ -467,11 +478,11 @@
                 data: JSON.stringify({
                     plan: plan
                 }),
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                        .getAttribute('content')
-                },
                 success: function(result) {
+                    if (typeof Razorpay === 'undefined') {
+                        console.error('Razorpay SDK not loaded');
+                        return;
+                    }
                     const options = {
                         key: "{{ getPaymentSetting()->razorpay_key }}",
                         amount: result.data.payable_amount * 100,
@@ -493,11 +504,6 @@
                                     razorpay_signature: response
                                         .razorpay_signature
                                 }),
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector(
-                                            'meta[name="csrf-token"]')
-                                        .getAttribute('content')
-                                },
                                 success: function(result) {
                                     new FilamentNotification()
                                         .title(result.message)
@@ -522,6 +528,9 @@
                     };
                     const rzp = new Razorpay(options);
                     rzp.open();
+                },
+                error: function(xhr) {
+                    console.error('Razorpay purchase error', xhr?.responseText || xhr);
                 }
             });
         });
