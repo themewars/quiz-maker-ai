@@ -13,22 +13,28 @@
 
 .sponsored-card-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
-.sponsored-card-header h3 {
-  margin: 0;
+.sponsored-text {
+  flex: 1;
+}
+
+.sponsored-text h3 {
+  margin: 0 0 8px 0;
   font-size: 20px;
   color: #e5e7eb;
+  font-weight: 600;
 }
 
-.sponsored-card-header p {
+.sponsored-text p {
   margin: 0;
   color: #9ca3af;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .sponsored-logos {
@@ -53,6 +59,27 @@
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive design for sponsored section */
+@media (max-width: 768px) {
+  .sponsored-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .sponsored-text h3 {
+    font-size: 18px;
+  }
+  
+  .sponsored-text p {
+    font-size: 13px;
+  }
+  
+  .sponsored-logos {
+    justify-content: flex-start;
+  }
 }
 /* Base Styles */
 :root {

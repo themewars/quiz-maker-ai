@@ -1277,8 +1277,10 @@
 
                 <div class="sponsored-card">
                     <div class="sponsored-card-header">
-                        <h3>Sponsored by</h3>
-                        <p>We appreciate our partners and directories supporting ExamGenerator.</p>
+                        <div class="sponsored-text">
+                            <h3>Sponsored by</h3>
+                            <p>We appreciate our partners and directories supporting ExamGenerator.</p>
+                        </div>
                     </div>
                     <div class="sponsored-logos">
                         @foreach ($sponsors as $sp)
