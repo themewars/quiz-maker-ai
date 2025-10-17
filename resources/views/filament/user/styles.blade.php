@@ -23,5 +23,80 @@ div[x-portal-root], .fi-portal, .fi-dropdown {
 [x-data] {
     transform: none !important;
 }
+
+/* Filament Button Text Color Override */
+.fi-btn {
+    color: white !important;
+}
+
+.fi-btn-primary {
+    color: white !important;
+}
+
+.fi-btn-success {
+    color: white !important;
+}
+
+.fi-btn-warning {
+    color: white !important;
+}
+
+.fi-btn-info {
+    color: white !important;
+}
+
+.fi-btn-gray {
+    color: white !important;
+}
+
+/* Action buttons specific styling */
+.fi-ac-btn {
+    color: white !important;
+}
+
+.fi-ac-btn-primary {
+    color: white !important;
+}
+
+.fi-ac-btn-success {
+    color: white !important;
+}
+
+.fi-ac-btn-warning {
+    color: white !important;
+}
+
+.fi-ac-btn-info {
+    color: white !important;
+}
+
+.fi-ac-btn-gray {
+    color: white !important;
+}
+
+/* Form action buttons */
+.fi-fo-actions .fi-btn {
+    color: white !important;
+}
+
+.fi-fo-actions .fi-btn-primary {
+    color: white !important;
+}
+
+.fi-fo-actions .fi-btn-success {
+    color: white !important;
+}
+
+.fi-fo-actions .fi-btn-warning {
+    color: white !important;
+}
+
+.fi-fo-actions .fi-btn-info {
+    color: white !important;
+}
+
+.fi-fo-actions .fi-btn-gray {
+    color: white !important;
+}
 </style>
 
