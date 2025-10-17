@@ -7,6 +7,12 @@
 button { color: white !important; }
 button * { color: white !important; }
 
+/* Specific targeting for fi-btn-label */
+.fi-btn-label { color: white !important; }
+.fi-btn-label * { color: white !important; }
+*[class*="fi-btn-label"] { color: white !important; }
+*[class*="fi-btn-label"] * { color: white !important; }
+
 /* JavaScript to force white text on buttons */
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -19,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
             '[class*="fi-fo-actions"] button',
             '.fi-btn',
             '.fi-ac-btn',
+            '.fi-btn-label',
+            '[class*="fi-btn-label"]',
             'button[type="submit"]',
             'button[type="button"]',
             'a[role="button"]',
