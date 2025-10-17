@@ -34,6 +34,91 @@
 .fi-btn[style*="color"], .fi-ac-btn[style*="color"] { color: white !important; }
 .fi-btn[style*="color"] *, .fi-ac-btn[style*="color"] * { color: white !important; }
 
+/* JavaScript to force white text on buttons - Ultimate Solution */
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function forceWhiteTextOnButtons() {
+        // Target ALL possible button elements
+        const buttonSelectors = [
+            '.fi-btn',
+            '.fi-btn-primary',
+            '.fi-btn-success',
+            '.fi-btn-warning',
+            '.fi-btn-info',
+            '.fi-btn-danger',
+            '.fi-btn-gray',
+            '.fi-ac-btn',
+            '.fi-ac-btn-primary',
+            '.fi-ac-btn-success',
+            '.fi-ac-btn-warning',
+            '.fi-ac-btn-info',
+            '.fi-ac-btn-danger',
+            '.fi-ac-btn-gray',
+            '.fi-fo-actions .fi-btn',
+            '.fi-fo-actions .fi-btn-primary',
+            '.fi-fo-actions .fi-btn-success',
+            '.fi-fo-actions .fi-btn-warning',
+            '.fi-fo-actions .fi-btn-info',
+            '.fi-fo-actions .fi-btn-danger',
+            '.fi-fo-actions .fi-btn-gray'
+        ];
+        
+        buttonSelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                // Force white text on element
+                element.style.setProperty('color', 'white', 'important');
+                element.style.setProperty('--tw-text-opacity', '1', 'important');
+                
+                // Force white text on all children
+                const children = element.querySelectorAll('*');
+                children.forEach(child => {
+                    child.style.setProperty('color', 'white', 'important');
+                    child.style.setProperty('--tw-text-opacity', '1', 'important');
+                });
+            });
+        });
+    }
+    
+    // Run immediately
+    forceWhiteTextOnButtons();
+    
+    // Run after delays
+    setTimeout(forceWhiteTextOnButtons, 100);
+    setTimeout(forceWhiteTextOnButtons, 500);
+    setTimeout(forceWhiteTextOnButtons, 1000);
+    setTimeout(forceWhiteTextOnButtons, 2000);
+    
+    // Run when DOM changes
+    const observer = new MutationObserver(function(mutations) {
+        let shouldRun = false;
+        mutations.forEach(mutation => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                shouldRun = true;
+            }
+        });
+        if (shouldRun) {
+            setTimeout(forceWhiteTextOnButtons, 100);
+        }
+    });
+    
+    observer.observe(document.body, { 
+        childList: true, 
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+    
+    // Run on window load
+    window.addEventListener('load', forceWhiteTextOnButtons);
+    
+    // Run on any click (in case buttons are dynamically created)
+    document.addEventListener('click', function() {
+        setTimeout(forceWhiteTextOnButtons, 100);
+    });
+});
+</script>
+
 /* Ensure Filament select dropdown panels are visible above content */
 .fi-dropdown-panel, .choices__list--dropdown, .fi-fo-select .fi-input-wrp > div[role="listbox"], .fi-fo-select .fi-select-panel {
     z-index: 9999 !important;
