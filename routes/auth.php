@@ -28,10 +28,25 @@ Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify']
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
+})->name('verification.notice');
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
 
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+// Route for resending verification without auth (for unverified users)
+Route::post('/email/resend-verification', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email|exists:users,email'
+    ]);
+    
+    $user = \App\Models\User::where('email', $request->email)->first();
+    if ($user && !$user->hasVerifiedEmail()) {
+        $user->sendEmailVerificationNotification();
+        return back()->with('status', 'verification-link-sent');
+    }
+    
+    return back()->with('error', 'Email not found or already verified.');
+})->name('verification.resend');
