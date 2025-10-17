@@ -103,8 +103,8 @@ class CustomRegister extends Register
         event(new Registered($user));
 
         // Auto-verify users for testing / simplified onboarding.
-        // Toggle with env AUTO_VERIFY_USERS=true|false (defaults true for now).
-        if (env('AUTO_VERIFY_USERS', true)) {
+        // Toggle with env AUTO_VERIFY_USERS=true|false (defaults false for security).
+        if (env('AUTO_VERIFY_USERS', false)) {
             $user->email_verified_at = now();
             $user->save();
             $msg = __('messages.user.register_successfully');
@@ -125,6 +125,11 @@ class CustomRegister extends Register
 
         // Auto-login and redirect to dashboard based on user role
         auth()->login($user);
+
+        // If user is not verified, redirect to verification page
+        if (!$user->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice')->with('status', 'Please verify your email address to continue.');
+        }
 
         // Force redirect to user dashboard after registration
         return redirect()->route('filament.user.pages.dashboard');

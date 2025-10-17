@@ -38,10 +38,15 @@ class RegisterController extends Controller
         // Create default subscription
         $this->createDefaultSubscription($user);
 
-        // Send email verification notification (disabled for now due to mail server issues)
-        // $user->sendEmailVerificationNotification();
+        // Send email verification notification
+        $user->sendEmailVerificationNotification();
 
         auth()->login($user);
+
+        // If user is not verified, redirect to verification page
+        if (!$user->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice')->with('status', 'Please verify your email address to continue.');
+        }
 
         return redirect($this->redirectTo)->with('status', 'Registration successful! Welcome to ' . getAppName() . '.');
     }
@@ -62,7 +67,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'status' => true,
-            'email_verified_at' => now(), // Auto-verify email for now
+            // email_verified_at will be null by default - user must verify
         ]);
     }
 
