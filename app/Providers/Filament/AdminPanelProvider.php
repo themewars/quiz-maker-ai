@@ -3,6 +3,10 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\CustomEditProfile;
+use App\Filament\Pages\Auth\CustomLogin;
+use App\Filament\Pages\Auth\CustomRegister;
+use App\Filament\Pages\Auth\CustomRequestPasswordReset;
+use App\Filament\Pages\Auth\CustomResetPassword;
 use App\Http\Middleware\RedirectAuthenticated;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -41,6 +45,10 @@ class AdminPanelProvider extends PanelProvider
             ->breadcrumbs(false)
             ->sidebarCollapsibleOnDesktop()
             ->profile(CustomEditProfile::class, isSimple: false)
+            ->login(CustomLogin::class)
+            ->registration(CustomRegister::class)
+            ->passwordReset(CustomRequestPasswordReset::class)
+            ->resetPassword(CustomResetPassword::class)
             ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
             ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
