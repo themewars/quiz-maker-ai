@@ -62,8 +62,8 @@ class LoginController extends Controller
                 return redirect()->route('verification.notice')->with('status', 'Please verify your email address to continue.');
             }
             
-            // Use Filament login response for proper redirect
-            return app(\App\Http\Responses\LoginResponse::class)->toResponse($request);
+            // Simple redirect to user dashboard
+            return redirect('/user');
         }
 
         throw ValidationException::withMessages([
