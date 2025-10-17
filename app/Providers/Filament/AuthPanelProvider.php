@@ -37,7 +37,7 @@ class AuthPanelProvider extends PanelProvider
             ->login(CustomLogin::class)
             ->registration(CustomRegister::class)
             ->passwordReset($requestAction = CustomRequestPasswordReset::class, $resetAction = CustomResetPassword::class)
-            ->emailVerification()
+            // ->emailVerification() // Disabled to use custom verification controller
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

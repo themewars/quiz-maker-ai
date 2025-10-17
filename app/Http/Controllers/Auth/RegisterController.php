@@ -38,8 +38,8 @@ class RegisterController extends Controller
         // Create default subscription
         $this->createDefaultSubscription($user);
 
-        // Email verification is handled by Filament's emailVerification() feature
-        // No need to send manually to avoid duplicate emails
+        // Send email verification notification manually since Filament's emailVerification() is disabled
+        $user->sendEmailVerificationNotification();
 
         auth()->login($user);
 

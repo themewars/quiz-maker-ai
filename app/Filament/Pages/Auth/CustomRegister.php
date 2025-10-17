@@ -113,8 +113,8 @@ class CustomRegister extends Register
             }
             Notification::make()->success()->title($msg)->send();
         } else {
-            // Filament's emailVerification() already handles sending verification email
-            // No need to send manually to avoid duplicate emails
+            // Send email verification notification manually since Filament's emailVerification() is disabled
+            $user->sendEmailVerificationNotification();
             Notification::make()
                 ->success()
                 ->title((function(){
