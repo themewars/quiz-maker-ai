@@ -1,4 +1,39 @@
 <style>
+/* Force white text on ALL buttons - Ultimate Override */
+*[class*="fi-btn"] { color: white !important; }
+*[class*="fi-btn"] * { color: white !important; }
+*[class*="fi-ac-btn"] { color: white !important; }
+*[class*="fi-ac-btn"] * { color: white !important; }
+button { color: white !important; }
+button * { color: white !important; }
+
+/* JavaScript to force white text on buttons */
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function forceWhiteText() {
+        const buttons = document.querySelectorAll('button, [class*="fi-btn"], [class*="fi-ac-btn"]');
+        buttons.forEach(button => {
+            button.style.color = 'white !important';
+            const children = button.querySelectorAll('*');
+            children.forEach(child => {
+                child.style.color = 'white !important';
+            });
+        });
+    }
+    
+    // Run immediately
+    forceWhiteText();
+    
+    // Run after a delay to catch dynamically loaded buttons
+    setTimeout(forceWhiteText, 1000);
+    setTimeout(forceWhiteText, 3000);
+    
+    // Run when DOM changes
+    const observer = new MutationObserver(forceWhiteText);
+    observer.observe(document.body, { childList: true, subtree: true });
+});
+</script>
+
 /* Ensure Filament select dropdown panels are visible above content */
 .fi-dropdown-panel, .choices__list--dropdown, .fi-fo-select .fi-input-wrp > div[role="listbox"], .fi-fo-select .fi-select-panel {
     z-index: 9999 !important;
