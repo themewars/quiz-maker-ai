@@ -39,7 +39,7 @@ class LoginResponse implements LoginResponseContract
 
             if ($role && $role->name === User::USER_ROLE) {
                 \Log::info('LoginResponse - Redirecting to user dashboard');
-                return redirect()->route('filament.user.pages.dashboard');
+                return redirect('/user');
             }
         }
 
