@@ -55,7 +55,7 @@ class UserPanelProvider extends PanelProvider
             ->login(CustomLogin::class)
             ->registration(CustomRegister::class)
             ->passwordReset(CustomRequestPasswordReset::class)
-            ->resetPassword(CustomResetPassword::class)
+            ->passwordReset(CustomResetPassword::class)
             ->renderHook(PanelsRenderHook::BODY_END, fn() => Blade::render('@livewire(\'change-password-modal\')'))
             ->renderHook('panels::user-menu.profile.after', fn() => $this->changePassword())
             ->discoverResources(in: app_path('Filament/User/Resources'), for: 'App\\Filament\\User\\Resources')
