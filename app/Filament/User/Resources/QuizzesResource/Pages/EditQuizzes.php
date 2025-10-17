@@ -395,6 +395,7 @@ class EditQuizzes extends EditRecord
             Action::make('save')
                 ->label('Save changes')
                 ->color('primary')
+                ->extraAttributes(['style' => 'color: white !important;'])
                 ->form([
                     \Filament\Forms\Components\Placeholder::make('review_confirmation')
                         ->label('Review Confirmation')
@@ -406,6 +407,7 @@ class EditQuizzes extends EditRecord
             Action::make('addMoreQuestions')
                 ->label('Add More Questions With AI')
                 ->color('success')
+                ->extraAttributes(['style' => 'color: white !important;'])
                 ->form([
                     \Filament\Forms\Components\TextInput::make('count')
                         ->label('Number of Questions to Add')
@@ -424,6 +426,7 @@ class EditQuizzes extends EditRecord
             Action::make('regenerate')
                 ->label(__('messages.common.re_generate'))
                 ->color('warning')
+                ->extraAttributes(['style' => 'color: white !important;'])
                 ->modalHeading('Re-Generate Questions')
                 ->form([
                     \Filament\Forms\Components\Placeholder::make('limits_dynamic')
@@ -461,6 +464,7 @@ class EditQuizzes extends EditRecord
             Action::make('addQuestionManual')
                 ->label('Add Question Manual')
                 ->color('info')
+                ->extraAttributes(['style' => 'color: white !important;'])
                 ->action(function() { 
                     // Prepare default answers based on current quiz question type
                     $state = is_array($this->data) ? $this->data : $this->form->getState();
@@ -500,17 +504,18 @@ class EditQuizzes extends EditRecord
             Action::make('cancel')
                 ->label(__('messages.common.cancel'))
                 ->color('gray')
+                ->extraAttributes(['style' => 'color: white !important;'])
                 ->url(QuizzesResource::getUrl('index')),
 
             // Show after questions are added via AI to guide user to edit
             Action::make('edit_questions')
                 ->label('Edit Questions')
                 ->color('warning')
+                ->extraAttributes(['style' => 'color: white !important; margin-left:8px;'])
                 ->visible(function(){
                     return Session::has('just_added_questions');
                 })
-                ->url(fn() => QuizzesResource::getUrl('edit', ['record' => $this->record?->id]))
-                ->extraAttributes(['style' => 'margin-left:8px;']),
+                ->url(fn() => QuizzesResource::getUrl('edit', ['record' => $this->record?->id])),
 
         ];
     }
