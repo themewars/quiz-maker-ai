@@ -13,52 +13,61 @@ button * { color: white !important; }
 *[class*="fi-btn-label"] { color: white !important; }
 *[class*="fi-btn-label"] * { color: white !important; }
 
-/* JavaScript to force white text on buttons */
+/* JavaScript to force white text on buttons - Ultimate Solution */
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function forceWhiteText() {
-        // Target all possible button selectors
-        const selectors = [
-            'button',
-            '[class*="fi-btn"]',
-            '[class*="fi-ac-btn"]',
-            '[class*="fi-fo-actions"] button',
-            '.fi-btn',
-            '.fi-ac-btn',
-            '.fi-btn-label',
-            '[class*="fi-btn-label"]',
-            'button[type="submit"]',
-            'button[type="button"]',
-            'a[role="button"]',
-            '[data-color="primary"]',
-            '[data-color="success"]',
-            '[data-color="warning"]',
-            '[data-color="info"]',
-            '[data-color="gray"]'
-        ];
+        // Target ALL possible elements that could contain button text
+        const allElements = document.querySelectorAll('*');
         
-        selectors.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(element => {
-                // Force white text on element
+        allElements.forEach(element => {
+            const classes = element.className || '';
+            const tagName = element.tagName.toLowerCase();
+            
+            // Check if this element is a button or has button-related classes
+            if (
+                tagName === 'button' ||
+                tagName === 'a' ||
+                classes.includes('fi-btn') ||
+                classes.includes('fi-ac-btn') ||
+                classes.includes('fi-btn-label') ||
+                classes.includes('btn') ||
+                element.getAttribute('role') === 'button' ||
+                element.getAttribute('type') === 'submit' ||
+                element.getAttribute('type') === 'button'
+            ) {
+                // Force white text with maximum priority
+                element.style.cssText += 'color: white !important;';
                 element.style.setProperty('color', 'white', 'important');
                 element.style.setProperty('--tw-text-opacity', '1', 'important');
                 
-                // Force white text on all children
+                // Also force on all children
                 const children = element.querySelectorAll('*');
                 children.forEach(child => {
+                    child.style.cssText += 'color: white !important;';
                     child.style.setProperty('color', 'white', 'important');
                     child.style.setProperty('--tw-text-opacity', '1', 'important');
                 });
-            });
+            }
+        });
+        
+        // Also target specific text elements
+        const textElements = document.querySelectorAll('span, div, p, label, strong, em');
+        textElements.forEach(element => {
+            const parent = element.closest('button, [class*="fi-btn"], [class*="fi-ac-btn"]');
+            if (parent) {
+                element.style.cssText += 'color: white !important;';
+                element.style.setProperty('color', 'white', 'important');
+            }
         });
     }
     
     // Run immediately
     forceWhiteText();
     
-    // Run multiple times to catch all buttons
-    setTimeout(forceWhiteText, 100);
+    // Run multiple times with different intervals
+    setTimeout(forceWhiteText, 50);
+    setTimeout(forceWhiteText, 200);
     setTimeout(forceWhiteText, 500);
     setTimeout(forceWhiteText, 1000);
     setTimeout(forceWhiteText, 2000);
@@ -73,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         if (shouldRun) {
-            setTimeout(forceWhiteText, 100);
+            setTimeout(forceWhiteText, 50);
         }
     });
     
@@ -84,8 +93,13 @@ document.addEventListener('DOMContentLoaded', function() {
         attributeFilter: ['class', 'style']
     });
     
-    // Also run on window load
+    // Run on window load
     window.addEventListener('load', forceWhiteText);
+    
+    // Run on any click (in case buttons are dynamically created)
+    document.addEventListener('click', function() {
+        setTimeout(forceWhiteText, 100);
+    });
 });
 </script>
 
