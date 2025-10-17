@@ -124,12 +124,12 @@ class CustomRegister extends Register
                 ->send();
         }
 
-        // Don't login user if email is not verified - use Filament registration response
+        // Don't login user if email is not verified - let Filament handle the response
         if (!$user->hasVerifiedEmail()) {
             // Login user temporarily so RegistrationResponse can access auth()->user()
             auth()->login($user);
-            // Use Filament registration response to handle redirect properly
-            return app(CustomRegistrationResponse::class)->toResponse(request());
+            // Let Filament registration response handle the redirect
+            return null;
         }
 
         // Only login if email is verified and redirect to user dashboard
