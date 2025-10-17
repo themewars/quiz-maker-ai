@@ -124,15 +124,13 @@ class CustomRegister extends Register
                 ->send();
         }
 
-        // Auto-login and redirect to dashboard based on user role
-        auth()->login($user);
-
-        // If user is not verified, redirect to verification page
+        // Don't login user if email is not verified - redirect to verification page
         if (!$user->hasVerifiedEmail()) {
             return redirect()->route('verification.notice')->with('status', 'Please verify your email address to continue.');
         }
 
-        // Force redirect to user dashboard after registration
+        // Only login if email is verified and redirect to user dashboard
+        auth()->login($user);
         return redirect()->route('filament.user.pages.dashboard');
     }
 }

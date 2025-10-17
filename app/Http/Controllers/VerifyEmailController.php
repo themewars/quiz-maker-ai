@@ -21,6 +21,12 @@ class VerifyEmailController extends Controller
             return redirect()->route('login')->with('success', 'Your email is already verified. You can login now.');
         }
 
+        // Verify the signed URL is valid
+        if (!$request->hasValidSignature()) {
+            \Log::info('Invalid signature for email verification');
+            return redirect()->route('login')->with('error', 'Invalid verification link. Please request a new verification email.');
+        }
+
         if ($user->markEmailAsVerified()) {
             \Log::info('Email verified successfully, redirecting to login with success message');
             \Log::info('User authenticated status: ' . (auth()->check() ? 'true' : 'false'));
@@ -29,10 +35,6 @@ class VerifyEmailController extends Controller
         }
 
         \Log::info('Email verification failed');
-        Notification::make()
-            ->danger()
-            ->title(__('messages.home.your_email_verification_failed'))
-            ->send();
-        return redirect()->route('login');
+        return redirect()->route('login')->with('error', 'Email verification failed. Please try again or contact support.');
     }
 }

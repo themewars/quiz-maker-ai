@@ -41,13 +41,13 @@ class RegisterController extends Controller
         // Send email verification notification manually since Filament's emailVerification() is disabled
         $user->sendEmailVerificationNotification();
 
-        auth()->login($user);
-
-        // If user is not verified, redirect to verification page
+        // Don't login user if email is not verified - redirect to verification page
         if (!$user->hasVerifiedEmail()) {
             return redirect()->route('verification.notice')->with('status', 'Please verify your email address to continue.');
         }
 
+        // Only login if email is verified
+        auth()->login($user);
         return redirect($this->redirectTo)->with('status', 'Registration successful! Welcome to ' . getAppName() . '.');
     }
 
