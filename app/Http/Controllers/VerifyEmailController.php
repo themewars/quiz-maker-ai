@@ -17,21 +17,13 @@ class VerifyEmailController extends Controller
         $user = User::findOrFail($request->route('id'));
 
         if ($user->hasVerifiedEmail()) {
-            \Log::info('User already verified, redirecting to user dashboard');
-            Notification::make()
-                ->success()
-                ->title(__('messages.home.email_already_verified'))
-                ->send();
-            return redirect()->route('filament.user.pages.dashboard');
+            \Log::info('User already verified, redirecting to login with message');
+            return redirect()->route('login')->with('success', 'Your email is already verified. You can login now.');
         }
 
         if ($user->markEmailAsVerified()) {
-            \Log::info('Email verified successfully, redirecting to user dashboard');
-            Notification::make()
-                ->success()
-                ->title(__('messages.home.your_email_verified_success'))
-                ->send();
-            return redirect()->route('filament.user.pages.dashboard');
+            \Log::info('Email verified successfully, redirecting to login with success message');
+            return redirect()->route('login')->with('success', 'Your email has been successfully verified! You can now login to your account.');
         }
 
         \Log::info('Email verification failed');
