@@ -24,7 +24,7 @@ class UserEmailVerification extends VerifyEmail
     protected function verificationUrl($notifiable)
     {
         // Use our custom verification route instead of Filament's default
-        return URL::temporarySignedRoute(
+        $url = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(config('auth.verification.expire', 60)),
             [
@@ -32,5 +32,10 @@ class UserEmailVerification extends VerifyEmail
                 'hash' => sha1($notifiable->getEmailForVerification()),
             ]
         );
+        
+        // Debug: Log the generated URL
+        \Log::info('Generated verification URL: ' . $url);
+        
+        return $url;
     }
 }

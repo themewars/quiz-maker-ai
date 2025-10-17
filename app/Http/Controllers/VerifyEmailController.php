@@ -10,6 +10,10 @@ class VerifyEmailController extends Controller
 {
     public function verify(Request $request)
     {
+        // Debug: Log the verification attempt
+        \Log::info('VerifyEmailController called with ID: ' . $request->route('id'));
+        \Log::info('Request URL: ' . $request->fullUrl());
+        
         $user = User::findOrFail($request->route('id'));
 
         if ($user->hasVerifiedEmail()) {
