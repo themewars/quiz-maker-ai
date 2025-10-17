@@ -24,33 +24,7 @@ class AuthPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
-            ->default()
-            ->id('auth')
-            ->path('/')
-            ->brandName(getAppName())
-            ->brandLogo(getAppLogo())
-            ->favicon(getFaviconUrl())
-            ->colors([
-                'primary' => Color::Purple,
-            ])
-            ->login(CustomLogin::class)
-            ->registration(CustomRegister::class)
-            ->passwordReset($requestAction = CustomRequestPasswordReset::class, $resetAction = CustomResetPassword::class)
-            // ->emailVerification() // Disabled to use custom verification controller
-            ->middleware([
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartSession::class,
-                AuthenticateSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
-            ]);
+        // Temporarily disable AuthPanelProvider to test if it's causing route conflicts
+        return $panel->default()->id('auth')->path('/')->login()->registration();
     }
 }
