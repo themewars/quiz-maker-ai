@@ -23,6 +23,8 @@ class VerifyEmailController extends Controller
 
         if ($user->markEmailAsVerified()) {
             \Log::info('Email verified successfully, redirecting to login with success message');
+            \Log::info('User authenticated status: ' . (auth()->check() ? 'true' : 'false'));
+            \Log::info('User ID: ' . $user->id . ', Email: ' . $user->email);
             return redirect()->route('login')->with('success', 'Your email has been successfully verified! You can now login to your account.');
         }
 
