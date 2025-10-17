@@ -125,8 +125,8 @@
     <!-- Site Footer -->
     <footer>
         <div class="container">
-            <div class="grid-container">
-                <div class="grid-item">
+            <div class="footer-content">
+                <div class="footer-logo-section">
                     <div class="footer-logo">
                         <img src="{{ getAppLogo() }}" alt="{{ getAppName() }}">
                     </div>
@@ -135,38 +135,40 @@
                     </p>
                 </div>
 
-                <div class="grid-item">
-                    <h3>{{ __('messages.home.company') }}</h3>
-                    <ul>
-                        <li><a href="{{ route('home') }}">{{ __('messages.home.home') }}</a></li>
-                        <li><a class="scrollspy-link" href="{{ route('home') . '#features' }}">{{ __('messages.home.features') }}</a></li>
-                        <li><a class="scrollspy-link" href="{{ route('home') . '#about' }}">{{ __('messages.home.about') }}</a></li>
-                        <li><a href="{{ route('pricing') }}">{{ __('messages.home.pricing') }}</a></li>
-                        @guest
-                            <li><a href="{{ route('login') }}">{{ __('messages.auth.login') }}</a></li>
-                            <li><a href="{{ route('register') }}">{{ __('messages.auth.register') }}</a></li>
-                        @endguest
-                    </ul>
-                </div>
+                <div class="footer-links-section">
+                    <div class="footer-links-group">
+                        <h3>{{ __('messages.home.company') }}</h3>
+                        <ul class="footer-links-horizontal">
+                            <li><a href="{{ route('home') }}">{{ __('messages.home.home') }}</a></li>
+                            <li><a class="scrollspy-link" href="{{ route('home') . '#features' }}">{{ __('messages.home.features') }}</a></li>
+                            <li><a class="scrollspy-link" href="{{ route('home') . '#about' }}">{{ __('messages.home.about') }}</a></li>
+                            <li><a href="{{ route('pricing') }}">{{ __('messages.home.pricing') }}</a></li>
+                            @guest
+                                <li><a href="{{ route('login') }}">{{ __('messages.auth.login') }}</a></li>
+                                <li><a href="{{ route('register') }}">{{ __('messages.auth.register') }}</a></li>
+                            @endguest
+                        </ul>
+                    </div>
 
-                <div class="grid-item">
-                    <h3>{{ __('messages.home.legal') }}</h3>
-                    <ul>
-                        @if (getSetting() && getSetting()->terms)
-                            <li><a href="{{ route('terms') }}">{{ __('messages.home.terms') }}</a></li>
-                        @endif
-                        @if (getSetting() && getSetting()->policy)
-                            <li><a href="{{ route('policy') }}">{{ __('messages.home.privacy_policy') }}</a></li>
-                        @endif
-                        @if (getSetting() && getSetting()->cookie_policy)
-                            <li><a href="{{ route('cookie') }}">{{ __('messages.home.cookie_policy') }}</a></li>
-                        @endif
-                        @if (getSetting() && !empty(getSetting()->custom_legal_pages))
-                            @foreach (getSetting()->custom_legal_pages as $page)
-                                <li><a href="{{ route('custom.legal', $page['slug']) }}">{{ $page['title'] }}</a></li>
-                            @endforeach
-                        @endif
-                    </ul>
+                    <div class="footer-links-group">
+                        <h3>{{ __('messages.home.legal') }}</h3>
+                        <ul class="footer-links-horizontal">
+                            @if (getSetting() && getSetting()->terms)
+                                <li><a href="{{ route('terms') }}">{{ __('messages.home.terms') }}</a></li>
+                            @endif
+                            @if (getSetting() && getSetting()->policy)
+                                <li><a href="{{ route('policy') }}">{{ __('messages.home.privacy_policy') }}</a></li>
+                            @endif
+                            @if (getSetting() && getSetting()->cookie_policy)
+                                <li><a href="{{ route('cookie') }}">{{ __('messages.home.cookie_policy') }}</a></li>
+                            @endif
+                            @if (getSetting() && !empty(getSetting()->custom_legal_pages))
+                                @foreach (getSetting()->custom_legal_pages as $page)
+                                    <li><a href="{{ route('custom.legal', $page['slug']) }}">{{ $page['title'] }}</a></li>
+                                @endforeach
+                            @endif
+                        </ul>
+                    </div>
                 </div>
 
                 @if (getSetting() && (getSetting()->facebook_url || getSetting()->twitter_url || getSetting()->instagram_url || getSetting()->linkedin_url || getSetting()->pinterest_url))

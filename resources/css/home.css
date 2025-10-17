@@ -1,3 +1,83 @@
+/* Quiz App Footer Styles */
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.footer-logo-section {
+  text-align: center;
+}
+
+.footer-links-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.footer-links-group h3 {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.footer-links-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links-horizontal li {
+  margin: 0;
+}
+
+.footer-links-horizontal a {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links-horizontal a:hover {
+  color: white;
+}
+
+/* Responsive design for quiz app footer */
+@media (min-width: 768px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .footer-logo-section {
+    text-align: left;
+    flex: 1;
+  }
+  
+  .footer-links-section {
+    flex-direction: row;
+    gap: 3rem;
+    flex: 2;
+  }
+  
+  .footer-links-group h3 {
+    text-align: left;
+  }
+  
+  .footer-links-horizontal {
+    justify-content: flex-start;
+  }
+}
+
 /* Sponsored by section */
 .sponsored-section {
   padding: 64px 0;
