@@ -1,21 +1,45 @@
 /* Quiz App Footer Styles */
-.footer-content {
+footer .footer-content {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 3rem 0 2rem;
 }
 
-.footer-logo-section {
+footer .footer-logo-section {
   text-align: center;
 }
 
-.footer-links-section {
+footer .footer-logo-section .footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+footer .footer-logo-section .footer-logo img {
+  max-height: 50px;
+  width: auto;
+}
+
+footer .footer-logo-section p {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+footer .footer-links-section {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  width: 100%;
 }
 
-.footer-links-group h3 {
+footer .footer-links-group {
+  width: 100%;
+}
+
+footer .footer-links-group h3 {
   color: white;
   font-size: 0.875rem;
   font-weight: 600;
@@ -25,55 +49,61 @@
   text-align: center;
 }
 
-.footer-links-horizontal {
-  display: flex;
+footer .footer-links-horizontal {
+  display: flex !important;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1.5rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-.footer-links-horizontal li {
-  margin: 0;
+footer .footer-links-horizontal li {
+  margin: 0 !important;
+  display: inline-block;
 }
 
-.footer-links-horizontal a {
+footer .footer-links-horizontal a {
   color: #9ca3af;
   text-decoration: none;
   font-size: 0.875rem;
   transition: color 0.3s ease;
 }
 
-.footer-links-horizontal a:hover {
+footer .footer-links-horizontal a:hover {
   color: white;
 }
 
 /* Responsive design for quiz app footer */
 @media (min-width: 768px) {
-  .footer-content {
+  footer .footer-content {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
   }
   
-  .footer-logo-section {
+  footer .footer-logo-section {
     text-align: left;
     flex: 1;
+    max-width: 300px;
   }
   
-  .footer-links-section {
-    flex-direction: row;
-    gap: 3rem;
+  footer .footer-logo-section .footer-logo {
+    justify-content: flex-start;
+  }
+  
+  footer .footer-links-section {
+    flex-direction: column;
+    gap: 2rem;
     flex: 2;
   }
   
-  .footer-links-group h3 {
+  footer .footer-links-group h3 {
     text-align: left;
   }
   
-  .footer-links-horizontal {
+  footer .footer-links-horizontal {
     justify-content: flex-start;
   }
 }
