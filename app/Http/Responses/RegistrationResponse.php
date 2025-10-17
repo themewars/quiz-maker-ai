@@ -22,6 +22,12 @@ class RegistrationResponse implements RegistrationResponseContract
         \Log::info('RegistrationResponse - User ID: ' . ($user ? $user->id : 'null'));
         
         if ($user) {
+            // Check if email is verified first
+            if (!$user->hasVerifiedEmail()) {
+                \Log::info('User email not verified, redirecting to verification page');
+                return redirect()->route('verification.notice')->with('status', 'Please verify your email address to continue.');
+            }
+
             // Refresh user to get latest role data
             $user->refresh();
             $role = $user->roles()->first();
