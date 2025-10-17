@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Filament\Notifications\Actions\Action as NotificationAction;
@@ -769,6 +770,9 @@ PROMPT;
                 Log::error('JSON decode error: ' . json_last_error_msg());
             }
 
+            // Send email notification to user if enabled
+            $this->sendExamCreationEmail($quiz);
+            
             return $quiz;
         }
 
@@ -794,6 +798,38 @@ PROMPT;
     protected function getCreatedNotificationTitle(): ?string
     {
         return __('messages.quiz.quiz_created_success');
+    }
+
+    /**
+     * Send exam creation email notification to user
+     */
+    protected function sendExamCreationEmail($quiz)
+    {
+        try {
+            // Check if email notifications are enabled
+            $settings = getSetting();
+            if (!$settings || !$settings->exam_creation_mail_to_user) {
+                return;
+            }
+
+            $user = Auth::user();
+            if (!$user || !$user->email) {
+                return;
+            }
+
+            // Generate exam URL
+            $examUrl = route('quiz-player', ['code' => $quiz->unique_code]);
+            
+            // Send email
+            Mail::to($user->email)
+                ->send(new \App\Mail\ExamCreatedMail($quiz, $user, $examUrl));
+                
+            Log::info("Exam creation email sent to user: " . $user->email . " for exam: " . $quiz->title);
+            
+        } catch (\Exception $e) {
+            Log::error("Failed to send exam creation email: " . $e->getMessage());
+            // Don't throw exception to avoid breaking exam creation process
+        }
     }
 
     protected function getRedirectUrl(): string

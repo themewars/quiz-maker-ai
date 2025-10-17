@@ -68,6 +68,7 @@ class Setting extends Model implements HasMedia
         'new_participant_mail_to_creator',
         'quiz_complete_mail_to_participant',
         'quiz_complete_mail_to_creator',
+        'exam_creation_mail_to_user',
         'custom_legal_pages',
         // currency controls
         'enforce_home_currency',
@@ -191,6 +192,14 @@ class Setting extends Model implements HasMedia
 
                 ToggleButtons::make('quiz_complete_mail_to_creator')
                     ->label(__('messages.setting.quiz_complete_mail_to_creator') . ':')
+                    ->options([
+                        '1' => __('messages.common.yes'),
+                        '0' => __('messages.common.no'),
+                    ])->inline()
+                    ->required(),
+
+                ToggleButtons::make('exam_creation_mail_to_user')
+                    ->label('Send Email to User When Exam is Created:')
                     ->options([
                         '1' => __('messages.common.yes'),
                         '0' => __('messages.common.no'),
