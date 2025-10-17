@@ -1,7 +1,12 @@
 <style>
 /* Remove all button styling - let original styles work */
 
-/* Remove all button styling - let original styles work */
+/* Target only exam edit page action buttons for white text */
+.fi-fo-actions .fi-btn-primary, .fi-fo-actions .fi-btn-primary * { color: white !important; }
+.fi-fo-actions .fi-btn-success, .fi-fo-actions .fi-btn-success * { color: white !important; }
+.fi-fo-actions .fi-btn-warning, .fi-fo-actions .fi-btn-warning * { color: white !important; }
+.fi-fo-actions .fi-btn-info, .fi-fo-actions .fi-btn-info * { color: white !important; }
+.fi-fo-actions .fi-btn-gray, .fi-fo-actions .fi-btn-gray * { color: white !important; }
 
 /* Ensure Filament select dropdown panels are visible above content */
 .fi-dropdown-panel, .choices__list--dropdown, .fi-fo-select .fi-input-wrp > div[role="listbox"], .fi-fo-select .fi-select-panel {
