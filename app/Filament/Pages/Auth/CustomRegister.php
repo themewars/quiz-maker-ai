@@ -134,6 +134,6 @@ class CustomRegister extends Register
 
         // Only login if email is verified and redirect to user dashboard
         auth()->login($user);
-        return redirect()->route('filament.user.pages.dashboard');
+        return redirect('/user');
     }
 }

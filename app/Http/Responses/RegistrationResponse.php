@@ -41,7 +41,7 @@ class RegistrationResponse implements RegistrationResponseContract
 
             if ($role && $role->name === User::USER_ROLE) {
                 \Log::info('Redirecting to user dashboard');
-                return redirect()->route('filament.user.pages.dashboard');
+                return redirect('/user');
             }
         }
 
