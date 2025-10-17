@@ -98,5 +98,55 @@ div[x-portal-root], .fi-portal, .fi-dropdown {
 .fi-fo-actions .fi-btn-gray {
     color: white !important;
 }
+
+/* Additional comprehensive button text overrides */
+.fi-btn *, .fi-btn-primary *, .fi-btn-success *, .fi-btn-warning *, .fi-btn-info *, .fi-btn-gray * {
+    color: white !important;
+}
+
+.fi-ac-btn *, .fi-ac-btn-primary *, .fi-ac-btn-success *, .fi-ac-btn-warning *, .fi-ac-btn-info *, .fi-ac-btn-gray * {
+    color: white !important;
+}
+
+.fi-fo-actions .fi-btn *, .fi-fo-actions .fi-btn-primary *, .fi-fo-actions .fi-btn-success *, .fi-fo-actions .fi-btn-warning *, .fi-fo-actions .fi-btn-info *, .fi-fo-actions .fi-btn-gray * {
+    color: white !important;
+}
+
+/* Button text spans and labels */
+.fi-btn span, .fi-btn label, .fi-btn .fi-btn-text {
+    color: white !important;
+}
+
+.fi-ac-btn span, .fi-ac-btn label, .fi-ac-btn .fi-btn-text {
+    color: white !important;
+}
+
+/* Force white text on all button elements */
+button[class*="fi-btn"], button[class*="fi-ac-btn"] {
+    color: white !important;
+}
+
+button[class*="fi-btn"] *, button[class*="fi-ac-btn"] * {
+    color: white !important;
+}
+
+/* Override any inline styles */
+.fi-btn[style*="color"], .fi-ac-btn[style*="color"] {
+    color: white !important;
+}
+
+/* Specific button text elements */
+.fi-btn-text, .fi-btn-label, .fi-btn-content {
+    color: white !important;
+}
+
+/* Additional selectors for all possible button variants */
+[class*="fi-btn"][class*="primary"], [class*="fi-btn"][class*="success"], [class*="fi-btn"][class*="warning"], [class*="fi-btn"][class*="info"], [class*="fi-btn"][class*="gray"] {
+    color: white !important;
+}
+
+[class*="fi-btn"][class*="primary"] *, [class*="fi-btn"][class*="success"] *, [class*="fi-btn"][class*="warning"] *, [class*="fi-btn"][class*="info"] *, [class*="fi-btn"][class*="gray"] * {
+    color: white !important;
+}
 </style>
 
