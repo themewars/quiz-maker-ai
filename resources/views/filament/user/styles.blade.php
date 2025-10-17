@@ -1,12 +1,24 @@
 <style>
-/* Remove all button styling - let original styles work */
+/* Copy exact admin panel button styling to user panel */
+.fi-btn-primary, .fi-btn-primary * { color: white !important; }
+.fi-btn-success, .fi-btn-success * { color: white !important; }
+.fi-btn-warning, .fi-btn-warning * { color: white !important; }
+.fi-btn-info, .fi-btn-info * { color: white !important; }
+.fi-btn-danger, .fi-btn-danger * { color: white !important; }
 
-/* Target only exam edit page action buttons for white text */
+/* Action buttons */
+.fi-ac-btn-primary, .fi-ac-btn-primary * { color: white !important; }
+.fi-ac-btn-success, .fi-ac-btn-success * { color: white !important; }
+.fi-ac-btn-warning, .fi-ac-btn-warning * { color: white !important; }
+.fi-ac-btn-info, .fi-ac-btn-info * { color: white !important; }
+.fi-ac-btn-danger, .fi-ac-btn-danger * { color: white !important; }
+
+/* Form action buttons */
 .fi-fo-actions .fi-btn-primary, .fi-fo-actions .fi-btn-primary * { color: white !important; }
 .fi-fo-actions .fi-btn-success, .fi-fo-actions .fi-btn-success * { color: white !important; }
 .fi-fo-actions .fi-btn-warning, .fi-fo-actions .fi-btn-warning * { color: white !important; }
 .fi-fo-actions .fi-btn-info, .fi-fo-actions .fi-btn-info * { color: white !important; }
-.fi-fo-actions .fi-btn-gray, .fi-fo-actions .fi-btn-gray * { color: white !important; }
+.fi-fo-actions .fi-btn-danger, .fi-fo-actions .fi-btn-danger * { color: white !important; }
 
 /* Ensure Filament select dropdown panels are visible above content */
 .fi-dropdown-panel, .choices__list--dropdown, .fi-fo-select .fi-input-wrp > div[role="listbox"], .fi-fo-select .fi-select-panel {
