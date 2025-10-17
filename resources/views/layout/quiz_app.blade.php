@@ -135,41 +135,6 @@
                     </p>
                 </div>
 
-                <div class="footer-links-section" style="display: flex; flex-direction: column; gap: 2rem; width: 100%;">
-                    <div class="footer-links-group" style="width: 100%;">
-                        <h3 style="color: white; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; text-align: center;">{{ __('messages.home.company') }}</h3>
-                        <ul class="footer-links-horizontal" style="display: flex !important; flex-wrap: wrap; justify-content: center; gap: 1.5rem; list-style: none; padding: 0; margin: 0;">
-                            <li style="margin: 0; display: inline-block;"><a href="{{ route('home') }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.home.home') }}</a></li>
-                            <li style="margin: 0; display: inline-block;"><a class="scrollspy-link" href="{{ route('home') . '#features' }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.home.features') }}</a></li>
-                            <li style="margin: 0; display: inline-block;"><a class="scrollspy-link" href="{{ route('home') . '#about' }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.home.about') }}</a></li>
-                            <li style="margin: 0; display: inline-block;"><a href="{{ route('pricing') }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.home.pricing') }}</a></li>
-                            @guest
-                                <li style="margin: 0; display: inline-block;"><a href="{{ route('login') }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.auth.login') }}</a></li>
-                                <li style="margin: 0; display: inline-block;"><a href="{{ route('register') }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.auth.register') }}</a></li>
-                            @endguest
-                        </ul>
-                    </div>
-
-                    <div class="footer-links-group" style="width: 100%;">
-                        <h3 style="color: white; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; text-align: center;">{{ __('messages.home.legal') }}</h3>
-                        <ul class="footer-links-horizontal" style="display: flex !important; flex-wrap: wrap; justify-content: center; gap: 1.5rem; list-style: none; padding: 0; margin: 0;">
-                            @if (getSetting() && getSetting()->terms)
-                                <li style="margin: 0; display: inline-block;"><a href="{{ route('terms') }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.home.terms') }}</a></li>
-                            @endif
-                            @if (getSetting() && getSetting()->policy)
-                                <li style="margin: 0; display: inline-block;"><a href="{{ route('policy') }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.home.privacy_policy') }}</a></li>
-                            @endif
-                            @if (getSetting() && getSetting()->cookie_policy)
-                                <li style="margin: 0; display: inline-block;"><a href="{{ route('cookie') }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ __('messages.home.cookie_policy') }}</a></li>
-                            @endif
-                            @if (getSetting() && !empty(getSetting()->custom_legal_pages))
-                                @foreach (getSetting()->custom_legal_pages as $page)
-                                    <li style="margin: 0; display: inline-block;"><a href="{{ route('custom.legal', $page['slug']) }}" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">{{ $page['title'] }}</a></li>
-                                @endforeach
-                            @endif
-                        </ul>
-                    </div>
-                </div>
 
                 @if (getSetting() && (getSetting()->facebook_url || getSetting()->twitter_url || getSetting()->instagram_url || getSetting()->linkedin_url || getSetting()->pinterest_url))
                     <div class="grid-item">
