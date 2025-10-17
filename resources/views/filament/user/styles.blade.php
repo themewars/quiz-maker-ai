@@ -1,77 +1,79 @@
 <style>
-/* Force white text on ALL buttons - Ultimate Override */
-*[class*="fi-btn"] { color: white !important; }
-*[class*="fi-btn"] * { color: white !important; }
-*[class*="fi-ac-btn"] { color: white !important; }
-*[class*="fi-ac-btn"] * { color: white !important; }
-button { color: white !important; }
-button * { color: white !important; }
+/* Targeted button text color fixes - Only for colored buttons */
+.fi-btn-primary, .fi-btn-primary * { color: white !important; }
+.fi-btn-success, .fi-btn-success * { color: white !important; }
+.fi-btn-warning, .fi-btn-warning * { color: white !important; }
+.fi-btn-info, .fi-btn-info * { color: white !important; }
+.fi-btn-danger, .fi-btn-danger * { color: white !important; }
 
-/* Specific targeting for fi-btn-label */
-.fi-btn-label { color: white !important; }
-.fi-btn-label * { color: white !important; }
-*[class*="fi-btn-label"] { color: white !important; }
-*[class*="fi-btn-label"] * { color: white !important; }
+/* Action buttons with colors */
+.fi-ac-btn-primary, .fi-ac-btn-primary * { color: white !important; }
+.fi-ac-btn-success, .fi-ac-btn-success * { color: white !important; }
+.fi-ac-btn-warning, .fi-ac-btn-warning * { color: white !important; }
+.fi-ac-btn-info, .fi-ac-btn-info * { color: white !important; }
+.fi-ac-btn-danger, .fi-ac-btn-danger * { color: white !important; }
 
-/* JavaScript to force white text on buttons - Ultimate Solution */
+/* Form action buttons with colors */
+.fi-fo-actions .fi-btn-primary, .fi-fo-actions .fi-btn-primary * { color: white !important; }
+.fi-fo-actions .fi-btn-success, .fi-fo-actions .fi-btn-success * { color: white !important; }
+.fi-fo-actions .fi-btn-warning, .fi-fo-actions .fi-btn-warning * { color: white !important; }
+.fi-fo-actions .fi-btn-info, .fi-fo-actions .fi-btn-info * { color: white !important; }
+.fi-fo-actions .fi-btn-danger, .fi-fo-actions .fi-btn-danger * { color: white !important; }
+
+/* Specific targeting for fi-btn-label in colored buttons */
+.fi-btn-primary .fi-btn-label, .fi-btn-primary .fi-btn-label * { color: white !important; }
+.fi-btn-success .fi-btn-label, .fi-btn-success .fi-btn-label * { color: white !important; }
+.fi-btn-warning .fi-btn-label, .fi-btn-warning .fi-btn-label * { color: white !important; }
+.fi-btn-info .fi-btn-label, .fi-btn-info .fi-btn-label * { color: white !important; }
+.fi-btn-danger .fi-btn-label, .fi-btn-danger .fi-btn-label * { color: white !important; }
+
+/* JavaScript to force white text on colored buttons only */
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    function forceWhiteText() {
-        // Target ALL possible elements that could contain button text
-        const allElements = document.querySelectorAll('*');
+    function forceWhiteTextOnColoredButtons() {
+        // Target only colored buttons
+        const coloredButtonSelectors = [
+            '.fi-btn-primary',
+            '.fi-btn-success', 
+            '.fi-btn-warning',
+            '.fi-btn-info',
+            '.fi-btn-danger',
+            '.fi-ac-btn-primary',
+            '.fi-ac-btn-success',
+            '.fi-ac-btn-warning', 
+            '.fi-ac-btn-info',
+            '.fi-ac-btn-danger',
+            '.fi-fo-actions .fi-btn-primary',
+            '.fi-fo-actions .fi-btn-success',
+            '.fi-fo-actions .fi-btn-warning',
+            '.fi-fo-actions .fi-btn-info',
+            '.fi-fo-actions .fi-btn-danger'
+        ];
         
-        allElements.forEach(element => {
-            const classes = element.className || '';
-            const tagName = element.tagName.toLowerCase();
-            
-            // Check if this element is a button or has button-related classes
-            if (
-                tagName === 'button' ||
-                tagName === 'a' ||
-                classes.includes('fi-btn') ||
-                classes.includes('fi-ac-btn') ||
-                classes.includes('fi-btn-label') ||
-                classes.includes('btn') ||
-                element.getAttribute('role') === 'button' ||
-                element.getAttribute('type') === 'submit' ||
-                element.getAttribute('type') === 'button'
-            ) {
-                // Force white text with maximum priority
-                element.style.cssText += 'color: white !important;';
+        coloredButtonSelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                // Force white text on element
                 element.style.setProperty('color', 'white', 'important');
                 element.style.setProperty('--tw-text-opacity', '1', 'important');
                 
-                // Also force on all children
+                // Force white text on all children
                 const children = element.querySelectorAll('*');
                 children.forEach(child => {
-                    child.style.cssText += 'color: white !important;';
                     child.style.setProperty('color', 'white', 'important');
                     child.style.setProperty('--tw-text-opacity', '1', 'important');
                 });
-            }
-        });
-        
-        // Also target specific text elements
-        const textElements = document.querySelectorAll('span, div, p, label, strong, em');
-        textElements.forEach(element => {
-            const parent = element.closest('button, [class*="fi-btn"], [class*="fi-ac-btn"]');
-            if (parent) {
-                element.style.cssText += 'color: white !important;';
-                element.style.setProperty('color', 'white', 'important');
-            }
+            });
         });
     }
     
     // Run immediately
-    forceWhiteText();
+    forceWhiteTextOnColoredButtons();
     
-    // Run multiple times with different intervals
-    setTimeout(forceWhiteText, 50);
-    setTimeout(forceWhiteText, 200);
-    setTimeout(forceWhiteText, 500);
-    setTimeout(forceWhiteText, 1000);
-    setTimeout(forceWhiteText, 2000);
-    setTimeout(forceWhiteText, 5000);
+    // Run after delays
+    setTimeout(forceWhiteTextOnColoredButtons, 500);
+    setTimeout(forceWhiteTextOnColoredButtons, 1000);
+    setTimeout(forceWhiteTextOnColoredButtons, 2000);
     
     // Run when DOM changes
     const observer = new MutationObserver(function(mutations) {
@@ -82,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         if (shouldRun) {
-            setTimeout(forceWhiteText, 50);
+            setTimeout(forceWhiteTextOnColoredButtons, 100);
         }
     });
     
@@ -94,12 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Run on window load
-    window.addEventListener('load', forceWhiteText);
-    
-    // Run on any click (in case buttons are dynamically created)
-    document.addEventListener('click', function() {
-        setTimeout(forceWhiteText, 100);
-    });
+    window.addEventListener('load', forceWhiteTextOnColoredButtons);
 });
 </script>
 
