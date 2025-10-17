@@ -44,13 +44,6 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user) {
-            // Check if email is verified
-            if ($user->email_verified_at == null) {
-                throw ValidationException::withMessages([
-                    'email' => 'Your email address is not verified. Please check your email for verification link.',
-                ]);
-            }
-
             // Check if account is active
             if ($user->status == false) {
                 throw ValidationException::withMessages([
@@ -61,6 +54,14 @@ class LoginController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
+            
+            // Check if user's email is verified after successful login
+            $user = Auth::user();
+            if (!$user->hasVerifiedEmail()) {
+                Auth::logout();
+                return redirect()->route('verification.notice')->with('status', 'Please verify your email address to continue.');
+            }
+            
             return redirect()->intended($this->redirectTo());
         }
 

@@ -38,9 +38,6 @@ class RegisterController extends Controller
         // Create default subscription
         $this->createDefaultSubscription($user);
 
-        // Send email verification notification manually since Filament's emailVerification() is disabled
-        $user->sendEmailVerificationNotification();
-
         // Don't login user if email is not verified - redirect to verification page
         if (!$user->hasVerifiedEmail()) {
             return redirect()->route('verification.notice')->with('status', 'Please verify your email address to continue.');
