@@ -26,6 +26,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Spatie\Permission\Middleware\RoleMiddleware;
 
 class UserPanelProvider extends PanelProvider
@@ -84,6 +85,7 @@ class UserPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 RedirectAuthenticated::class,
+                EnsureEmailIsVerified::class,
                 RoleMiddleware::class . ':user',
             ]);
     }
