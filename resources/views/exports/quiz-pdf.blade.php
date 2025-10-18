@@ -277,7 +277,7 @@
         
         @forelse($quiz->questions as $index => $question)
         <div class="question">
-            <div class="question-number">{{ $index + 1 }}.</div><div class="question-text">{{ $question->title }}</div>
+            <div class="question-number">{{ $index + 1 }}.</div> <div class="question-text">{{ $question->title }}</div>
             
             @if($includeAnswers && $question->answers->count() > 0)
             <div class="answers">
