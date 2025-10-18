@@ -129,12 +129,14 @@
             font-weight: bold;
             color: #e74c3c;
             font-size: 14px;
+            display: inline;
         }
         
         .question-text {
-            margin: 10px 0;
+            margin: 0;
             font-size: 13px;
             line-height: 1.5;
+            display: inline;
         }
         
         .answers {
@@ -275,8 +277,7 @@
         
         @forelse($quiz->questions as $index => $question)
         <div class="question">
-            <div class="question-number">{{ $index + 1 }}.</div>
-            <div class="question-text">{{ $question->title }}</div>
+            <div class="question-number">{{ $index + 1 }}.</div><div class="question-text">{{ $question->title }}</div>
             
             @if($includeAnswers && $question->answers->count() > 0)
             <div class="answers">
