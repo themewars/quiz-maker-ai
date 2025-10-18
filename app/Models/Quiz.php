@@ -286,7 +286,9 @@ class Quiz extends Model implements HasMedia
                                                         return isset($map[$key]) ? in_array($map[$key], $allowed) : true;
                                                     });
                                                 })
-                                                ->default(0)
+                                                ->default(function(){
+                                                    return (int)(getUserSettings('default_question_type') ?? 0);
+                                                })
                                                 ->searchable()
                                                 ->required()
                                             ->preload()
@@ -297,7 +299,9 @@ class Quiz extends Model implements HasMedia
                                             Select::make('diff_level')
                                                 ->label(__('messages.quiz.difficulty') . ':')
                                                 ->options(Quiz::getDiffLevelOptions())
-                                                ->default(0)
+                                                ->default(function(){
+                                                    return (int)(getUserSettings('default_difficulty') ?? 0);
+                                                })
                                                 ->required()
                                                 ->searchable()
                                             ->preload()
@@ -309,7 +313,9 @@ class Quiz extends Model implements HasMedia
                                                 ->integer()
                                                 ->required()
                                                 ->minValue(1)
-                                                ->default(25)
+                                                ->default(function(){
+                                                    return (int)(getUserSettings('default_questions_count') ?? 10);
+                                                })
                                                 ->label(__('messages.quiz.num_of_questions') . ':')
                                                 ->hintIcon('heroicon-o-information-circle')
                                                 ->hintIconTooltip(function(){
@@ -339,7 +345,9 @@ class Quiz extends Model implements HasMedia
                                                 ->searchable()
                                                 ->native(true)
                                             
-                                                ->default('en')
+                                                ->default(function(){
+                                                    return getUserSettings('default_language') ?? 'en';
+                                                })
                                                 ->validationAttribute(__('messages.home.language'))
                                         ])
                                         ->columns(2),
