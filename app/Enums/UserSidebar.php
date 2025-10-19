@@ -9,4 +9,5 @@ enum UserSidebar: int
     case POLL = 3;
     case MANAGE_SUBSCRIPTION = 4;
     case QUIZ_SETTINGS = 5;
+    case AI_NOTES_GENERATOR = 6;
 }

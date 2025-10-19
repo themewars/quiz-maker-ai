@@ -68,6 +68,7 @@ class UserPanelProvider extends PanelProvider
             ])
             ->pages([
                 Pages\Dashboard::class,
+                \App\Filament\User\Pages\AINotesGenerator::class,
             ])
             ->navigationItems([
                 NavigationItem::Make('Manage Subscription')
