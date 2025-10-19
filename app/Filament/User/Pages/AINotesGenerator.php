@@ -197,20 +197,54 @@ class AINotesGenerator extends Page implements HasForms, HasActions
                 $sampleNotes .= "## Overview\n";
                 $sampleNotes .= "This is a comprehensive summary of {$topic} in the field of {$subject}.\n\n";
                 $sampleNotes .= "## Key Points\n";
-                $sampleNotes .= "• Important concept 1\n";
-                $sampleNotes .= "• Important concept 2\n";
-                $sampleNotes .= "• Important concept 3\n\n";
+                $sampleNotes .= "• **Historical Context**: Understanding the background and causes\n";
+                $sampleNotes .= "• **Major Events**: Key incidents and developments\n";
+                $sampleNotes .= "• **Impact**: Long-term effects and consequences\n";
+                $sampleNotes .= "• **Significance**: Why this topic matters today\n\n";
+                $sampleNotes .= "## Detailed Analysis\n";
+                $sampleNotes .= "### Background\n";
+                $sampleNotes .= "{$topic} emerged from complex historical circumstances that shaped its development and impact.\n\n";
+                $sampleNotes .= "### Main Characteristics\n";
+                $sampleNotes .= "The key features of {$topic} include:\n";
+                $sampleNotes .= "- Primary characteristics and defining elements\n";
+                $sampleNotes .= "- Important relationships and connections\n";
+                $sampleNotes .= "- Unique aspects that distinguish it from similar concepts\n\n";
+                $sampleNotes .= "### Examples and Applications\n";
+                $sampleNotes .= "Real-world examples demonstrate how {$topic} functions:\n";
+                $sampleNotes .= "- Practical applications in {$subject}\n";
+                $sampleNotes .= "- Case studies and notable instances\n";
+                $sampleNotes .= "- Contemporary relevance and modern applications\n\n";
                 $sampleNotes .= "## Summary\n";
-                $sampleNotes .= "In conclusion, {$topic} is a fundamental concept in {$subject} that...\n";
+                $sampleNotes .= "In conclusion, {$topic} represents a fundamental concept in {$subject} that continues to influence our understanding and practice. Its historical significance, practical applications, and ongoing relevance make it essential for comprehensive study and application in various contexts.\n\n";
+                $sampleNotes .= "### Key Takeaways\n";
+                $sampleNotes .= "• Understanding the core principles and mechanisms\n";
+                $sampleNotes .= "• Recognizing patterns and relationships\n";
+                $sampleNotes .= "• Applying knowledge in practical situations\n";
+                $sampleNotes .= "• Connecting to broader concepts and themes\n";
                 break;
                 
             case 'bullet_points':
-                $sampleNotes .= "## {$topic} - Key Points\n\n";
-                $sampleNotes .= "• **Definition**: Basic definition of {$topic}\n";
-                $sampleNotes .= "• **Characteristics**: Main features and properties\n";
-                $sampleNotes .= "• **Examples**: Real-world applications\n";
-                $sampleNotes .= "• **Importance**: Why it matters in {$subject}\n";
-                $sampleNotes .= "• **Related Concepts**: Connected topics\n";
+                $sampleNotes .= "## {$topic} - Comprehensive Key Points\n\n";
+                $sampleNotes .= "### Core Concepts\n";
+                $sampleNotes .= "• **Definition**: {$topic} refers to a complex phenomenon in {$subject} that encompasses multiple dimensions and aspects\n";
+                $sampleNotes .= "• **Historical Background**: The origins and development of {$topic} can be traced through significant historical periods\n";
+                $sampleNotes .= "• **Key Characteristics**: Essential features that define and distinguish {$topic} from related concepts\n";
+                $sampleNotes .= "• **Scope and Scale**: The extent and magnitude of {$topic}'s influence and impact\n\n";
+                $sampleNotes .= "### Important Elements\n";
+                $sampleNotes .= "• **Primary Components**: The main parts that constitute {$topic}\n";
+                $sampleNotes .= "• **Supporting Factors**: Elements that contribute to {$topic}'s development and maintenance\n";
+                $sampleNotes .= "• **Interconnected Systems**: How {$topic} relates to other concepts and systems\n";
+                $sampleNotes .= "• **Dynamic Processes**: The ongoing changes and evolution within {$topic}\n\n";
+                $sampleNotes .= "### Practical Applications\n";
+                $sampleNotes .= "• **Real-World Examples**: Concrete instances where {$topic} is evident\n";
+                $sampleNotes .= "• **Contemporary Relevance**: How {$topic} applies to current situations and challenges\n";
+                $sampleNotes .= "• **Cross-Disciplinary Impact**: Influence across different fields and domains\n";
+                $sampleNotes .= "• **Future Implications**: Potential developments and trends related to {$topic}\n\n";
+                $sampleNotes .= "### Analysis and Interpretation\n";
+                $sampleNotes .= "• **Critical Perspectives**: Different viewpoints and interpretations of {$topic}\n";
+                $sampleNotes .= "• **Comparative Analysis**: How {$topic} compares to similar concepts\n";
+                $sampleNotes .= "• **Significance Assessment**: The importance and value of understanding {$topic}\n";
+                $sampleNotes .= "• **Learning Applications**: How knowledge of {$topic} can be applied in practice\n";
                 break;
                 
             case 'outline':
@@ -226,14 +260,31 @@ class AINotesGenerator extends Page implements HasForms, HasActions
                 break;
                 
             default:
-                $sampleNotes .= "## {$topic}\n\n";
-                $sampleNotes .= "This is a detailed explanation of {$topic} in {$subject}.\n\n";
+                $sampleNotes .= "## {$topic} - Comprehensive Analysis\n\n";
                 $sampleNotes .= "### Introduction\n";
-                $sampleNotes .= "{$topic} is an important concept that...\n\n";
-                $sampleNotes .= "### Main Content\n";
-                $sampleNotes .= "The key aspects include...\n\n";
+                $sampleNotes .= "{$topic} represents a significant and multifaceted concept within the field of {$subject}. This comprehensive analysis explores the various dimensions, implications, and applications of {$topic}, providing a thorough understanding of its importance and relevance.\n\n";
+                $sampleNotes .= "### Historical Context and Development\n";
+                $sampleNotes .= "The evolution of {$topic} can be understood through its historical development and the various factors that have shaped its current form. Understanding this context is crucial for appreciating the complexity and significance of {$topic} in contemporary {$subject}.\n\n";
+                $sampleNotes .= "### Core Principles and Mechanisms\n";
+                $sampleNotes .= "At its foundation, {$topic} operates through several key principles and mechanisms that define its nature and function. These include:\n";
+                $sampleNotes .= "- Fundamental processes and operations\n";
+                $sampleNotes .= "- Underlying structures and frameworks\n";
+                $sampleNotes .= "- Essential relationships and interactions\n";
+                $sampleNotes .= "- Core methodologies and approaches\n\n";
+                $sampleNotes .= "### Detailed Analysis and Components\n";
+                $sampleNotes .= "A comprehensive examination of {$topic} reveals multiple interconnected components that work together to create its overall impact and effectiveness. Each component contributes unique aspects to the understanding and application of {$topic}.\n\n";
+                $sampleNotes .= "### Practical Applications and Examples\n";
+                $sampleNotes .= "The real-world applications of {$topic} demonstrate its practical value and relevance across various contexts. These applications show how theoretical understanding translates into practical benefits and solutions.\n\n";
+                $sampleNotes .= "### Contemporary Relevance and Future Implications\n";
+                $sampleNotes .= "In today's rapidly changing world, {$topic} continues to evolve and adapt to new challenges and opportunities. Understanding its current relevance and potential future developments is essential for staying informed and prepared.\n\n";
                 $sampleNotes .= "### Conclusion\n";
-                $sampleNotes .= "Understanding {$topic} is essential for...\n";
+                $sampleNotes .= "The study of {$topic} provides valuable insights into complex phenomena within {$subject}. Its comprehensive understanding enables better decision-making, problem-solving, and innovation across various domains. The continued exploration and application of {$topic} will remain crucial for advancing knowledge and addressing contemporary challenges.\n\n";
+                $sampleNotes .= "### Key Learning Points\n";
+                $sampleNotes .= "- Comprehensive understanding of core concepts and principles\n";
+                $sampleNotes .= "- Recognition of practical applications and real-world relevance\n";
+                $sampleNotes .= "- Awareness of historical context and contemporary significance\n";
+                $sampleNotes .= "- Ability to apply knowledge in various contexts and situations\n";
+                break;
         }
         
         return $sampleNotes;
