@@ -8,6 +8,7 @@ use Filament\Pages\Page;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -116,21 +117,18 @@ class AINotesGenerator extends Page implements HasForms, HasActions
                             ])
                             ->required(),
                     ])
-                    ->columns(2),
+                    ->columns(2)
+                    ->actions([
+                        FormAction::make('generate')
+                            ->label(__('messages.ai_notes.generate_notes'))
+                            ->icon('heroicon-o-sparkles')
+                            ->color('primary')
+                            ->action('generateNotes'),
+                    ]),
             ])
             ->statePath('data');
     }
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Action::make('generate')
-                ->label(__('messages.ai_notes.generate_notes'))
-                ->icon('heroicon-o-sparkles')
-                ->color('primary')
-                ->action('generateNotes'),
-        ];
-    }
 
     public function generateNotes()
     {
