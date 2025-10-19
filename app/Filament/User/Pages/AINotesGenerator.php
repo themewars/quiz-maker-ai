@@ -153,9 +153,6 @@ class AINotesGenerator extends Page implements HasForms, HasActions
             // Store the generated notes in session or database
             session(['generated_notes' => $notes]);
             
-            // Redirect to view the generated notes
-            return redirect()->to('/user/ai-notes-generator');
-            
         } catch (\Exception $e) {
             Notification::make()
                 ->title(__('messages.ai_notes.error_generating_notes'))
