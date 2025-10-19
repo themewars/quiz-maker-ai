@@ -6,7 +6,6 @@ use App\Enums\UserSidebar;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Actions\Action;
@@ -15,7 +14,6 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Http;
 
 class AINotesGenerator extends Page implements HasForms, HasActions
 {
@@ -132,6 +130,7 @@ class AINotesGenerator extends Page implements HasForms, HasActions
 
     public function generateNotes()
     {
+        $this->form->validate();
         $data = $this->form->getState();
         
         try {
@@ -151,7 +150,7 @@ class AINotesGenerator extends Page implements HasForms, HasActions
             session(['generated_notes' => $notes]);
             
             // Redirect to view the generated notes
-            return redirect()->route('filament.user.pages.ai-notes-generator');
+            return redirect()->to('/user/ai-notes-generator');
             
         } catch (\Exception $e) {
             Notification::make()
