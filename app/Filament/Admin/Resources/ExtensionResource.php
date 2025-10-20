@@ -226,7 +226,7 @@ class ExtensionResource extends Resource
                     ]),
                 Action::make('install')
                     ->label('Install')
-                    ->icon('heroicon-o-download')
+                    ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->visible(fn (Extension $record): bool => !$record->installed)
                     ->requiresConfirmation()
@@ -333,7 +333,7 @@ class ExtensionResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     BulkAction::make('install_selected')
                         ->label('Install Selected')
-                        ->icon('heroicon-o-download')
+                        ->icon('heroicon-o-arrow-down-tray')
                         ->color('success')
                         ->requiresConfirmation()
                         ->modalHeading('Install Selected Extensions')
