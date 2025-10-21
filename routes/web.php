@@ -24,10 +24,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::middleware(['SetLanguage', 'SetCurrency'])->group(function () {
-    Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
-    Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
+// Auth routes without middleware to prevent 404 errors
+Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
+Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
 
+Route::middleware(['SetLanguage', 'SetCurrency'])->group(function () {
     Route::get('change-language/{code}', [UserQuizController::class, 'changeLanguage'])->name('change.language');
     
     // Currency switching routes
