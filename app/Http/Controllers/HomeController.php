@@ -17,16 +17,21 @@ class HomeController extends Controller
 {
     public function index()
     {
-        if (isset(getSetting()->enable_landing_page) && getSetting()->enable_landing_page == 0) {
-            if (Auth::check() && Auth::user()->hasRole('admin')) {
-                return redirect()->route('filament.admin.pages.dashboard');
-            }
+        try {
+            $setting = getSetting();
+            if (isset($setting->enable_landing_page) && $setting->enable_landing_page == 0) {
+                if (Auth::check() && Auth::user()->hasRole('admin')) {
+                    return redirect()->route('filament.admin.pages.dashboard');
+                }
 
-            if (Auth::check() && Auth::user()->hasRole('user')) {
-                return redirect()->route('filament.user.pages.dashboard');
-            }
+                if (Auth::check() && Auth::user()->hasRole('user')) {
+                    return redirect()->route('filament.user.pages.dashboard');
+                }
 
-            return redirect()->route('filament.auth.auth.login');
+                return redirect()->route('filament.auth.auth.login');
+            }
+        } catch (\Exception $e) {
+            // Continue with landing page if database is not available
         }
         // Pricing plans: show all active plans, sorted by sort_order (if present) else by price
         $plansQuery = Plan::with(['prices.currency', 'currency'])->where('status', true);
@@ -38,7 +43,13 @@ class HomeController extends Controller
         $plans = $plansQuery->get();
 
         // Compute current-currency price for home cards
-        $currentCurrency = getCurrentCurrency();
+        try {
+            $currentCurrency = getCurrentCurrency();
+        } catch (\Exception $e) {
+            // Fallback to USD if currency detection fails
+            $currentCurrency = (object) ['id' => 1, 'code' => 'USD', 'symbol' => '$'];
+        }
+        
         $plans = $plans->map(function ($plan) use ($currentCurrency) {
             $planPrice = $plan->prices->firstWhere('currency_id', $currentCurrency->id);
             if ($planPrice) {
@@ -50,18 +61,25 @@ class HomeController extends Controller
             $plan->current_currency = $currentCurrency;
             return $plan;
         });
-        $testimonials = Testimonial::all();
-        // Eager-load relationships used in the view to prevent N+1 and missing data
-        $quizzes = Quiz::with(['category', 'user', 'questions'])
-            ->whereNotNull('category_id')
-            ->where('status', 1)->where('is_show_home', 1)->where('is_public', 1)
-            ->where(function ($query) {
-                $query->whereNull('quiz_expiry_date')
-                    ->orWhere('quiz_expiry_date', '>=', Carbon::now());
-            })
-            ->orderBy('id', 'desc')
-            ->get();
-        $faqs = Faq::where('status', 1)->get();
+        try {
+            $testimonials = Testimonial::all();
+            // Eager-load relationships used in the view to prevent N+1 and missing data
+            $quizzes = Quiz::with(['category', 'user', 'questions'])
+                ->whereNotNull('category_id')
+                ->where('status', 1)->where('is_show_home', 1)->where('is_public', 1)
+                ->where(function ($query) {
+                    $query->whereNull('quiz_expiry_date')
+                        ->orWhere('quiz_expiry_date', '>=', Carbon::now());
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+            $faqs = Faq::where('status', 1)->get();
+        } catch (\Exception $e) {
+            // Fallback data if database is not available
+            $testimonials = collect();
+            $quizzes = collect();
+            $faqs = collect();
+        }
 
         return view('home.index', compact('plans', 'testimonials', 'quizzes', 'faqs', 'currentCurrency'));
     }
