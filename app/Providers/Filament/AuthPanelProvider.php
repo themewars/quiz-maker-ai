@@ -24,7 +24,8 @@ class AuthPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        // Temporarily disable AuthPanelProvider to test if it's causing route conflicts
-        return $panel->default()->id('auth')->path('/')->login()->registration();
+        // Disable Filament auth panel to use Laravel's default auth routes
+        // This prevents route conflicts with /login and /register
+        return $panel->default()->id('auth')->path('/auth-disabled');
     }
 }
