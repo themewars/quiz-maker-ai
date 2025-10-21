@@ -16,15 +16,25 @@ class SetCurrency
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // If admin enforces home currency on homepage, apply it
-        $enforce = (bool) (getSetting()->enforce_home_currency ?? false);
-        if ($enforce && $this->isHomePage($request)) {
-            $forced = getSetting()->home_currency_code ?? null;
-            if ($forced && $this->isValidCurrency($forced)) {
-                session(['currency' => strtoupper($forced)]);
-                app()->instance('currency', strtoupper($forced));
-                return $next($request);
+        // Skip middleware for auth routes to prevent 404 errors
+        if ($this->isAuthRoute($request)) {
+            return $next($request);
+        }
+
+        try {
+            // If admin enforces home currency on homepage, apply it
+            $setting = getSetting();
+            $enforce = (bool) ($setting->enforce_home_currency ?? false);
+            if ($enforce && $this->isHomePage($request)) {
+                $forced = $setting->home_currency_code ?? null;
+                if ($forced && $this->isValidCurrency($forced)) {
+                    session(['currency' => strtoupper($forced)]);
+                    app()->instance('currency', strtoupper($forced));
+                    return $next($request);
+                }
             }
+        } catch (\Exception $e) {
+            // Fallback if database is not available
         }
 
         // Otherwise, get currency from session, cookie, or detect from IP
@@ -35,6 +45,23 @@ class SetCurrency
         app()->instance('currency', $currencyCode);
         
         return $next($request);
+    }
+
+    /**
+     * Check if the request is for auth routes
+     */
+    private function isAuthRoute(Request $request): bool
+    {
+        $authRoutes = ['login', 'register', 'password/reset', 'email/verify'];
+        $path = $request->path();
+        
+        foreach ($authRoutes as $route) {
+            if (str_starts_with($path, $route)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     private function isHomePage(Request $request): bool

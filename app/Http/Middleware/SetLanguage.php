@@ -17,6 +17,11 @@ class SetLanguage
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Skip middleware for auth routes to prevent 404 errors
+        if ($this->isAuthRoute($request)) {
+            return $next($request);
+        }
+
         $localeLanguage = Session::get('locale');
 
         if ($localeLanguage) {
@@ -24,7 +29,31 @@ class SetLanguage
             return $next($request);
         }
 
-        App::setLocale(getSetting() ? getSetting()->default_language : 'en');
+        try {
+            $setting = getSetting();
+            App::setLocale($setting ? $setting->default_language : 'en');
+        } catch (\Exception $e) {
+            // Fallback to default language if database is not available
+            App::setLocale('en');
+        }
+        
         return $next($request);
+    }
+
+    /**
+     * Check if the request is for auth routes
+     */
+    private function isAuthRoute(Request $request): bool
+    {
+        $authRoutes = ['login', 'register', 'password/reset', 'email/verify'];
+        $path = $request->path();
+        
+        foreach ($authRoutes as $route) {
+            if (str_starts_with($path, $route)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }
