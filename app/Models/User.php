@@ -191,7 +191,16 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasAvatar,
                     ->disk(config('app.media_disk'))
                     ->collection(User::PROFILE)
                     ->image()
-                    ->avatar(),
+                    ->avatar()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->rules([
+                        'required',
+                        'image',
+                        'mimes:jpeg,png,gif,webp',
+                        'max:2048', // 2MB max
+                        'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000'
+                    ])
+                    ->helperText(__('messages.user.profile_upload_help')),
                 Select::make('plan')
                     ->visibleOn('create')
                     ->label(__('messages.plan.plan') . ':')

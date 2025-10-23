@@ -263,7 +263,7 @@ return [
         'account_deactivate' => 'Your account has been deactivated. For assistance, please reach out to the system administrator.',
         'your_account_information' => 'Your Account Information',
         'email_not_verified' => 'Please verify your email before login.',
-        'quizzes_and_polls' => 'Exams / Polls',
+        'profile_upload_help' => 'Upload a profile image (JPEG, PNG, GIF, WebP). Max size: 2MB. Min dimensions: 100x100px.',
     ],
 
     'plan' => [

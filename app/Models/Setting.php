@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\FileSecurityService;
 use Filament\Forms\Get;
 use Spatie\MediaLibrary\HasMedia;
 use Filament\Forms\Components\Group;
@@ -16,6 +17,7 @@ use Filament\Forms\Components\ToggleButtons;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Illuminate\Validation\ValidationException;
 
 class Setting extends Model implements HasMedia
 {
@@ -213,14 +215,68 @@ class Setting extends Model implements HasMedia
                     ->required()
                     ->image()
                     ->disk(config('app.media_disk'))
-                    ->collection(self::APP_LOGO),
+                    ->collection(self::APP_LOGO)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->rules([
+                        'required',
+                        'image',
+                        'mimes:jpeg,png,gif,webp',
+                        'max:2048', // 2MB max
+                        'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000'
+                    ])
+                    ->afterStateUpdated(function ($state, $set) {
+                        if ($state instanceof \Illuminate\Http\UploadedFile) {
+                            // Validate file content security
+                            if (!FileSecurityService::validateFileContent($state)) {
+                                $set('app_logo', null);
+                                throw ValidationException::withMessages([
+                                    'app_logo' => 'File contains malicious content and cannot be uploaded.'
+                                ]);
+                            }
+                            
+                            // Validate image content
+                            if (!FileSecurityService::validateImageContent($state)) {
+                                $set('app_logo', null);
+                                throw ValidationException::withMessages([
+                                    'app_logo' => 'Invalid image file or dimensions.'
+                                ]);
+                            }
+                        }
+                    }),
                 SpatieMediaLibraryFileUpload::make('favicon')
                     ->label(__('messages.setting.app_favicon') . ':')
                     ->validationAttribute(__('messages.setting.app_favicon'))
                     ->required()
                     ->image()
                     ->disk(config('app.media_disk'))
-                    ->collection(self::FAVICON),
+                    ->collection(self::FAVICON)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->rules([
+                        'required',
+                        'image',
+                        'mimes:jpeg,png,gif,webp',
+                        'max:1024', // 1MB max for favicon
+                        'dimensions:min_width=16,min_height=16,max_width=512,max_height=512'
+                    ])
+                    ->afterStateUpdated(function ($state, $set) {
+                        if ($state instanceof \Illuminate\Http\UploadedFile) {
+                            // Validate file content security
+                            if (!FileSecurityService::validateFileContent($state)) {
+                                $set('favicon', null);
+                                throw ValidationException::withMessages([
+                                    'favicon' => 'File contains malicious content and cannot be uploaded.'
+                                ]);
+                            }
+                            
+                            // Validate image content
+                            if (!FileSecurityService::validateImageContent($state)) {
+                                $set('favicon', null);
+                                throw ValidationException::withMessages([
+                                    'favicon' => 'Invalid image file or dimensions.'
+                                ]);
+                            }
+                        }
+                    }),
             ])->columns(2)->columnSpanFull(),
         ];
     }

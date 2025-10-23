@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\FileSecurityService;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Validation\ValidationException;
 
 class Testimonial extends Model implements HasMedia
 {
@@ -49,7 +51,34 @@ class Testimonial extends Model implements HasMedia
                     ->disk(config('app.media_disk'))
                     ->collection(Testimonial::ICON)
                     ->image()
-                    ->avatar(),
+                    ->avatar()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->rules([
+                        'required',
+                        'image',
+                        'mimes:jpeg,png,gif,webp',
+                        'max:2048', // 2MB max
+                        'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000'
+                    ])
+                    ->afterStateUpdated(function ($state, $set) {
+                        if ($state instanceof \Illuminate\Http\UploadedFile) {
+                            // Validate file content security
+                            if (!FileSecurityService::validateFileContent($state)) {
+                                $set('icon', null);
+                                throw ValidationException::withMessages([
+                                    'icon' => 'File contains malicious content and cannot be uploaded.'
+                                ]);
+                            }
+                            
+                            // Validate image content
+                            if (!FileSecurityService::validateImageContent($state)) {
+                                $set('icon', null);
+                                throw ValidationException::withMessages([
+                                    'icon' => 'Invalid image file or dimensions.'
+                                ]);
+                            }
+                        }
+                    }),
                 Group::make([
                     TextInput::make('name')
                         ->label(__('messages.common.name') . ':')

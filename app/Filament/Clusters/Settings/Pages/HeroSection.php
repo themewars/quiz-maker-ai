@@ -5,6 +5,7 @@ namespace App\Filament\Clusters\Settings\Pages;
 use App\Enums\AdminSettingSidebar;
 use App\Filament\Clusters\Settings;
 use App\Models\Setting;
+use App\Services\FileSecurityService;
 use Exception;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +16,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Validation\ValidationException;
 
 class HeroSection extends Page implements HasForms
 {
@@ -65,13 +67,65 @@ class HeroSection extends Page implements HasForms
                     ->validationAttribute(__('messages.setting.hero_section_img'))
                     ->image()
                     ->disk(config('app.media_disk'))
-                    ->collection(Setting::HERO_SECTION_IMG),
+                    ->collection(Setting::HERO_SECTION_IMG)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->rules([
+                        'image',
+                        'mimes:jpeg,png,gif,webp',
+                        'max:5120', // 5MB max for hero images
+                        'dimensions:min_width=400,min_height=300,max_width=4000,max_height=3000'
+                    ])
+                    ->afterStateUpdated(function ($state, $set) {
+                        if ($state instanceof \Illuminate\Http\UploadedFile) {
+                            // Validate file content security
+                            if (!FileSecurityService::validateFileContent($state)) {
+                                $set('hero_section_img', null);
+                                throw ValidationException::withMessages([
+                                    'hero_section_img' => 'File contains malicious content and cannot be uploaded.'
+                                ]);
+                            }
+                            
+                            // Validate image content
+                            if (!FileSecurityService::validateImageContent($state)) {
+                                $set('hero_section_img', null);
+                                throw ValidationException::withMessages([
+                                    'hero_section_img' => 'Invalid image file or dimensions.'
+                                ]);
+                            }
+                        }
+                    }),
                 SpatieMediaLibraryFileUpload::make('login_page_img')
                     ->label(__('messages.setting.login_page_img') . ':')
                     ->validationAttribute(__('messages.setting.login_page_img'))
                     ->image()
                     ->disk(config('app.media_disk'))
-                    ->collection(Setting::LOGIN_PAGE_IMG),
+                    ->collection(Setting::LOGIN_PAGE_IMG)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->rules([
+                        'image',
+                        'mimes:jpeg,png,gif,webp',
+                        'max:5120', // 5MB max for login page images
+                        'dimensions:min_width=400,min_height=300,max_width=4000,max_height=3000'
+                    ])
+                    ->afterStateUpdated(function ($state, $set) {
+                        if ($state instanceof \Illuminate\Http\UploadedFile) {
+                            // Validate file content security
+                            if (!FileSecurityService::validateFileContent($state)) {
+                                $set('login_page_img', null);
+                                throw ValidationException::withMessages([
+                                    'login_page_img' => 'File contains malicious content and cannot be uploaded.'
+                                ]);
+                            }
+                            
+                            // Validate image content
+                            if (!FileSecurityService::validateImageContent($state)) {
+                                $set('login_page_img', null);
+                                throw ValidationException::withMessages([
+                                    'login_page_img' => 'Invalid image file or dimensions.'
+                                ]);
+                            }
+                        }
+                    }),
             ])
             ->columns(2)
             ->statePath('data');

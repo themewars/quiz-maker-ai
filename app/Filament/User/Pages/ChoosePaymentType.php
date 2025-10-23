@@ -9,6 +9,7 @@ use App\Http\Middleware\CheckPaddingSubscription;
 use App\Models\PaymentSetting;
 use App\Models\Plan;
 use App\Models\Subscription;
+use App\Services\FileSecurityService;
 use Carbon\Carbon;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -20,6 +21,7 @@ use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\HtmlString;
+use Illuminate\Validation\ValidationException;
 
 class ChoosePaymentType extends Page implements HasForms
 {
@@ -132,7 +134,34 @@ class ChoosePaymentType extends Page implements HasForms
                     ->disk(config('app.media_disk'))
                     ->collection(Subscription::ATTACHMENT)
                     ->image()
-                    ->visible(fn(Get $get) => $get('payment_type') == Subscription::TYPE_MANUALLY),
+                    ->visible(fn(Get $get) => $get('payment_type') == Subscription::TYPE_MANUALLY)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'])
+                    ->rules([
+                        'file',
+                        'mimes:jpeg,png,gif,webp,pdf',
+                        'max:5120', // 5MB max for payment attachments
+                    ])
+                    ->afterStateUpdated(function ($state, $set) {
+                        if ($state instanceof \Illuminate\Http\UploadedFile) {
+                            // Validate file content security
+                            if (!FileSecurityService::validateFileContent($state)) {
+                                $set('attachment', null);
+                                throw ValidationException::withMessages([
+                                    'attachment' => 'File contains malicious content and cannot be uploaded.'
+                                ]);
+                            }
+                            
+                            // For images, validate image content
+                            if (in_array($state->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'])) {
+                                if (!FileSecurityService::validateImageContent($state)) {
+                                    $set('attachment', null);
+                                    throw ValidationException::withMessages([
+                                        'attachment' => 'Invalid image file or dimensions.'
+                                    ]);
+                                }
+                            }
+                        }
+                    }),
                 Textarea::make('notes')
                     ->label(__('messages.subscription.notes') . ':')
                     ->visible(fn(Get $get) => $get('payment_type') == Subscription::TYPE_MANUALLY),

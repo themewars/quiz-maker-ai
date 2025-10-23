@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\FileSecurityService;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Validation\ValidationException;
 
 class Poll extends Model implements HasMedia
 {
@@ -112,7 +114,33 @@ class Poll extends Model implements HasMedia
                         ->disk(config('app.media_disk'))
                         ->collection(Poll::POLL_IMAGES_1)
                         ->image()
-                        ->imagePreviewHeight('100px'),
+                        ->imagePreviewHeight('100px')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                        ->rules([
+                            'image',
+                            'mimes:jpeg,png,gif,webp',
+                            'max:2048', // 2MB max
+                            'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000'
+                        ])
+                        ->afterStateUpdated(function ($state, $set) {
+                            if ($state instanceof \Illuminate\Http\UploadedFile) {
+                                // Validate file content security
+                                if (!FileSecurityService::validateFileContent($state)) {
+                                    $set('option1_image', null);
+                                    throw ValidationException::withMessages([
+                                        'option1_image' => 'File contains malicious content and cannot be uploaded.'
+                                    ]);
+                                }
+                                
+                                // Validate image content
+                                if (!FileSecurityService::validateImageContent($state)) {
+                                    $set('option1_image', null);
+                                    throw ValidationException::withMessages([
+                                        'option1_image' => 'Invalid image file or dimensions.'
+                                    ]);
+                                }
+                            }
+                        }),
                     TextInput::make('option2')
                         ->required()
                         ->label(__('messages.poll.option_2') . ':')
@@ -123,7 +151,33 @@ class Poll extends Model implements HasMedia
                         ->disk(config('app.media_disk'))
                         ->collection(Poll::POLL_IMAGES_2)
                         ->image()
-                        ->imagePreviewHeight('100px'),
+                        ->imagePreviewHeight('100px')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                        ->rules([
+                            'image',
+                            'mimes:jpeg,png,gif,webp',
+                            'max:2048', // 2MB max
+                            'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000'
+                        ])
+                        ->afterStateUpdated(function ($state, $set) {
+                            if ($state instanceof \Illuminate\Http\UploadedFile) {
+                                // Validate file content security
+                                if (!FileSecurityService::validateFileContent($state)) {
+                                    $set('option2_image', null);
+                                    throw ValidationException::withMessages([
+                                        'option2_image' => 'File contains malicious content and cannot be uploaded.'
+                                    ]);
+                                }
+                                
+                                // Validate image content
+                                if (!FileSecurityService::validateImageContent($state)) {
+                                    $set('option2_image', null);
+                                    throw ValidationException::withMessages([
+                                        'option2_image' => 'Invalid image file or dimensions.'
+                                    ]);
+                                }
+                            }
+                        }),
                     TextInput::make('option3')
                         ->label(__('messages.poll.option_3') . ':')
                         ->maxLength(181)
@@ -133,7 +187,33 @@ class Poll extends Model implements HasMedia
                         ->disk(config('app.media_disk'))
                         ->collection(Poll::POLL_IMAGES_3)
                         ->image()
-                        ->imagePreviewHeight('100px'),
+                        ->imagePreviewHeight('100px')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                        ->rules([
+                            'image',
+                            'mimes:jpeg,png,gif,webp',
+                            'max:2048', // 2MB max
+                            'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000'
+                        ])
+                        ->afterStateUpdated(function ($state, $set) {
+                            if ($state instanceof \Illuminate\Http\UploadedFile) {
+                                // Validate file content security
+                                if (!FileSecurityService::validateFileContent($state)) {
+                                    $set('option3_image', null);
+                                    throw ValidationException::withMessages([
+                                        'option3_image' => 'File contains malicious content and cannot be uploaded.'
+                                    ]);
+                                }
+                                
+                                // Validate image content
+                                if (!FileSecurityService::validateImageContent($state)) {
+                                    $set('option3_image', null);
+                                    throw ValidationException::withMessages([
+                                        'option3_image' => 'Invalid image file or dimensions.'
+                                    ]);
+                                }
+                            }
+                        }),
                     TextInput::make('option4')
                         ->label(__('messages.poll.option_4') . ':')
                         ->maxLength(181)
@@ -143,7 +223,33 @@ class Poll extends Model implements HasMedia
                         ->disk(config('app.media_disk'))
                         ->collection(Poll::POLL_IMAGES_4)
                         ->image()
-                        ->imagePreviewHeight('100px'),
+                        ->imagePreviewHeight('100px')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                        ->rules([
+                            'image',
+                            'mimes:jpeg,png,gif,webp',
+                            'max:2048', // 2MB max
+                            'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000'
+                        ])
+                        ->afterStateUpdated(function ($state, $set) {
+                            if ($state instanceof \Illuminate\Http\UploadedFile) {
+                                // Validate file content security
+                                if (!FileSecurityService::validateFileContent($state)) {
+                                    $set('option4_image', null);
+                                    throw ValidationException::withMessages([
+                                        'option4_image' => 'File contains malicious content and cannot be uploaded.'
+                                    ]);
+                                }
+                                
+                                // Validate image content
+                                if (!FileSecurityService::validateImageContent($state)) {
+                                    $set('option4_image', null);
+                                    throw ValidationException::withMessages([
+                                        'option4_image' => 'Invalid image file or dimensions.'
+                                    ]);
+                                }
+                            }
+                        }),
                 ])
         ];
     }
